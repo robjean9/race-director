@@ -27,6 +27,8 @@
     "webpack-cli": "^3.2.1"
   },
   "dependencies": {
+    "echarts": "^4.2.0-rc.2",
+    "echarts-for-react": "^2.0.15-beta.0",
     "f1-telemetry-parser": "0.0.8",
     "react": "^16.7.0",
     "react-dom": "^16.7.0"

@@ -1,8 +1,13 @@
 import * as React from "react";
-const F1TelemetryParser = require("f1-telemetry-parser").default;
-//import styles from "./styles.css";
+import ReactEcharts from "echarts-for-react";
+import { find, map } from "lodash";
+import { ICarTelemetryData, ILapData, IState } from "./types";
+import F1TelemetryParser from "f1-telemetry-parser";
+//import styles from "./styles.scss";
+import "./styles.scss";
+var fs = require("fs");
 
-export class App extends React.Component<any, any> {
+export class App extends React.Component<any, IState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -10,18 +15,183 @@ export class App extends React.Component<any, any> {
     };
 
     const client = new F1TelemetryParser();
-    client.on("SESSION", m => console.log("SESSION", m));
-    client.on("MOTION", m => console.log("MOTION", m));
-    client.on("LAP_DATA", m => console.log("LAP_DATA", m));
-    client.on("EVENT", m => console.log("EVENT", m));
-    client.on("PARTICIPANTS", m => console.log("PARTICIPANTS", m));
-    client.on("CAR_SETUPS", m => console.log("CAR_SETUPS", m));
-    client.on("CAR_TELEMETRY", m => console.log("CAR_TELEMETRY", m));
-    client.on("CAR_STATUS", m => console.log("CAR_STATUS", m));
+    client.on("SESSION", m => this.storeInSession("SESSION", m));
+    client.on("MOTION", m => this.storeInSession("MOTION", m));
+    client.on("LAP_DATA", m => this.storeInSession("LAP_DATA", m));
+    client.on("EVENT", m => this.storeInSession("EVENT", m));
+    client.on("PARTICIPANTS", m => this.storeInSession("PARTICIPANTS", m));
+    client.on("CAR_SETUPS", m => this.storeInSession("CAR_SETUPS", m));
+    client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
+    client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
     client.start();
   }
 
+  storeInSession = (type: string, data: any) => {
+    const { session } = this.state;
+    if (!session[type]) {
+      session[type] = [];
+    }
+    session[type].push(data);
+    this.setState({ session }, () => console.log("Session update", session));
+  };
+
+  getPlayerTelemetry = (): ICarTelemetryData[] => {
+    const { session } = this.state;
+    if (!session || !session.CAR_TELEMETRY) {
+      return [];
+    }
+    const values = session.CAR_TELEMETRY.map(telemetry => {
+      const playerIndex = telemetry.m_header.m_playerCarIndex;
+      return telemetry.m_carTelemetryData[playerIndex];
+    });
+    return values;
+  };
+
+  getPlayerLapData = (): ILapData[] => {
+    const { session } = this.state;
+    if (!session || !session.LAP_DATA) {
+      return [];
+    }
+    const values = session.LAP_DATA.map(lapData => {
+      const playerIndex = lapData.m_header.m_playerCarIndex;
+      return lapData.m_lapData[playerIndex];
+    });
+    return values;
+  };
+
+  getPlayerCurrentLapTime = () => {
+    return map(this.getPlayerLapData(), "m_currentLapTime");
+  };
+
+  getPlayerSpeed = () => {
+    return map(this.getPlayerTelemetry(), "m_speed");
+  };
+
+  mergeValueWithCurrentLapTimes = values => {
+    const lapTimes = this.getPlayerCurrentLapTime();
+    let test = [];
+    for (var i = 0; i < lapTimes.length; i++) {
+      test.push({ x: lapTimes[i], y: values[i] });
+    }
+    return test;
+  };
+
+  handleSessionLoad = () => {
+    fs.readFile("./data.rd", (err, session) => {
+      if (err) {
+        throw err;
+      }
+      this.setState({ session: JSON.parse(session.toString()) }, () =>
+        console.log("Session loaded", this.state.session)
+      );
+    });
+  };
+
+  getPlayerParticipantData = () => {
+    // gets data from participants
+    const { session } = this.state;
+    if (!session || !session.PARTICIPANTS) {
+      return;
+    }
+    const participants = session.PARTICIPANTS.map(data => data.m_participants);
+    const playerParticipantData = participants.map(participantPacket =>
+      find(participantPacket, { m_aiControlled: 0 })
+    );
+    console.log(playerParticipantData);
+  };
+
+  handleSessionRestart = () => {
+    this.setState({ session: {} }, () =>
+      console.log("Session restarted", this.state.session)
+    );
+  };
+
+  handleSessionSave = () => {
+    const { session } = this.state;
+    fs.writeFile("./data.rd", JSON.stringify(session), err => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("Session has been saved");
+    });
+  };
+
   render() {
-    return <div>Hello Appo</div>;
+    return (
+      <div>
+        <h2>Race Director v0.0.1</h2>
+        <button onClick={this.handleSessionLoad}>Load Session</button>
+        <button onClick={this.handleSessionSave}>Save Session</button>
+        <button onClick={this.handleSessionRestart}>Restart Session</button>
+        <ReactEcharts
+          option={this.getOption()}
+          style={{ height: "350px", width: "100%" }}
+          className="react_for_echarts"
+        />
+      </div>
+    );
   }
+
+  getOption = () => {
+    return {
+      title: {
+        text: "Speed"
+      },
+      toolbox: {
+        feature: {
+          dataZoom: {
+            yAxisIndex: false
+          }
+        }
+      },
+      tooltip: {
+        trigger: "axis"
+        /*
+        formatter: function(params) {
+          params = params[0];
+          var date = new Date(params.name);
+          return (
+            date.getDate() +
+            "/" +
+            (date.getMonth() + 1) +
+            "/" +
+            date.getFullYear() +
+            " : " +
+            params.value[1]
+          );
+        }*/
+      },
+      xAxis: [
+        {
+          boundaryGap: false,
+          silent: true,
+          data: this.getPlayerCurrentLapTime()
+        }
+      ],
+      yAxis: [
+        {
+          type: "value"
+        }
+      ],
+      dataZoom: [
+        {
+          type: "inside"
+        },
+        {
+          type: "slider"
+        }
+      ],
+      series: [
+        {
+          name: "Speed",
+          type: "line",
+          stack: "l",
+          large: true,
+          areaStyle: { normal: {} },
+          data: this.getPlayerSpeed()
+        }
+      ]
+    };
+  };
 }
