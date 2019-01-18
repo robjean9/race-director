@@ -1,14 +1,43 @@
 import { app, BrowserWindow } from "electron";
+const {
+  default: installExtension,
+  REACT_DEVELOPER_TOOLS
+} = require("electron-devtools-installer");
 import * as path from "path";
 import * as url from "url";
 
 let mainWindow: Electron.BrowserWindow;
+let isDev = process.env["NODE_ENV"] === "development";
 
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     height: 600,
-    width: 800
+    width: 800,
+    // See https://electronjs.org/docs/tutorial/security#2-disable-nodejs-integration-for-remote-content
+    webPreferences: {
+      nodeIntegration: false
+    }
+  });
+
+  if (isDev) {
+    // Load index.html via webpack dev server.
+    require("./webpack-server.js");
+    mainWindow.loadURL("http://localhost:3000/index.html");
+
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
+  } else {
+    // Load index.html from the file system.
+    mainWindow.loadFile("dist/index.html");
+  }
+
+  // Emitted when the window is closed.
+  mainWindow.on("closed", function() {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    mainWindow = null;
   });
 
   // and load the index.html of the app.
@@ -35,7 +64,18 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  if (isDev) {
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then(name => {
+        console.log(`Added Extension:  ${name}`);
+        createWindow();
+      })
+      .catch(err => console.log("An error occurred: ", err));
+  } else {
+    createWindow();
+  }
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {

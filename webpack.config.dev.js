@@ -1,9 +1,9 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
-function getConfig(name, extension = "ts") {
+function getConfig(entryPath, name) {
   return ({
-    entry: `./src/${name}/${name}.${extension}`,
+    entry: entryPath,
     target: `electron-${name}`,
     output: {
       filename: `${name}.bundle.js`,
@@ -50,11 +50,11 @@ function getConfig(name, extension = "ts") {
 }
 
 let mainConfig = {
-  ...getConfig("main")
+  ...getConfig("./main.ts", "main")
 };
 
 let rendererConfig = {
-  ...getConfig("renderer", "tsx"),
+  ...getConfig("./src/renderer/renderer.tsx", "renderer"),
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "./src/renderer/index.html")
