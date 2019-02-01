@@ -2,9 +2,9 @@ import * as React from "react";
 import ReactEcharts from "echarts-for-react";
 import { find, map } from "lodash";
 import { ICarTelemetryData, ILapData, IState } from "./types";
-import F1TelemetryParser from "f1-telemetry-parser";
-//import styles from "./styles.scss";
-import "./styles.scss";
+//import F1TelemetryParser from "f1-telemetry-parser";
+//import styles from "./styles.css";
+import "./styles.css";
 var fs = require("fs");
 
 export class App extends React.Component<any, IState> {
@@ -14,6 +14,7 @@ export class App extends React.Component<any, IState> {
       session: {}
     };
 
+    /*
     const client = new F1TelemetryParser();
     client.on("SESSION", m => this.storeInSession("SESSION", m));
     client.on("MOTION", m => this.storeInSession("MOTION", m));
@@ -24,6 +25,9 @@ export class App extends React.Component<any, IState> {
     client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
     client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
     client.start();
+    */
+
+    console.log("Test!!!");
   }
 
   storeInSession = (type: string, data: any) => {
