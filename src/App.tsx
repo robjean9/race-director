@@ -1,13 +1,15 @@
 import * as React from "react";
+import { PureComponent } from "react";
 import ReactEcharts from "echarts-for-react";
 import { find, map } from "lodash";
 import { ICarTelemetryData, ILapData, IState } from "./types";
-//import F1TelemetryParser from "f1-telemetry-parser";
-//import styles from "./styles.css";
+import { hot } from "react-hot-loader";
 import "./styles.css";
 var fs = require("fs");
+//import F1TelemetryParser from "f1-telemetry-parser";
+//import styles from "./styles.css";
 
-export class App extends React.Component<any, IState> {
+class App extends PureComponent<any, IState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -26,8 +28,6 @@ export class App extends React.Component<any, IState> {
     client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
     client.start();
     */
-
-    console.log("Test!!!");
   }
 
   storeInSession = (type: string, data: any) => {
@@ -199,3 +199,5 @@ export class App extends React.Component<any, IState> {
     };
   };
 }
+
+export default hot(module)(App);
