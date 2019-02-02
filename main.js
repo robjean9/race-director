@@ -7,6 +7,8 @@ const {
 const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
+const F1TelemetryParser = require("f1-telemetry-parser").default;
+const client = new F1TelemetryParser();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -44,6 +46,18 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+client.start();
+client.on("MOTION", m => console.log(m));
+/*
+client.on("SESSION", m => console.log(m)); //this.storeInSession("SESSION", m));
+client.on("LAP_DATA", m => this.storeInSession("LAP_DATA", m));
+client.on("EVENT", m => this.storeInSession("EVENT", m));
+client.on("PARTICIPANTS", m => this.storeInSession("PARTICIPANTS", m));
+client.on("CAR_SETUPS", m => this.storeInSession("CAR_SETUPS", m));
+client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
+client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
+*/
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

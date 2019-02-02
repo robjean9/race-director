@@ -5,9 +5,6 @@ import { find, map } from "lodash";
 import { ICarTelemetryData, ILapData, IState } from "./types";
 import { hot } from "react-hot-loader";
 import "./styles.css";
-var fs = require("fs");
-//import F1TelemetryParser from "f1-telemetry-parser";
-//import styles from "./styles.css";
 
 class App extends PureComponent<any, IState> {
   constructor(props) {
@@ -15,19 +12,6 @@ class App extends PureComponent<any, IState> {
     this.state = {
       session: {}
     };
-
-    /*
-    const client = new F1TelemetryParser();
-    client.on("SESSION", m => this.storeInSession("SESSION", m));
-    client.on("MOTION", m => this.storeInSession("MOTION", m));
-    client.on("LAP_DATA", m => this.storeInSession("LAP_DATA", m));
-    client.on("EVENT", m => this.storeInSession("EVENT", m));
-    client.on("PARTICIPANTS", m => this.storeInSession("PARTICIPANTS", m));
-    client.on("CAR_SETUPS", m => this.storeInSession("CAR_SETUPS", m));
-    client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
-    client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
-    client.start();
-    */
   }
 
   storeInSession = (type: string, data: any) => {
@@ -80,6 +64,7 @@ class App extends PureComponent<any, IState> {
     return test;
   };
 
+  /*
   handleSessionLoad = () => {
     fs.readFile("./data.rd", (err, session) => {
       if (err) {
@@ -90,6 +75,18 @@ class App extends PureComponent<any, IState> {
       );
     });
   };
+
+  handleSessionSave = () => {
+    const { session } = this.state;
+    fs.writeFile("./data.rd", JSON.stringify(session), err => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("Session has been saved");
+    });
+  };
+  */
 
   getPlayerParticipantData = () => {
     // gets data from participants
@@ -110,23 +107,14 @@ class App extends PureComponent<any, IState> {
     );
   };
 
-  handleSessionSave = () => {
-    const { session } = this.state;
-    fs.writeFile("./data.rd", JSON.stringify(session), err => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log("Session has been saved");
-    });
-  };
-
   render() {
     return (
       <div>
         <h2>Race Director v0.0.1</h2>
+        {/*
         <button onClick={this.handleSessionLoad}>Load Session</button>
         <button onClick={this.handleSessionSave}>Save Session</button>
+         */}
         <button onClick={this.handleSessionRestart}>Restart Session</button>
         <ReactEcharts
           option={this.getOption()}
