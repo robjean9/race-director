@@ -4,8 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "webpack --config webpack.config.prod.js && electron .",
-    "start:dev": "cross-env NODE_ENV=development electron ."
+    "build": "webpack --config webpack.config.prod.js && electron .",
+    "start": "cross-env NODE_ENV=development electron ."
   },
   "author": "",
   "license": "ISC",

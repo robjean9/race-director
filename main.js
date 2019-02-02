@@ -1,12 +1,18 @@
 const electron = require("electron");
+
+// Module to control application life.
+const app = electron.app;
+
+// Module to create native browser window.
+const BrowserWindow = electron.BrowserWindow;
+
+// Devtools
 const {
   default: installExtension,
   REACT_DEVELOPER_TOOLS
 } = require("electron-devtools-installer");
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
+
+// F1 telemetry client
 const F1TelemetryParser = require("f1-telemetry-parser").default;
 const client = new F1TelemetryParser();
 
@@ -47,18 +53,6 @@ function createWindow() {
   });
 }
 
-client.start();
-client.on("MOTION", m => console.log(m));
-/*
-client.on("SESSION", m => console.log(m)); //this.storeInSession("SESSION", m));
-client.on("LAP_DATA", m => this.storeInSession("LAP_DATA", m));
-client.on("EVENT", m => this.storeInSession("EVENT", m));
-client.on("PARTICIPANTS", m => this.storeInSession("PARTICIPANTS", m));
-client.on("CAR_SETUPS", m => this.storeInSession("CAR_SETUPS", m));
-client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
-client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
-*/
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -92,5 +86,16 @@ app.on("activate", function () {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// F1 client logic
+
+client.start();
+client.on("MOTION", m => console.log(m));
+/*
+client.on("SESSION", m => console.log(m)); //this.storeInSession("SESSION", m));
+client.on("LAP_DATA", m => this.storeInSession("LAP_DATA", m));
+client.on("EVENT", m => this.storeInSession("EVENT", m));
+client.on("PARTICIPANTS", m => this.storeInSession("PARTICIPANTS", m));
+client.on("CAR_SETUPS", m => this.storeInSession("CAR_SETUPS", m));
+client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
+client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
+*/
