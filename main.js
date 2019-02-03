@@ -1,4 +1,5 @@
 const electron = require("electron");
+const path = require('path')
 
 // Module to control application life.
 const app = electron.app;
@@ -12,9 +13,12 @@ const {
   REACT_DEVELOPER_TOOLS
 } = require("electron-devtools-installer");
 
+// Mongo database
+var mongojs = require("mongojs");
+
 // F1 telemetry client
-const F1TelemetryParser = require("f1-telemetry-parser").default;
-const client = new F1TelemetryParser();
+const F1TelemetryClient = require("f1-telemetry-client").default;
+const client = new F1TelemetryClient();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -86,16 +90,24 @@ app.on("activate", function () {
   }
 });
 
-// F1 client logic
+// Mongo database
+var db = mongojs("mongodb://localhost:27017/racedirector");
+db.on("connect", function () {
+  console.log("Connected to Mongo Database");
+});
+db.racedirector.find(function (err, docs) {
+  // Docs is an array of all the documents in mycollection
+  //console.log(docs);
+});
+const insertInMongo = m => db.racedirector.insert(m);
 
+// F1 client logic
 client.start();
-client.on("MOTION", m => console.log(m));
-/*
-client.on("SESSION", m => console.log(m)); //this.storeInSession("SESSION", m));
-client.on("LAP_DATA", m => this.storeInSession("LAP_DATA", m));
-client.on("EVENT", m => this.storeInSession("EVENT", m));
-client.on("PARTICIPANTS", m => this.storeInSession("PARTICIPANTS", m));
-client.on("CAR_SETUPS", m => this.storeInSession("CAR_SETUPS", m));
-client.on("CAR_TELEMETRY", m => this.storeInSession("CAR_TELEMETRY", m));
-client.on("CAR_STATUS", m => this.storeInSession("CAR_STATUS", m));
-*/
+client.on("MOTION", m => insertInMongo(m));
+client.on("SESSION", m => insertInMongo(m));
+client.on("LAP_DATA", m => insertInMongo(m));
+client.on("EVENT", m => insertInMongo(m));
+client.on("PARTICIPANTS", m => insertInMongo(m));
+client.on("CAR_SETUPS", m => insertInMongo(m));
+client.on("CAR_TELEMETRY", m => insertInMongo(m));
+client.on("CAR_STATUS", m => insertInMongo(m));
