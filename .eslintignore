@@ -26,13 +26,9 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
-out
 
 # OSX
 .DS_Store
-
-# Race Director data
-*.rd
 
 # App packaged
 release
@@ -49,3 +45,8 @@ main.js.map
 
 .idea
 npm-debug.log.*
+__snapshots__
+
+# Package.json
+package.json
+.travis.yml
