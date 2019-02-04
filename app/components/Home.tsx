@@ -1,12 +1,12 @@
-import * as React from "react";
-import { PureComponent } from "react";
-import ReactEcharts from "echarts-for-react";
-import { find, map } from "lodash";
-import { ICarTelemetryData, ILapData, IState } from "./types";
-import { hot } from "react-hot-loader";
-import "./styles.css";
+import * as React from 'react';
+import { PureComponent } from 'react';
+import ReactEcharts from 'echarts-for-react';
+import { find, map } from 'lodash';
+import { ICarTelemetryData, ILapData, IState } from './types';
 
-class App extends PureComponent<any, IState> {
+// const styles = require('./Home.css');
+
+export default class Home extends PureComponent<any, IState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,7 +20,7 @@ class App extends PureComponent<any, IState> {
       session[type] = [];
     }
     session[type].push(data);
-    this.setState({ session }, () => console.log("Session update", session));
+    this.setState({ session }, () => console.log('Session update', session));
   };
 
   getPlayerTelemetry = (): ICarTelemetryData[] => {
@@ -47,18 +47,15 @@ class App extends PureComponent<any, IState> {
     return values;
   };
 
-  getPlayerCurrentLapTime = () => {
-    return map(this.getPlayerLapData(), "m_currentLapTime");
-  };
+  getPlayerCurrentLapTime = () =>
+    map(this.getPlayerLapData(), 'm_currentLapTime');
 
-  getPlayerSpeed = () => {
-    return map(this.getPlayerTelemetry(), "m_speed");
-  };
+  getPlayerSpeed = () => map(this.getPlayerTelemetry(), 'm_speed');
 
   mergeValueWithCurrentLapTimes = values => {
     const lapTimes = this.getPlayerCurrentLapTime();
-    let test = [];
-    for (var i = 0; i < lapTimes.length; i++) {
+    const test = [];
+    for (let i = 0; i < lapTimes.length; i++) {
       test.push({ x: lapTimes[i], y: values[i] });
     }
     return test;
@@ -102,33 +99,16 @@ class App extends PureComponent<any, IState> {
   };
 
   handleSessionRestart = () => {
-    this.setState({ session: {} }, () =>
-      console.log("Session restarted", this.state.session)
-    );
+    this.setState({ session: {} }, () => {
+      const { session } = this.state;
+      console.log('Session restarted', session);
+    });
   };
-
-  render() {
-    return (
-      <div>
-        <h2>Race Director v0.0.1</h2>
-        {/*
-        <button onClick={this.handleSessionLoad}>Load Session</button>
-        <button onClick={this.handleSessionSave}>Save Session</button>
-         */}
-        <button onClick={this.handleSessionRestart}>Restart Session</button>
-        <ReactEcharts
-          option={this.getOption()}
-          style={{ height: "350px", width: "100%" }}
-          className="react_for_echarts"
-        />
-      </div>
-    );
-  }
 
   getOption = () => {
     return {
       title: {
-        text: "Speed"
+        text: 'Speed'
       },
       toolbox: {
         feature: {
@@ -138,7 +118,7 @@ class App extends PureComponent<any, IState> {
         }
       },
       tooltip: {
-        trigger: "axis"
+        trigger: 'axis'
         /*
         formatter: function(params) {
           params = params[0];
@@ -163,22 +143,22 @@ class App extends PureComponent<any, IState> {
       ],
       yAxis: [
         {
-          type: "value"
+          type: 'value'
         }
       ],
       dataZoom: [
         {
-          type: "inside"
+          type: 'inside'
         },
         {
-          type: "slider"
+          type: 'slider'
         }
       ],
       series: [
         {
-          name: "Speed",
-          type: "line",
-          stack: "l",
+          name: 'Speed',
+          type: 'line',
+          stack: 'l',
           large: true,
           areaStyle: { normal: {} },
           data: this.getPlayerSpeed()
@@ -186,6 +166,24 @@ class App extends PureComponent<any, IState> {
       ]
     };
   };
-}
 
-export default hot(module)(App);
+  render() {
+    return (
+      <div>
+        <h2>Race Director v0.0.1</h2>
+        {/*
+        <button onClick={this.handleSessionLoad}>Load Session</button>
+        <button onClick={this.handleSessionSave}>Save Session</button>
+         */}
+        <button type="button" onClick={this.handleSessionRestart}>
+          Restart Session
+        </button>
+        <ReactEcharts
+          option={this.getOption()}
+          style={{ height: '350px', width: '100%' }}
+          className="react_for_echarts"
+        />
+      </div>
+    );
+  }
+}
