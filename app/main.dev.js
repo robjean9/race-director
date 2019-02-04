@@ -13,6 +13,14 @@ import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
+// Mongo database
+const mongojs = require('mongojs');
+
+// F1 telemetry client
+const F1TelemetryClient = require('f1-telemetry-client').default;
+
+const client = new F1TelemetryClient();
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -95,3 +103,26 @@ app.on('ready', async () => {
   // eslint-disable-next-line
   new AppUpdater();
 });
+
+// Mongo database
+const db = mongojs('mongodb://localhost:27017/racedirector');
+db.on('connect', () => {
+  console.log('Connected to Mongo Database');
+});
+db.racedirector.find(() => {
+  //(err, docs) => {
+  // Docs is an array of all the documents in mycollection
+  //console.log(docs);
+});
+const insertInMongo = m => db.racedirector.insert(m);
+
+// F1 client logic
+client.start();
+client.on('MOTION', m => insertInMongo(m));
+client.on('SESSION', m => insertInMongo(m));
+client.on('LAP_DATA', m => insertInMongo(m));
+client.on('EVENT', m => insertInMongo(m));
+client.on('PARTICIPANTS', m => insertInMongo(m));
+client.on('CAR_SETUPS', m => insertInMongo(m));
+client.on('CAR_TELEMETRY', m => insertInMongo(m));
+client.on('CAR_STATUS', m => insertInMongo(m));
