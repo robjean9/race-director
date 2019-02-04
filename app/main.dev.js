@@ -33,10 +33,6 @@ export default class AppUpdater {
 
 let mainWindow = null;
 
-ipcMain.on('action', (e, args) => {
-  console.log('receives data ', args.data);
-});
-
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -66,6 +62,8 @@ const installExtensions = async () => {
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
+  client.stop();
+
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -117,21 +115,29 @@ db.on('connect', () => {
   console.log('Connected to Mongo Database');
 });
 
-db.racedirector.find(() => {
-  //(err, docs) => {
+/* 
+// Read from database
+db.racedirector.find((err, docs) => {
   // Docs is an array of all the documents in mycollection
-  //console.log(docs);
+  // console.log(docs);
 });
-
-const insertInMongo = m => db.racedirector.insert(m);
+*/
 
 // F1 client logic
+let isRecording = false;
+ipcMain.on('startF1Client', () => (isRecording = true));
+ipcMain.on('stopF1Client', () => (isRecording = false));
+
 client.start();
-client.on('MOTION', m => insertInMongo(m));
-client.on('SESSION', m => insertInMongo(m));
-client.on('LAP_DATA', m => insertInMongo(m));
-client.on('EVENT', m => insertInMongo(m));
-client.on('PARTICIPANTS', m => insertInMongo(m));
-client.on('CAR_SETUPS', m => insertInMongo(m));
-client.on('CAR_TELEMETRY', m => insertInMongo(m));
-client.on('CAR_STATUS', m => insertInMongo(m));
+client.on('MOTION', data => storeInCollection(db.motion, data));
+client.on('SESSION', data => storeInCollection(db.session, data));
+client.on('LAP_DATA', data => storeInCollection(db.lapData, data));
+client.on('EVENT', data => storeInCollection(db.event, data));
+client.on('PARTICIPANTS', data => storeInCollection(db.participants, data));
+client.on('CAR_SETUPS', data => storeInCollection(db.carSetups, data));
+client.on('CAR_TELEMETRY', data => storeInCollection(db.carTelemetry, data));
+client.on('CAR_STATUS', data => storeInCollection(db.carStatus, data));
+
+const storeInCollection = (collection, data) => {
+  isRecording && collection.insert(data);
+};

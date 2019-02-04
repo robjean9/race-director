@@ -63,30 +63,6 @@ export default class Home extends PureComponent<any, IState> {
     return test;
   };
 
-  /*
-  handleSessionLoad = () => {
-    fs.readFile("./data.rd", (err, session) => {
-      if (err) {
-        throw err;
-      }
-      this.setState({ session: JSON.parse(session.toString()) }, () =>
-        console.log("Session loaded", this.state.session)
-      );
-    });
-  };
-
-  handleSessionSave = () => {
-    const { session } = this.state;
-    fs.writeFile("./data.rd", JSON.stringify(session), err => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log("Session has been saved");
-    });
-  };
-  */
-
   getPlayerParticipantData = () => {
     // gets data from participants
     const { session } = this.state;
@@ -106,6 +82,10 @@ export default class Home extends PureComponent<any, IState> {
       console.log('Session restarted', session);
     });
   };
+
+  handleStartRecording = () => ipcRenderer.send('startF1Client');
+
+  handleStopRecording = () => ipcRenderer.send('stopF1Client');
 
   getOption = () => {
     return {
@@ -176,7 +156,13 @@ export default class Home extends PureComponent<any, IState> {
         {/*
         <button onClick={this.handleSessionLoad}>Load Session</button>
         <button onClick={this.handleSessionSave}>Save Session</button>
-         */}
+      */}
+        <button type="button" onClick={this.handleStartRecording}>
+          Start Recording
+        </button>
+        <button type="button" onClick={this.handleStopRecording}>
+          Stop Recording
+        </button>
         <button type="button" onClick={this.handleSessionRestart}>
           Restart Session
         </button>
