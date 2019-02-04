@@ -20,6 +20,19 @@ const mongojs = require('mongojs');
 
 // F1 telemetry client
 const F1TelemetryClient = require('f1-telemetry-client').default;
+const {
+  MONGO_CONNECTION_STRING,
+  START_F1_CLIENT,
+  STOP_F1_CLIENT,
+  MOTION,
+  SESSION,
+  LAP_DATA,
+  EVENT,
+  PARTICIPANTS,
+  CAR_SETUPS,
+  CAR_TELEMETRY,
+  CAR_STATUS
+} = require('./constants/f1client');
 
 const client = new F1TelemetryClient();
 
@@ -109,7 +122,7 @@ app.on('ready', async () => {
 });
 
 // Mongo database
-const db = mongojs('mongodb://localhost:27017/racedirector');
+const db = mongojs(MONGO_CONNECTION_STRING);
 
 db.on('connect', () => {
   console.log('Connected to Mongo Database');
@@ -125,18 +138,28 @@ db.racedirector.find((err, docs) => {
 
 // F1 client logic
 let isRecording = false;
-ipcMain.on('startF1Client', () => (isRecording = true));
-ipcMain.on('stopF1Client', () => (isRecording = false));
+ipcMain.on(START_F1_CLIENT, () => !isRecording && startRecording());
+ipcMain.on(STOP_F1_CLIENT, () => isRecording && stopRecording());
+
+const startRecording = () => {
+  client.start();
+  isRecording = true;
+};
+
+const stopRecording = () => {
+  client.stop();
+  isRecording = false;
+};
 
 client.start();
-client.on('MOTION', data => storeInCollection(db.motion, data));
-client.on('SESSION', data => storeInCollection(db.session, data));
-client.on('LAP_DATA', data => storeInCollection(db.lapData, data));
-client.on('EVENT', data => storeInCollection(db.event, data));
-client.on('PARTICIPANTS', data => storeInCollection(db.participants, data));
-client.on('CAR_SETUPS', data => storeInCollection(db.carSetups, data));
-client.on('CAR_TELEMETRY', data => storeInCollection(db.carTelemetry, data));
-client.on('CAR_STATUS', data => storeInCollection(db.carStatus, data));
+client.on(MOTION, data => storeInCollection(db.motion, data));
+client.on(SESSION, data => storeInCollection(db.session, data));
+client.on(LAP_DATA, data => storeInCollection(db.lapData, data));
+client.on(EVENT, data => storeInCollection(db.event, data));
+client.on(PARTICIPANTS, data => storeInCollection(db.participants, data));
+client.on(CAR_SETUPS, data => storeInCollection(db.carSetups, data));
+client.on(CAR_TELEMETRY, data => storeInCollection(db.carTelemetry, data));
+client.on(CAR_STATUS, data => storeInCollection(db.carStatus, data));
 
 const storeInCollection = (collection, data) => {
   isRecording && collection.insert(data);

@@ -4,6 +4,7 @@ import ReactEcharts from 'echarts-for-react';
 import { find, map } from 'lodash';
 import { ipcRenderer } from 'electron';
 import { ICarTelemetryData, ILapData, IState } from './types';
+import { START_F1_CLIENT, STOP_F1_CLIENT } from '../constants/f1client';
 
 // const styles = require('./Home.css');
 
@@ -13,7 +14,6 @@ export default class Home extends PureComponent<any, IState> {
     this.state = {
       session: {}
     };
-    ipcRenderer.send('action', { data: 'sent_data' });
   }
 
   storeInSession = (type: string, data: any) => {
@@ -83,21 +83,14 @@ export default class Home extends PureComponent<any, IState> {
     });
   };
 
-  handleStartRecording = () => ipcRenderer.send('startF1Client');
+  handleStartRecording = () => ipcRenderer.send(START_F1_CLIENT);
 
-  handleStopRecording = () => ipcRenderer.send('stopF1Client');
+  handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
   getOption = () => {
     return {
       title: {
         text: 'Speed'
-      },
-      toolbox: {
-        feature: {
-          dataZoom: {
-            yAxisIndex: false
-          }
-        }
       },
       tooltip: {
         trigger: 'axis'
@@ -153,10 +146,6 @@ export default class Home extends PureComponent<any, IState> {
     return (
       <div>
         <h2>Race Director v0.0.1</h2>
-        {/*
-        <button onClick={this.handleSessionLoad}>Load Session</button>
-        <button onClick={this.handleSessionSave}>Save Session</button>
-      */}
         <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>

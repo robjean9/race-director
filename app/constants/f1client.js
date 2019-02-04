@@ -1,0 +1,11 @@
+export const MONGO_CONNECTION_STRING = 'mongodb://localhost:27017/racedirector';
+export const START_F1_CLIENT = 'startF1Client';
+export const STOP_F1_CLIENT = 'stopF1Client';
+export const MOTION = 'MOTION';
+export const SESSION = 'SESSION';
+export const LAP_DATA = 'LAP_DATA';
+export const EVENT = 'EVENT';
+export const PARTICIPANTS = 'PARTICIPANTS';
+export const CAR_SETUPS = 'CAR_SETUPS';
+export const CAR_TELEMETRY = 'CAR_TELEMETRY';
+export const CAR_STATUS = 'CAR_STATUS';
