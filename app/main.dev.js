@@ -13,6 +13,8 @@ import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
+const { ipcMain } = require('electron');
+
 // Mongo database
 const mongojs = require('mongojs');
 
@@ -30,6 +32,10 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
+
+ipcMain.on('action', (e, args) => {
+  console.log('receives data ', args.data);
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -106,14 +112,17 @@ app.on('ready', async () => {
 
 // Mongo database
 const db = mongojs('mongodb://localhost:27017/racedirector');
+
 db.on('connect', () => {
   console.log('Connected to Mongo Database');
 });
+
 db.racedirector.find(() => {
   //(err, docs) => {
   // Docs is an array of all the documents in mycollection
   //console.log(docs);
 });
+
 const insertInMongo = m => db.racedirector.insert(m);
 
 // F1 client logic

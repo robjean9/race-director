@@ -31,6 +31,9 @@ out
 # OSX
 .DS_Store
 
+# Optional eslint cache
+.eslintcache
+
 # Race Director data
 *.rd
 
