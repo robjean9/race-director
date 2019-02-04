@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { find, map } from 'lodash';
+import { ipcRenderer } from 'electron';
 import { ICarTelemetryData, ILapData, IState } from './types';
 
 // const styles = require('./Home.css');
@@ -12,6 +13,7 @@ export default class Home extends PureComponent<any, IState> {
     this.state = {
       session: {}
     };
+    ipcRenderer.send('action', { data: 'sent_data' });
   }
 
   storeInSession = (type: string, data: any) => {
