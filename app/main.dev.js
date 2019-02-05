@@ -1,14 +1,3 @@
-/* eslint global-require: off */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `yarn build` or `yarn build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- *
- */
 import { app, BrowserWindow } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
@@ -17,6 +6,9 @@ const { ipcMain } = require('electron');
 
 // Mongo database
 const mongojs = require('mongojs');
+
+// Socket.io
+const io = require('socket.io')();
 
 // F1 telemetry client
 const F1TelemetryClient = require('f1-telemetry-client').default;
@@ -46,7 +38,10 @@ export default class AppUpdater {
 
 let mainWindow = null;
 
+io.listen(24500);
+
 if (process.env.NODE_ENV === 'production') {
+  // eslint-disable-next-line global-require
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
@@ -55,10 +50,12 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
+  // eslint-disable-next-line global-require
   require('electron-debug')();
 }
 
 const installExtensions = async () => {
+  // eslint-disable-next-line global-require
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS'];
@@ -68,10 +65,7 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
-/**
- * Add event listeners...
- */
-
+// Add event listeners
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
@@ -140,6 +134,42 @@ db.racedirector.find((err, docs) => {
 let isRecording = false;
 ipcMain.on(START_F1_CLIENT, () => !isRecording && startRecording());
 ipcMain.on(STOP_F1_CLIENT, () => isRecording && stopRecording());
+/*
+// Handle ipcMain message
+ipcMain.on('asynchronous-message', (event, arg) => {
+  event.sender.send('asynchronous-reply', 'pong')
+})
+*/
+
+// Communication with renderer
+io.on('connection', socket => {
+  console.log('Socket connection opened');
+  // Start listening to F1 client
+  client.start();
+  client.on(MOTION, data => registerClient(MOTION, db.motion, data, socket));
+  client.on(SESSION, data => registerClient(SESSION, db.session, data, socket));
+  client.on(LAP_DATA, data =>
+    registerClient(LAP_DATA, db.lapData, data, socket)
+  );
+  client.on(EVENT, data => registerClient(EVENT, db.event, data, socket));
+  client.on(PARTICIPANTS, data =>
+    registerClient(PARTICIPANTS, db.participants, data, socket)
+  );
+  client.on(CAR_SETUPS, data =>
+    registerClient(PARTICIPANTS, db.carSetups, data, socket)
+  );
+  client.on(CAR_TELEMETRY, data =>
+    registerClient(CAR_TELEMETRY, db.carTelemetry, data, socket)
+  );
+  client.on(CAR_STATUS, data =>
+    registerClient(CAR_STATUS, db.carStatus, data, socket)
+  );
+});
+
+const registerClient = (packet, collection, data, socket) => {
+  storeInCollection(collection, data);
+  socket.emit(packet, data);
+};
 
 const startRecording = () => {
   client.start();
@@ -150,16 +180,6 @@ const stopRecording = () => {
   client.stop();
   isRecording = false;
 };
-
-client.start();
-client.on(MOTION, data => storeInCollection(db.motion, data));
-client.on(SESSION, data => storeInCollection(db.session, data));
-client.on(LAP_DATA, data => storeInCollection(db.lapData, data));
-client.on(EVENT, data => storeInCollection(db.event, data));
-client.on(PARTICIPANTS, data => storeInCollection(db.participants, data));
-client.on(CAR_SETUPS, data => storeInCollection(db.carSetups, data));
-client.on(CAR_TELEMETRY, data => storeInCollection(db.carTelemetry, data));
-client.on(CAR_STATUS, data => storeInCollection(db.carStatus, data));
 
 const storeInCollection = (collection, data) => {
   isRecording && collection.insert(data);

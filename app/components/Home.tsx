@@ -3,8 +3,20 @@ import { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { find, map } from 'lodash';
 import { ipcRenderer } from 'electron';
+import openSocket from 'socket.io-client';
+import {
+  START_F1_CLIENT,
+  STOP_F1_CLIENT,
+  MOTION,
+  SESSION,
+  LAP_DATA,
+  EVENT,
+  PARTICIPANTS,
+  CAR_SETUPS,
+  CAR_TELEMETRY,
+  CAR_STATUS
+} from '../constants/f1client';
 import { ICarTelemetryData, ILapData, IState } from './types';
-import { START_F1_CLIENT, STOP_F1_CLIENT } from '../constants/f1client';
 
 // const styles = require('./Home.css');
 
@@ -14,7 +26,28 @@ export default class Home extends PureComponent<any, IState> {
     this.state = {
       session: {}
     };
+    this.openSocket();
   }
+
+  openSocket = () => {
+    /*
+    // Handle ipcRenderer message
+    ipcRenderer.send('asynchronous-message', 'ping');
+    ipcRenderer.on('asynchronous-reply', (event, arg) => {
+      console.log(arg); // prints "pong"
+    });
+    */
+
+    const socket = openSocket('http://localhost:24500');
+    socket.on(MOTION, e => console.log(e));
+    socket.on(SESSION, e => console.log(e));
+    socket.on(LAP_DATA, e => console.log(e));
+    socket.on(EVENT, e => console.log(e));
+    socket.on(PARTICIPANTS, e => console.log(e));
+    socket.on(CAR_SETUPS, e => console.log(e));
+    socket.on(CAR_TELEMETRY, e => console.log(e));
+    socket.on(CAR_STATUS, e => console.log(e));
+  };
 
   storeInSession = (type: string, data: any) => {
     const { session } = this.state;
