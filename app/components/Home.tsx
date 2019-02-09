@@ -24,7 +24,8 @@ export default class Home extends PureComponent<any, IState> {
   constructor(props) {
     super(props);
     this.state = {
-      session: {}
+      currentLapTimes: [],
+      currentPlayerSpeeds: []
     };
     this.openSocket();
   }
@@ -39,80 +40,47 @@ export default class Home extends PureComponent<any, IState> {
     */
 
     const socket = openSocket('http://localhost:24500');
-    socket.on(MOTION, e => console.log(e));
-    socket.on(SESSION, e => console.log(e));
-    socket.on(LAP_DATA, e => console.log(e));
-    socket.on(EVENT, e => console.log(e));
-    socket.on(PARTICIPANTS, e => console.log(e));
-    socket.on(CAR_SETUPS, e => console.log(e));
-    socket.on(CAR_TELEMETRY, e => console.log(e));
-    socket.on(CAR_STATUS, e => console.log(e));
-  };
-
-  storeInSession = (type: string, data: any) => {
-    const { session } = this.state;
-    if (!session[type]) {
-      session[type] = [];
-    }
-    session[type].push(data);
-    this.setState({ session }, () => console.log('Session update', session));
-  };
-
-  getPlayerTelemetry = (): ICarTelemetryData[] => {
-    const { session } = this.state;
-    if (!session || !session.CAR_TELEMETRY) {
-      return [];
-    }
-    const values = session.CAR_TELEMETRY.map(telemetry => {
-      const playerIndex = telemetry.m_header.m_playerCarIndex;
-      return telemetry.m_carTelemetryData[playerIndex];
+    socket.on(LAP_DATA, e => {
+      this.storeCurrentLapTime(e);
     });
-    return values;
-  };
-
-  getPlayerLapData = (): ILapData[] => {
-    const { session } = this.state;
-    if (!session || !session.LAP_DATA) {
-      return [];
-    }
-    const values = session.LAP_DATA.map(lapData => {
-      const playerIndex = lapData.m_header.m_playerCarIndex;
-      return lapData.m_lapData[playerIndex];
+    socket.on(CAR_TELEMETRY, e => {
+      this.storeCurrentPlayerSpeed(e);
     });
-    return values;
+    /*
+    socket.on(SESSION, e => this.storeInSession(SESSION, e));
+    socket.on(MOTION, e => this.storeInSession(MOTION, e));
+    socket.on(EVENT, e => this.storeInSession(EVENT, e));
+    socket.on(PARTICIPANTS, e => this.storeInSession(PARTICIPANTS, e));
+    socket.on(CAR_SETUPS, e => this.storeInSession(CAR_SETUPS, e));
+    socket.on(CAR_STATUS, e => this.storeInSession(CAR_STATUS, e));
+    */
   };
 
-  getPlayerCurrentLapTime = () =>
-    map(this.getPlayerLapData(), 'm_currentLapTime');
-
-  getPlayerSpeed = () => map(this.getPlayerTelemetry(), 'm_speed');
-
-  mergeValueWithCurrentLapTimes = values => {
-    const lapTimes = this.getPlayerCurrentLapTime();
-    const test = [];
-    for (let i = 0; i < lapTimes.length; i++) {
-      test.push({ x: lapTimes[i], y: values[i] });
-    }
-    return test;
+  // stores current lap time to state
+  storeCurrentLapTime = (lapTimePackage: LAP_DATA) => {
+    const playerIndex = lapTimePackage.m_header.m_playerCarIndex;
+    const currentTime = lapTimePackage.m_lapData[playerIndex].m_currentLapTime;
+    this.setState(prevState => ({
+      currentLapTimes: [...prevState.currentLapTimes, currentTime]
+    }));
   };
 
-  getPlayerParticipantData = () => {
-    // gets data from participants
-    const { session } = this.state;
-    if (!session || !session.PARTICIPANTS) {
-      return;
-    }
-    const participants = session.PARTICIPANTS.map(data => data.m_participants);
-    const playerParticipantData = participants.map(participantPacket =>
-      find(participantPacket, { m_aiControlled: 0 })
-    );
-    console.log(playerParticipantData);
+  storeCurrentPlayerSpeed = (carTelemetryPackage: CAR_TELEMETRY) => {
+    const playerIndex = carTelemetryPackage.m_header.m_playerCarIndex;
+    const currentPlayerSpeed =
+      carTelemetryPackage.m_carTelemetryData[playerIndex].m_speed;
+    this.setState(prevState => ({
+      currentPlayerSpeeds: [
+        ...prevState.currentPlayerSpeeds,
+        currentPlayerSpeed
+      ]
+    }));
   };
 
   handleSessionRestart = () => {
-    this.setState({ session: {} }, () => {
-      const { session } = this.state;
-      console.log('Session restarted', session);
+    this.setState({
+      currentLapTimes: [],
+      currentPlayerSpeeds: []
     });
   };
 
@@ -121,6 +89,7 @@ export default class Home extends PureComponent<any, IState> {
   handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
   getOption = () => {
+    const { currentLapTimes, currentPlayerSpeeds } = this.state;
     return {
       title: {
         text: 'Speed'
@@ -146,7 +115,7 @@ export default class Home extends PureComponent<any, IState> {
         {
           boundaryGap: false,
           silent: true,
-          data: this.getPlayerCurrentLapTime()
+          data: currentLapTimes
         }
       ],
       yAxis: [
@@ -169,7 +138,7 @@ export default class Home extends PureComponent<any, IState> {
           stack: 'l',
           large: true,
           areaStyle: { normal: {} },
-          data: this.getPlayerSpeed()
+          data: currentPlayerSpeeds
         }
       ]
     };

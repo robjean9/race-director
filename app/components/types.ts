@@ -5,7 +5,8 @@ export interface ISession {
 }
 
 export interface IState {
-  session: ISession;
+  currentLapTimes: Array<number>;
+  currentPlayerSpeeds: Array<number>;
 }
 
 interface IPacketLapData {

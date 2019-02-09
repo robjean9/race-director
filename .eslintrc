@@ -19,7 +19,7 @@
     "import/no-extraneous-dependencies": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "array-callback-return": "off",
-    "no-console": "off",
+    "no-unused-vars": "off",
     "arrow-body-style": "off",
     "no-unused-expressions": "off",
     "spaced-comment": "off",
