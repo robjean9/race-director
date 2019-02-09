@@ -5,8 +5,11 @@ export interface ISession {
 }
 
 export interface IState {
-  currentLapTimes: Array<number>;
-  currentPlayerSpeeds: Array<number>;
+  // lap x time
+  currentLapTimes: number[][];
+  // lap x speed
+  currentPlayerSpeeds: number[][];
+  currentLapNumber: number;
 }
 
 interface IPacketLapData {
