@@ -10,6 +10,7 @@ export interface IState {
   // lap x speed
   currentPlayerSpeeds: number[][];
   currentLapNumber: number;
+  sessionStarted: boolean;
 }
 
 interface IPacketLapData {

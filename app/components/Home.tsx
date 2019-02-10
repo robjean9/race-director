@@ -16,6 +16,8 @@ import {
   CAR_TELEMETRY,
   CAR_STATUS
 } from '../constants/f1client';
+import carTelemetryMock from './CarTelemetryMock';
+import lapDataMock from './LapDataMock';
 import { ICarTelemetryData, ILapData, IState } from './types';
 
 // const styles = require('./Home.css');
@@ -31,7 +33,8 @@ export default class Home extends PureComponent<any, IState> {
     this.state = {
       currentLapTimes: [[]],
       currentPlayerSpeeds: [[]],
-      currentLapNumber: 0
+      currentLapNumber: 0,
+      sessionStarted: false
     };
     this.openSocket();
   }
@@ -44,16 +47,33 @@ export default class Home extends PureComponent<any, IState> {
       console.log(arg); // prints "pong"
     });
     */
-
     const socket = openSocket('http://localhost:24500');
     socket.on(LAP_DATA, e => {
-      this.updateCurrentLapTime(e);
+      if (this.state.sessionStarted) {
+        this.updateCurrentLapTime(e);
+      }
     });
     socket.on(CAR_TELEMETRY, e => {
-      this.updateCurrentPlayerSpeed(e);
+      if (this.state.sessionStarted) {
+        this.updateCurrentPlayerSpeed(e);
+      }
     });
+    socket.on(SESSION, e => {
+      console.log('e.m_sessionTimeLeft', e.m_sessionTimeLeft);
+      console.log('e.m_sessionDuration', e.m_sessionDuration);
+      if (e.m_sessionTimeLeft < e.m_sessionDuration) {
+        this.setState({ sessionStarted: true });
+      }
+    });
+
     /*
-    socket.on(SESSION, e => this.storeInSession(SESSION, e));
+    // MOCK HELPER
+    setInterval(() => {
+      this.updateCurrentLapTime(lapDataMock);
+      this.updateCurrentPlayerSpeed(carTelemetryMock);
+    }, 1000);
+    */
+    /*
     socket.on(MOTION, e => this.storeInSession(MOTION, e));
     socket.on(EVENT, e => this.storeInSession(EVENT, e));
     socket.on(PARTICIPANTS, e => this.storeInSession(PARTICIPANTS, e));
@@ -67,17 +87,19 @@ export default class Home extends PureComponent<any, IState> {
     const playerIndex = lapTimePackage.m_header.m_playerCarIndex;
     const newLapNumber =
       lapTimePackage.m_lapData[playerIndex].m_currentLapNum - 1;
-    const currentTime = lapTimePackage.m_lapData[playerIndex].m_currentLapTime;
+    const currentTime = lapTimePackage.m_lapData[
+      playerIndex
+    ].m_currentLapTime.toFixed(3);
 
     this.setState(prevState => {
-      // add time to current lap
-      const currentLapTimes = prevState.currentLapTimes;
+      // add time to current lap, slices to rerender
+      const currentLapTimes = prevState.currentLapTimes.slice();
+      // creates a new lap
       if (!currentLapTimes[newLapNumber]) {
         currentLapTimes[newLapNumber] = [];
       }
+      // saves the data in the new lap
       currentLapTimes[newLapNumber].push(currentTime);
-
-      this.forceUpdate();
       // updates lap times and current lap
       return { currentLapTimes, currentLapNumber: newLapNumber };
     });
@@ -92,13 +114,14 @@ export default class Home extends PureComponent<any, IState> {
       carTelemetryPackage.m_carTelemetryData[playerIndex].m_speed;
 
     this.setState(prevState => {
-      // add time to current lap
-      const currentPlayerSpeeds = prevState.currentPlayerSpeeds;
+      // add time to current lap, slices to rerender
+      const currentPlayerSpeeds = prevState.currentPlayerSpeeds.slice();
+      // creates a new lap
       if (!currentPlayerSpeeds[currentLapNumber]) {
         currentPlayerSpeeds[currentLapNumber] = [];
       }
+      // saves the data in the new lap
       currentPlayerSpeeds[currentLapNumber].push(currentPlayerSpeed);
-      this.forceUpdate();
       return { currentPlayerSpeeds };
     });
   };
@@ -117,32 +140,23 @@ export default class Home extends PureComponent<any, IState> {
   getSpeedChart = () => {
     const { currentLapTimes, currentPlayerSpeeds } = this.state;
 
-    //console.log('Lap times', currentLapTimes);
-    //console.log('Player speeds', currentPlayerSpeeds);
-
     // converts to chartable data (adds echarts properties)
-    const xAxis = currentLapTimes.map(data => {
-      console.log('lap times', data);
-      return {
-        boundaryGap: false,
-        silent: true,
-        data
-      };
-    });
+    // maps by lap
+    const xAxis = currentLapTimes.map(data => ({
+      boundaryGap: false,
+      silent: true,
+      data
+    }));
 
-    const series = currentPlayerSpeeds.map(data => {
-      console.log('player speeds', data);
-      return {
-        name: 'Speed',
-        type: 'line',
-        smooth: true,
-        large: true,
-        data
-      };
-    });
-
-    console.log(xAxis);
-    console.log(series);
+    const series = currentPlayerSpeeds.map(data => ({
+      name: 'Speed',
+      smooth: true,
+      type: 'line',
+      large: true,
+      // for some reason if we dont copy the array then the chart does not render
+      data: data.slice()
+      //data
+    }));
 
     return {
       title: {
@@ -150,20 +164,6 @@ export default class Home extends PureComponent<any, IState> {
       },
       tooltip: {
         trigger: 'axis'
-        /*
-        formatter: function(params) {
-          params = params[0];
-          var date = new Date(params.name);
-          return (
-            date.getDate() +
-            "/" +
-            (date.getMonth() + 1) +
-            "/" +
-            date.getFullYear() +
-            " : " +
-            params.value[1]
-          );
-        }*/
       },
       // matrix here, one element per lap
       xAxis,
@@ -172,6 +172,7 @@ export default class Home extends PureComponent<any, IState> {
           type: 'value'
         }
       ],
+      series,
       dataZoom: [
         {
           type: 'inside'
@@ -179,13 +180,11 @@ export default class Home extends PureComponent<any, IState> {
         {
           type: 'slider'
         }
-      ],
-      series
+      ]
     };
   };
 
   render() {
-    console.log('rerenders');
     return (
       <div>
         <h2>Race Director v0.0.1</h2>
