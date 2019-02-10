@@ -7,13 +7,13 @@ import openSocket from 'socket.io-client';
 import {
   START_F1_CLIENT,
   STOP_F1_CLIENT,
-  MOTION,
   SESSION,
   LAP_DATA,
+  CAR_TELEMETRY,
+  MOTION,
   EVENT,
   PARTICIPANTS,
   CAR_SETUPS,
-  CAR_TELEMETRY,
   CAR_STATUS
 } from '../constants/f1client';
 import carTelemetryMock from './CarTelemetryMock';
@@ -31,8 +31,8 @@ export default class Home extends PureComponent<any, IState> {
     // [[10, 20, 40, 90, 130], [15, 25, 35, 85, 160], [5, 22, 33, 56, 20]]
 
     this.state = {
-      currentLapTimes: [[]],
-      currentPlayerSpeeds: [[]],
+      currentLapTimes: [[1.1, 2.1, 3.1, 4.1, 5.1], [1.2, 2.2, 3.2, 4.2, 5.2]],
+      currentPlayerSpeeds: [[10, 20, 40, 90, 130], [15, 25, 35, 85, 160]],
       currentLapNumber: 0,
       sessionStarted: false
     };
@@ -49,12 +49,14 @@ export default class Home extends PureComponent<any, IState> {
     */
     const socket = openSocket('http://localhost:24500');
     socket.on(LAP_DATA, e => {
-      if (this.state.sessionStarted) {
+      const { sessionStarted } = this.state;
+      if (sessionStarted) {
         this.updateCurrentLapTime(e);
       }
     });
     socket.on(CAR_TELEMETRY, e => {
-      if (this.state.sessionStarted) {
+      const { sessionStarted } = this.state;
+      if (sessionStarted) {
         this.updateCurrentPlayerSpeed(e);
       }
     });
@@ -148,8 +150,8 @@ export default class Home extends PureComponent<any, IState> {
       data
     }));
 
-    const series = currentPlayerSpeeds.map(data => ({
-      name: 'Speed',
+    const series = currentPlayerSpeeds.map((data, idx) => ({
+      name: `Lap ${idx + 1}`,
       smooth: true,
       type: 'line',
       large: true,
@@ -163,7 +165,17 @@ export default class Home extends PureComponent<any, IState> {
         text: 'Speed'
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          animation: false,
+          label: {
+            backgroundColor: '#505765'
+          }
+        }
+      },
+      legend: {
+        data: series.map(serie => serie.name)
       },
       // matrix here, one element per lap
       xAxis,
