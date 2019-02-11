@@ -9,11 +9,39 @@ export interface IState {
   currentLapTimes: number[][];
   // lap x speed
   currentPlayerSpeeds: number[][];
+  // world positions
+  currentWorldPositions: any[];
   currentLapNumber: number;
   sessionStarted: boolean;
 }
 
-interface IPacketLapData {
+export interface IPacketMotionData {
+  m_header: IPacketHeader;
+  m_carMotionData: IMotionData[];
+}
+
+export interface IMotionData {
+  m_worldPositionX: number;
+  m_worldPositionY: number;
+  m_worldPositionZ: number;
+  m_worldVelocityX: number;
+  m_worldVelocityY: number;
+  m_worldVelocityZ: number;
+  m_worldForwardDirX: number;
+  m_worldForwardDirY: number;
+  m_worldForwardDirZ: number;
+  m_worldRightDirX: number;
+  m_worldRightDirY: number;
+  m_worldRightDirZ: number;
+  m_gForceLateral: number;
+  m_gForceLongitudinal: number;
+  m_gForceVertical: number;
+  m_yaw: number;
+  m_pitch: number;
+  m_roll: number;
+}
+
+export interface IPacketLapData {
   m_header: IPacketHeader;
   m_lapData: ILapData[];
 }
@@ -43,7 +71,7 @@ interface IPacketParticipantsData {
   m_participants: IParticipantData[];
 }
 
-interface IPacketCarTelemetryData {
+export interface IPacketCarTelemetryData {
   m_header: IPacketHeader;
   m_buttonStatus: number;
   m_carTelemetryData: ICarTelemetryData[];

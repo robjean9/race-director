@@ -18,7 +18,14 @@ import {
 } from '../constants/f1client';
 import carTelemetryMock from './CarTelemetryMock';
 import lapDataMock from './LapDataMock';
-import { ICarTelemetryData, ILapData, IState } from './types';
+import RaceLine from './RaceLine';
+import {
+  IPacketCarTelemetryData,
+  IPacketLapData,
+  IPacketMotionData,
+  ILapData,
+  IState
+} from './types';
 
 // const styles = require('./Home.css');
 
@@ -31,8 +38,9 @@ export default class Home extends PureComponent<any, IState> {
     // [[10, 20, 40, 90, 130], [15, 25, 35, 85, 160], [5, 22, 33, 56, 20]]
 
     this.state = {
-      currentLapTimes: [[1.1, 2.1, 3.1, 4.1, 5.1], [1.2, 2.2, 3.2, 4.2, 5.2]],
-      currentPlayerSpeeds: [[10, 20, 40, 90, 130], [15, 25, 35, 85, 160]],
+      currentLapTimes: [[]],
+      currentPlayerSpeeds: [[]],
+      currentWorldPositions: [],
       currentLapNumber: 0,
       sessionStarted: false
     };
@@ -61,11 +69,12 @@ export default class Home extends PureComponent<any, IState> {
       }
     });
     socket.on(SESSION, e => {
-      console.log('e.m_sessionTimeLeft', e.m_sessionTimeLeft);
-      console.log('e.m_sessionDuration', e.m_sessionDuration);
       if (e.m_sessionTimeLeft < e.m_sessionDuration) {
         this.setState({ sessionStarted: true });
       }
+    });
+    socket.on(MOTION, e => {
+      this.updateTrack(e);
     });
 
     /*
@@ -76,7 +85,6 @@ export default class Home extends PureComponent<any, IState> {
     }, 1000);
     */
     /*
-    socket.on(MOTION, e => this.storeInSession(MOTION, e));
     socket.on(EVENT, e => this.storeInSession(EVENT, e));
     socket.on(PARTICIPANTS, e => this.storeInSession(PARTICIPANTS, e));
     socket.on(CAR_SETUPS, e => this.storeInSession(CAR_SETUPS, e));
@@ -84,14 +92,36 @@ export default class Home extends PureComponent<any, IState> {
     */
   };
 
+  //
+  updateTrack = (motionPackage: IPacketMotionData) => {
+    const playerIndex = motionPackage.m_header.m_playerCarIndex;
+    const posX = motionPackage.m_carMotionData[playerIndex].m_worldPositionX;
+    const posY = motionPackage.m_carMotionData[playerIndex].m_worldPositionZ;
+
+    this.setState(prevState => {
+      const { currentLapNumber } = this.state;
+      const currentWorldPositions = prevState.currentWorldPositions.slice();
+      // creates a new lap
+      if (!currentWorldPositions[currentLapNumber]) {
+        currentWorldPositions[currentLapNumber] = [];
+      }
+      // saves the data in the new lap
+      currentWorldPositions[currentLapNumber].push({
+        posX,
+        posY
+      });
+      return { currentWorldPositions };
+    });
+  };
+
   // stores current lap time to state
-  updateCurrentLapTime = (lapTimePackage: LAP_DATA) => {
+  updateCurrentLapTime = (lapTimePackage: IPacketLapData) => {
     const playerIndex = lapTimePackage.m_header.m_playerCarIndex;
     const newLapNumber =
       lapTimePackage.m_lapData[playerIndex].m_currentLapNum - 1;
-    const currentTime = lapTimePackage.m_lapData[
-      playerIndex
-    ].m_currentLapTime.toFixed(3);
+    const currentTime =
+      Math.round(lapTimePackage.m_lapData[playerIndex].m_currentLapTime * 1e3) /
+      1e3;
 
     this.setState(prevState => {
       // add time to current lap, slices to rerender
@@ -108,14 +138,13 @@ export default class Home extends PureComponent<any, IState> {
   };
 
   // stores current player speed to state
-  updateCurrentPlayerSpeed = (carTelemetryPackage: CAR_TELEMETRY) => {
-    const { currentLapNumber } = this.state;
-
+  updateCurrentPlayerSpeed = (carTelemetryPackage: IPacketCarTelemetryData) => {
     const playerIndex = carTelemetryPackage.m_header.m_playerCarIndex;
     const currentPlayerSpeed =
       carTelemetryPackage.m_carTelemetryData[playerIndex].m_speed;
 
     this.setState(prevState => {
+      const { currentLapNumber } = this.state;
       // add time to current lap, slices to rerender
       const currentPlayerSpeeds = prevState.currentPlayerSpeeds.slice();
       // creates a new lap
@@ -197,6 +226,7 @@ export default class Home extends PureComponent<any, IState> {
   };
 
   render() {
+    const { currentWorldPositions } = this.state;
     return (
       <div>
         <h2>Race Director v0.0.1</h2>
@@ -214,6 +244,7 @@ export default class Home extends PureComponent<any, IState> {
           style={{ height: '350px', width: '100%' }}
           className="react_for_echarts"
         />
+        <RaceLine worldPositions={currentWorldPositions} />
       </div>
     );
   }
