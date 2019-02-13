@@ -18,7 +18,7 @@ import {
 } from '../constants/f1client';
 import carTelemetryMock from './CarTelemetryMock';
 import lapDataMock from './LapDataMock';
-import RaceLine from './RaceLine';
+import RaceLine from './RaceLine/RaceLine';
 import {
   IPacketCarTelemetryData,
   IPacketLapData,
@@ -40,7 +40,7 @@ export default class Home extends PureComponent<any, IState> {
     this.state = {
       currentLapTimes: [[]],
       currentPlayerSpeeds: [[]],
-      currentWorldPositions: [],
+      currentWorldPosition: [],
       currentLapNumber: 0,
       sessionStarted: false
     };
@@ -95,23 +95,12 @@ export default class Home extends PureComponent<any, IState> {
   //
   updateTrack = (motionPackage: IPacketMotionData) => {
     const playerIndex = motionPackage.m_header.m_playerCarIndex;
-    const posX = motionPackage.m_carMotionData[playerIndex].m_worldPositionX;
-    const posY = motionPackage.m_carMotionData[playerIndex].m_worldPositionZ;
+    const posX =
+      motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 5 + 300;
+    const posY =
+      motionPackage.m_carMotionData[playerIndex].m_worldPositionZ / 5 + 300;
 
-    this.setState(prevState => {
-      const { currentLapNumber } = this.state;
-      const currentWorldPositions = prevState.currentWorldPositions.slice();
-      // creates a new lap
-      if (!currentWorldPositions[currentLapNumber]) {
-        currentWorldPositions[currentLapNumber] = [];
-      }
-      // saves the data in the new lap
-      currentWorldPositions[currentLapNumber].push({
-        posX,
-        posY
-      });
-      return { currentWorldPositions };
-    });
+    this.setState({ currentWorldPosition: [posX, posY] });
   };
 
   // stores current lap time to state
@@ -226,7 +215,7 @@ export default class Home extends PureComponent<any, IState> {
   };
 
   render() {
-    const { currentWorldPositions } = this.state;
+    const { currentWorldPosition } = this.state;
     return (
       <div>
         <h2>Race Director v0.0.1</h2>
@@ -244,7 +233,7 @@ export default class Home extends PureComponent<any, IState> {
           style={{ height: '350px', width: '100%' }}
           className="react_for_echarts"
         />
-        <RaceLine worldPositions={currentWorldPositions} />
+        <RaceLine worldPosition={currentWorldPosition} />
       </div>
     );
   }
