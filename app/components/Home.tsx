@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
-import { find, map } from 'lodash';
 import { ipcRenderer } from 'electron';
 import openSocket from 'socket.io-client';
 import {
@@ -16,9 +15,7 @@ import {
   CAR_SETUPS,
   CAR_STATUS
 } from '../constants/f1client';
-import carTelemetryMock from './CarTelemetryMock';
-import lapDataMock from './LapDataMock';
-import RaceLine from './RaceLine/RaceLine';
+import Track from './Track/Track';
 import {
   IPacketCarTelemetryData,
   IPacketLapData,
@@ -40,7 +37,7 @@ export default class Home extends PureComponent<any, IState> {
     this.state = {
       currentLapTimes: [[]],
       currentPlayerSpeeds: [[]],
-      currentWorldPosition: [],
+      currentWorldPosition: { x: 0, y: 0 },
       currentLapNumber: 0,
       sessionStarted: false
     };
@@ -95,12 +92,12 @@ export default class Home extends PureComponent<any, IState> {
   //
   updateTrack = (motionPackage: IPacketMotionData) => {
     const playerIndex = motionPackage.m_header.m_playerCarIndex;
-    const posX =
-      motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 5 + 300;
-    const posY =
-      motionPackage.m_carMotionData[playerIndex].m_worldPositionZ / 5 + 300;
+    const x =
+      motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 10 + 100;
+    const y =
+      motionPackage.m_carMotionData[playerIndex].m_worldPositionZ / 10 + 100;
 
-    this.setState({ currentWorldPosition: [posX, posY] });
+    this.setState({ currentWorldPosition: { x, y } });
   };
 
   // stores current lap time to state
@@ -233,7 +230,7 @@ export default class Home extends PureComponent<any, IState> {
           style={{ height: '350px', width: '100%' }}
           className="react_for_echarts"
         />
-        <RaceLine worldPosition={currentWorldPosition} />
+        <Track worldPosition={currentWorldPosition} />
       </div>
     );
   }

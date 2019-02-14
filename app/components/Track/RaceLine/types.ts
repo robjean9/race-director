@@ -3,7 +3,3 @@ export interface IState {
   context: any;
   mode: any;
 }
-
-export interface IProps {
-  worldPosition: number[];
-}

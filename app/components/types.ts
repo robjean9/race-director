@@ -10,7 +10,7 @@ export interface IState {
   // lap x speed
   currentPlayerSpeeds: number[][];
   // world positions
-  currentWorldPosition: number[];
+  currentWorldPosition: any;
   currentLapNumber: number;
   sessionStarted: boolean;
 }
