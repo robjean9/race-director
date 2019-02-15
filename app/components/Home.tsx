@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import ReactEcharts from 'echarts-for-react';
 import { ipcRenderer } from 'electron';
+import ReactEcharts from 'echarts-for-react';
 import openSocket from 'socket.io-client';
+import Track from './Track';
 import {
   START_F1_CLIENT,
   STOP_F1_CLIENT,
@@ -15,7 +16,6 @@ import {
   CAR_SETUPS,
   CAR_STATUS
 } from '../constants/f1client';
-import Track from './Track/Track';
 import {
   IPacketCarTelemetryData,
   IPacketLapData,
@@ -26,32 +26,23 @@ import {
 
 // const styles = require('./Home.css');
 
+const initialState: IState = {
+  currentLapTimes: [[]],
+  currentPlayerSpeeds: [[]],
+  currentWorldPosition: { x: 0, y: 0 },
+  currentLapNumber: 0,
+  sessionStarted: false,
+  currentTrackId: 0
+};
+
 export default class Home extends PureComponent<any, IState> {
   constructor(props) {
     super(props);
-
-    // test values:
-    // [[1.1, 2.1, 3.1, 4.1, 5.1], [1.2, 2.2, 3.2, 4.2, 5.2], [1.3, 2.3, 3.3, 4.3, 5.3]]
-    // [[10, 20, 40, 90, 130], [15, 25, 35, 85, 160], [5, 22, 33, 56, 20]]
-
-    this.state = {
-      currentLapTimes: [[]],
-      currentPlayerSpeeds: [[]],
-      currentWorldPosition: { x: 0, y: 0 },
-      currentLapNumber: 0,
-      sessionStarted: false
-    };
+    this.state = initialState;
     this.openSocket();
   }
 
   openSocket = () => {
-    /*
-    // Handle ipcRenderer message
-    ipcRenderer.send('asynchronous-message', 'ping');
-    ipcRenderer.on('asynchronous-reply', (event, arg) => {
-      console.log(arg); // prints "pong"
-    });
-    */
     const socket = openSocket('http://localhost:24500');
     socket.on(LAP_DATA, e => {
       const { sessionStarted } = this.state;
@@ -69,6 +60,7 @@ export default class Home extends PureComponent<any, IState> {
       if (e.m_sessionTimeLeft < e.m_sessionDuration) {
         this.setState({ sessionStarted: true });
       }
+      this.setState({ currentTrackId: e.m_trackId });
     });
     socket.on(MOTION, e => {
       this.updateTrack(e);
@@ -81,21 +73,16 @@ export default class Home extends PureComponent<any, IState> {
       this.updateCurrentPlayerSpeed(carTelemetryMock);
     }, 1000);
     */
-    /*
-    socket.on(EVENT, e => this.storeInSession(EVENT, e));
-    socket.on(PARTICIPANTS, e => this.storeInSession(PARTICIPANTS, e));
-    socket.on(CAR_SETUPS, e => this.storeInSession(CAR_SETUPS, e));
-    socket.on(CAR_STATUS, e => this.storeInSession(CAR_STATUS, e));
-    */
   };
 
-  //
+  // Update track position
   updateTrack = (motionPackage: IPacketMotionData) => {
     const playerIndex = motionPackage.m_header.m_playerCarIndex;
+    // Note: this transformation only works for barcelona
     const x =
-      motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 10 + 100;
+      motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 4 + 175;
     const y =
-      motionPackage.m_carMotionData[playerIndex].m_worldPositionZ / 10 + 100;
+      motionPackage.m_carMotionData[playerIndex].m_worldPositionZ / 4 + 175;
 
     this.setState({ currentWorldPosition: { x, y } });
   };
@@ -143,12 +130,8 @@ export default class Home extends PureComponent<any, IState> {
     });
   };
 
-  handleSessionRestart = () => {
-    this.setState({
-      currentLapTimes: [],
-      currentPlayerSpeeds: []
-    });
-  };
+  // resets state
+  handleSessionRestart = () => this.setState(initialState);
 
   handleStartRecording = () => ipcRenderer.send(START_F1_CLIENT);
 
@@ -212,7 +195,7 @@ export default class Home extends PureComponent<any, IState> {
   };
 
   render() {
-    const { currentWorldPosition } = this.state;
+    const { currentTrackId, currentWorldPosition } = this.state;
     return (
       <div>
         <h2>Race Director v0.0.1</h2>
@@ -230,7 +213,7 @@ export default class Home extends PureComponent<any, IState> {
           style={{ height: '350px', width: '100%' }}
           className="react_for_echarts"
         />
-        <Track worldPosition={currentWorldPosition} />
+        <Track trackId={currentTrackId} worldPosition={currentWorldPosition} />
       </div>
     );
   }

@@ -1,38 +1,27 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { Image } from 'react-konva';
-import { IState } from './types';
+import { IProps, IState, ICoordinate } from './types';
 
-export default class RaceLine extends PureComponent<any, IState> {
+export default class RaceLine extends PureComponent<IProps, IState> {
   image;
   lastPointerPosition;
 
   constructor(props) {
     super(props);
 
+    const { width, height } = this.props;
+
     const canvas = document.createElement('canvas');
-    canvas.width = 300;
-    canvas.height = 300;
+    canvas.width = width;
+    canvas.height = height;
     const context = canvas.getContext('2d');
 
-    //this.lastPointerPosition = { x: 0, y: 0 };
-    this.state = { canvas, context, mode: undefined };
-
-    //this.setState({ canvas, context });
+    this.state = { canvas, context };
   }
 
-  /*
-  componentDidMount() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 300;
-    canvas.height = 300;
-    const context = canvas.getContext('2d');
-    this.setState({ canvas, context });
-  }
-  */
-
-  drawToCoordinate = coordinate => {
-    const { context, mode } = this.state;
+  drawToCoordinate = (coordinate: ICoordinate) => {
+    const { context } = this.state;
 
     if (!this.image) {
       return;
@@ -44,14 +33,9 @@ export default class RaceLine extends PureComponent<any, IState> {
 
     // TODO: Don't always get a new context
     context.strokeStyle = '#000000';
-    //context.lineJoin = 'round';
+    context.lineJoin = 'round';
     context.lineWidth = 2;
-
-    if (mode === 'brush') {
-      context.globalCompositeOperation = 'source-over';
-    } else if (mode === 'eraser') {
-      context.globalCompositeOperation = 'destination-out';
-    }
+    context.globalCompositeOperation = 'source-over';
     context.beginPath();
 
     var localPos = {
@@ -60,9 +44,6 @@ export default class RaceLine extends PureComponent<any, IState> {
     };
     context.moveTo(localPos.x, localPos.y);
 
-    // TODO: improve
-    //const stage = this.image.parent.parent;
-    //var pos = stage.getPointerPosition();
     localPos = {
       x: coordinate.x - this.image.x(),
       y: coordinate.y - this.image.y()
@@ -70,20 +51,23 @@ export default class RaceLine extends PureComponent<any, IState> {
     context.lineTo(localPos.x, localPos.y);
     context.closePath();
     context.stroke();
+
     this.lastPointerPosition = coordinate;
     this.image.getLayer().draw();
   };
 
   render() {
-    const { worldPosition } = this.props;
+    const { worldPosition, width, height } = this.props;
     const { canvas } = this.state;
+
     this.drawToCoordinate(worldPosition);
+
     return (
       <Image
         image={canvas}
         ref={node => (this.image = node)}
-        width={500}
-        height={500}
+        width={width}
+        height={height}
         stroke="blue"
       />
     );

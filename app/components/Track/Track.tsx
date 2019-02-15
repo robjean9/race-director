@@ -2,58 +2,36 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import { Stage, Layer } from 'react-konva';
 import { IProps } from './types';
-import RaceLine from './RaceLine/RaceLine';
+import { TRACKS } from '../../constants/f1client';
+import RaceLine from './RaceLine';
 
-export default class Track extends PureComponent<IProps, any> {
+const WIDTH = 350;
+const HEIGHT = 350;
+
+export default class Track extends PureComponent<IProps, undefined> {
   render() {
-    const { worldPosition } = this.props;
+    const { trackId, worldPosition } = this.props;
+
+    console.log(TRACKS[trackId]);
+
     return (
-      <Stage width={1500} height={1500} style={{ border: '1px red solid' }}>
+      <Stage
+        width={WIDTH}
+        height={HEIGHT}
+        style={{
+          width: `${WIDTH}px`,
+          height: `${HEIGHT}px`,
+          border: '1px red solid'
+        }}
+      >
         <Layer>
-          <RaceLine worldPosition={worldPosition} />
+          <RaceLine
+            width={WIDTH}
+            height={HEIGHT}
+            worldPosition={worldPosition}
+          />
         </Layer>
       </Stage>
     );
   }
 }
-
-/*
-export default class MyRect extends PureComponent<any, any> {
-  lastWorldPosition: number[];
-
-  drawRaceLine = () => {
-    const { worldPosition } = this.props;
-    return (
-      <Shape
-        fill="#00D2FF"
-        draggable
-        sceneFunc={(context, shape) => {
-          //context.strokeStyle = '#df4b26';
-          //context.lineJoin = 'round';
-          //context.lineWidth = 5;
-
-          shape.globalCompositeOperation('source-over');
-
-          context.beginPath();
-          if (this.lastWorldPosition) {
-            context.moveTo(0, 0);
-          }
-          context.lineTo(worldPosition[0], worldPosition[1]);
-          context.closePath();
-          context.stroke();
-
-          this.lastWorldPosition = worldPosition;
-        }}
-      />
-    );
-  };
-
-  render() {
-    return (
-      <Stage width={300} height={500} style={{ border: '1px red solid' }}>
-        <Layer>{this.drawRaceLine()}</Layer>
-      </Stage>
-    );
-  }
-}
-*/

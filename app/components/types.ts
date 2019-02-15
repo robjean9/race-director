@@ -1,8 +1,4 @@
-export interface ISession {
-  PARTICIPANTS?: IPacketParticipantsData[];
-  CAR_TELEMETRY?: IPacketCarTelemetryData[];
-  LAP_DATA?: IPacketLapData[];
-}
+import { ICoordinate } from './Track/RaceLine/types';
 
 export interface IState {
   // lap x time
@@ -10,9 +6,17 @@ export interface IState {
   // lap x speed
   currentPlayerSpeeds: number[][];
   // world positions
-  currentWorldPosition: any;
+  currentWorldPosition: ICoordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
+  currentTrackId: number;
+}
+
+// TODO: Move typings to f1-telemetry-client
+export interface ISession {
+  PARTICIPANTS?: IPacketParticipantsData[];
+  CAR_TELEMETRY?: IPacketCarTelemetryData[];
+  LAP_DATA?: IPacketLapData[];
 }
 
 export interface IPacketMotionData {
