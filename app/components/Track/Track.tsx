@@ -12,7 +12,9 @@ export default class Track extends PureComponent<IProps, undefined> {
   render() {
     const { trackId, worldPosition } = this.props;
 
-    console.log(TRACKS[trackId]);
+    if (trackId !== undefined) {
+      console.log(TRACKS[trackId]);
+    }
 
     return (
       <Stage

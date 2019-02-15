@@ -32,7 +32,7 @@ const initialState: IState = {
   currentWorldPosition: { x: 0, y: 0 },
   currentLapNumber: 0,
   sessionStarted: false,
-  currentTrackId: 0
+  currentTrackId: undefined
 };
 
 export default class Home extends PureComponent<any, IState> {
