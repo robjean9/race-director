@@ -1,8 +1,9 @@
-// TODO: move this and typings to f1-telemetry-client
+// TODO move this and typings to f1-telemetry-client
 
 export const MONGO_CONNECTION_STRING = 'mongodb://localhost:27017/racedirector';
 export const START_F1_CLIENT = 'startF1Client';
 export const STOP_F1_CLIENT = 'stopF1Client';
+
 export const MOTION = 'MOTION';
 export const SESSION = 'SESSION';
 export const LAP_DATA = 'LAP_DATA';
@@ -38,30 +39,77 @@ export const SILVERSTONE_SHORT = 'Silverstone (Short)';
 export const TEXAS_SHORT = 'Texas (Short)';
 export const SUZUKA_SHORT = 'Suzuka (Short)';
 
-export const TRACKS = {
-  0: MELBOURNE,
-  1: PAUL_RICARD,
-  2: SHANGHAI,
-  3: SAKHIR,
-  4: CATALUNYA,
-  5: MONACO,
-  6: MONTREAL,
-  7: SILVERSTONE,
-  8: HOCKENHEIM,
-  9: HUNGARORING,
-  10: SPA,
-  11: MONZA,
-  12: SINGAPORE,
-  13: SUZUKA,
-  14: ABU_DHABI,
-  15: TEXAS,
-  16: BRAZIL,
-  17: AUSTRIA,
-  18: SOCHI,
-  19: MEXICO,
-  20: BAKU,
-  21: SAKHIR_SHORT,
-  22: SILVERSTONE_SHORT,
-  23: TEXAS_SHORT,
-  24: SUZUKA_SHORT
+export const TRACKS = [
+  MELBOURNE,
+  PAUL_RICARD,
+  SHANGHAI,
+  SAKHIR,
+  CATALUNYA,
+  MONACO,
+  MONTREAL,
+  SILVERSTONE,
+  HOCKENHEIM,
+  HUNGARORING,
+  SPA,
+  MONZA,
+  SINGAPORE,
+  SUZUKA,
+  ABU_DHABI,
+  TEXAS,
+  BRAZIL,
+  AUSTRIA,
+  SOCHI,
+  MEXICO,
+  BAKU,
+  SAKHIR_SHORT,
+  SILVERSTONE_SHORT,
+  TEXAS_SHORT,
+  SUZUKA_SHORT
+];
+
+export const createDriverObject = (abbr, firstName, lastName) => ({
+  abbr,
+  firstName,
+  lastName
+});
+
+// improve this
+export const DRIVERS = {
+  0: createDriverObject('SAI', 'Carlos', 'Sainz'),
+  2: createDriverObject('RIC', 'Daniel', 'Ricciardo'),
+  3: createDriverObject('ALO', 'Fernando', 'Alonso'),
+  6: createDriverObject('RAI', 'Kimi', 'Raikonen'),
+  7: createDriverObject('HAM', 'Lewis', 'Hamilton'),
+  8: createDriverObject('ERI', 'Marcus', 'Ericsson'),
+  9: createDriverObject('VER', 'Max', 'Verstappen'),
+  10: createDriverObject('HUL', 'Nico', 'Hulkenburg'),
+  11: createDriverObject('MAG', 'Kevin', 'Magnusson'),
+  12: createDriverObject('GRO', 'Roman', 'Grosjean'),
+  13: createDriverObject('VET', 'Sebastien', 'Vettel'),
+  14: createDriverObject('PER', 'Sergio', 'Perez'),
+  15: createDriverObject('BOT', 'Valterie', 'Bottas'),
+  17: createDriverObject('OCO', 'Esteban', 'Ocon'),
+  18: createDriverObject('VAN', 'Stoffel', 'Vandorne'),
+  19: createDriverObject('STR', 'Lance', 'Stroll'),
+  20: createDriverObject('BAR', 'Arron', 'Barnes'),
+  21: createDriverObject('GIL', 'Martin', 'Giles'),
+  22: createDriverObject('MUR', 'Alex', 'Murray'),
+  23: createDriverObject('ROT', 'Lucas', 'Roth'),
+  24: createDriverObject('COR', 'Igor', 'Correia'),
+  25: createDriverObject('LEV', 'Sophie', 'Levasseur'),
+  26: createDriverObject('SCH', 'Jonas', 'Schiffer'),
+  27: createDriverObject('FOR', 'Alain', 'Forest'),
+  28: createDriverObject('LET', 'Jay', 'Letorneau'),
+  29: createDriverObject('SAA', 'Esto', 'Saari'),
+  30: createDriverObject('ATI', 'Yasar', 'Atiyeh'),
+  31: createDriverObject('CAL', 'Callisto', 'Calabresi'),
+  32: createDriverObject('IZU', 'Naota', 'Izum'),
+  33: createDriverObject('CLA', 'Howard', 'Clarke'),
+  34: createDriverObject('KAU', 'Wilheim', 'Kaufmann'),
+  35: createDriverObject('LAU', 'Marie', 'Laursen'),
+  36: createDriverObject('NIE', 'Flavio', 'Nieves'),
+  58: createDriverObject('LEC', 'Charles', 'Leclerc'),
+  59: createDriverObject('GAS', 'Pierre', 'Gasly'),
+  60: createDriverObject('HAR', 'Brendon', 'Hatley'),
+  61: createDriverObject('SIR', 'Sergey', 'Sirotkin')
 };

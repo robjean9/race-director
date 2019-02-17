@@ -1,5 +1,11 @@
 import { ICoordinate } from './Track/RaceLine/types';
 
+export interface IDriver {
+  firstName: string;
+  lastName: string;
+  abbreviation: string;
+}
+
 export interface IState {
   // lap x time
   currentLapTimes: number[][];
@@ -10,6 +16,7 @@ export interface IState {
   currentLapNumber: number;
   sessionStarted: boolean;
   currentTrackId: number;
+  currentParticipants: any[];
 }
 
 // TODO: Move typings to f1-telemetry-client
@@ -70,7 +77,8 @@ export interface ILapData {
   m_resultStatus: number;
 }
 
-interface IPacketParticipantsData {
+export interface IPacketParticipantsData {
+  m_header: IPacketHeader;
   m_numCars: number;
   m_participants: IParticipantData[];
 }

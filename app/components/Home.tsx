@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { ipcRenderer } from 'electron';
-import ReactEcharts from 'echarts-for-react';
 import openSocket from 'socket.io-client';
 import Track from './Track';
 import {
@@ -9,26 +8,28 @@ import {
   STOP_F1_CLIENT,
   SESSION,
   LAP_DATA,
+  PARTICIPANTS,
   CAR_TELEMETRY,
   MOTION,
-  EVENT,
-  PARTICIPANTS,
-  CAR_SETUPS,
-  CAR_STATUS
+  DRIVERS,
+  createDriverObject
 } from '../constants/f1client';
 import {
   IPacketCarTelemetryData,
   IPacketLapData,
   IPacketMotionData,
-  ILapData,
-  IState
+  IState,
+  IPacketParticipantsData
 } from './types';
+import SpeedChart from './SpeedChart';
+import RacerPanel from './RacerPanel/RacerPanel';
 
-// const styles = require('./Home.css');
+const styles = require('./Home.css');
 
 const initialState: IState = {
   currentLapTimes: [[]],
   currentPlayerSpeeds: [[]],
+  currentParticipants: [],
   currentWorldPosition: { x: 0, y: 0 },
   currentLapNumber: 0,
   sessionStarted: false,
@@ -65,20 +66,28 @@ export default class Home extends PureComponent<any, IState> {
     socket.on(MOTION, e => {
       this.updateTrack(e);
     });
+    socket.on(PARTICIPANTS, e => {
+      this.updateParticipants(e);
+    });
+  };
 
-    /*
-    // MOCK HELPER
-    setInterval(() => {
-      this.updateCurrentLapTime(lapDataMock);
-      this.updateCurrentPlayerSpeed(carTelemetryMock);
-    }, 1000);
-    */
+  // stores current participants data to state
+  updateParticipants = (participantsPackage: IPacketParticipantsData) => {
+    const participantList = participantsPackage.m_participants;
+    if (participantList.length === 0) {
+      return;
+    }
+    const currentParticipants = participantList.map(participant => {
+      const driver = DRIVERS[participant.m_driverId];
+      return driver || createDriverObject('', '', '');
+    });
+    this.setState({ currentParticipants });
   };
 
   // Update track position
   updateTrack = (motionPackage: IPacketMotionData) => {
     const playerIndex = motionPackage.m_header.m_playerCarIndex;
-    // Note: this transformation only works for barcelona
+    // Note: this transformation only works for Catalunya
     const x =
       motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 4 + 175;
     const y =
@@ -137,68 +146,16 @@ export default class Home extends PureComponent<any, IState> {
 
   handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
-  getSpeedChart = () => {
-    const { currentLapTimes, currentPlayerSpeeds } = this.state;
-
-    // converts to chartable data (adds echarts properties)
-    // maps by lap
-    const xAxis = currentLapTimes.map(data => ({
-      boundaryGap: false,
-      silent: true,
-      data
-    }));
-
-    const series = currentPlayerSpeeds.map((data, idx) => ({
-      name: `Lap ${idx + 1}`,
-      smooth: true,
-      type: 'line',
-      large: true,
-      // for some reason if we dont copy the array then the chart does not render
-      data: data.slice()
-      //data
-    }));
-
-    return {
-      title: {
-        text: 'Speed'
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          animation: false,
-          label: {
-            backgroundColor: '#505765'
-          }
-        }
-      },
-      legend: {
-        data: series.map(serie => serie.name)
-      },
-      // matrix here, one element per lap
-      xAxis,
-      yAxis: [
-        {
-          type: 'value'
-        }
-      ],
-      series,
-      dataZoom: [
-        {
-          type: 'inside'
-        },
-        {
-          type: 'slider'
-        }
-      ]
-    };
-  };
-
   render() {
-    const { currentTrackId, currentWorldPosition } = this.state;
+    const {
+      currentTrackId,
+      currentWorldPosition,
+      currentLapTimes,
+      currentPlayerSpeeds,
+      currentParticipants
+    } = this.state;
     return (
       <div>
-        <h2>Race Director v0.0.1</h2>
         <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>
@@ -208,12 +165,17 @@ export default class Home extends PureComponent<any, IState> {
         <button type="button" onClick={this.handleSessionRestart}>
           Restart Session
         </button>
-        <ReactEcharts
-          option={this.getSpeedChart()}
-          style={{ height: '350px', width: '100%' }}
-          className="react_for_echarts"
-        />
-        <Track trackId={currentTrackId} worldPosition={currentWorldPosition} />
+        <div className={styles.telemetryPanels}>
+          <RacerPanel currentParticipants={currentParticipants} />
+          <SpeedChart
+            currentLapTimes={currentLapTimes}
+            currentPlayerSpeeds={currentPlayerSpeeds}
+          />
+          <Track
+            trackId={currentTrackId}
+            worldPosition={currentWorldPosition}
+          />
+        </div>
       </div>
     );
   }

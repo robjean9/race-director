@@ -32,7 +32,7 @@ export default class RaceLine extends PureComponent<IProps, IState> {
     }
 
     // TODO: Don't always get a new context
-    context.strokeStyle = '#000000';
+    context.strokeStyle = '#ffffff';
     context.lineJoin = 'round';
     context.lineWidth = 2;
     context.globalCompositeOperation = 'source-over';
@@ -68,7 +68,6 @@ export default class RaceLine extends PureComponent<IProps, IState> {
         ref={node => (this.image = node)}
         width={width}
         height={height}
-        stroke="blue"
       />
     );
   }

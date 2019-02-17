@@ -2,7 +2,6 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import { Stage, Layer } from 'react-konva';
 import { IProps } from './types';
-import { TRACKS } from '../../constants/f1client';
 import RaceLine from './RaceLine';
 
 const WIDTH = 350;
@@ -12,9 +11,11 @@ export default class Track extends PureComponent<IProps, undefined> {
   render() {
     const { trackId, worldPosition } = this.props;
 
+    /*
     if (trackId !== undefined) {
       console.log(TRACKS[trackId]);
     }
+    */
 
     return (
       <Stage
@@ -23,7 +24,7 @@ export default class Track extends PureComponent<IProps, undefined> {
         style={{
           width: `${WIDTH}px`,
           height: `${HEIGHT}px`,
-          border: '1px red solid'
+          border: '1px black solid'
         }}
       >
         <Layer>
