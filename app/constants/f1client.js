@@ -39,6 +39,27 @@ export const SILVERSTONE_SHORT = 'Silverstone (Short)';
 export const TEXAS_SHORT = 'Texas (Short)';
 export const SUZUKA_SHORT = 'Suzuka (Short)';
 
+const MERCEDES = "Mercedes";
+const FERRARI = "Ferrari";
+const RED_BULL = "Red Bull";
+const WILLIAMS = "Williams";
+const FORCE_INDIA = "Force India";
+const RENAULT = "Renault";
+const TORO_ROSSO = "Toro Rosso";
+const HAAS = "Haas";
+const MCLAREN = "McLaren";
+const SAUBER = "Sauber";
+const MCLAREN_1988 = "McLaren 1988";
+const MCLAREN_1991 = "McLaren 1991";
+const WILLIAMS_1992 = "Williams 1992";
+const FERRARI_1995 = "Ferrari 1995";
+const WILLIAMS_1996 = "Williams 1996";
+const MCLAREN_1998 = "McLaren 1998";
+const FERRARI_2002 = "Ferrari 2002";
+const FERRARI_2004 = "Ferrari 2004";
+const RENAULT_2006 = "Renault 2006";
+const FERRARI_2007 = "Ferrari 2007";
+
 export const TRACKS = [
   MELBOURNE,
   PAUL_RICARD,
@@ -113,3 +134,26 @@ export const DRIVERS = {
   60: createDriverObject('HAR', 'Brendon', 'Hatley'),
   61: createDriverObject('SIR', 'Sergey', 'Sirotkin')
 };
+
+export const TEAMS = [
+  MERCEDES,
+  FERRARI,
+  RED_BULL,
+  WILLIAMS,
+  FORCE_INDIA,
+  RENAULT,
+  TORO_ROSSO,
+  HAAS,
+  MCLAREN,
+  SAUBER,
+  MCLAREN_1988,
+  MCLAREN_1991,
+  WILLIAMS_1992,
+  FERRARI_1995,
+  WILLIAMS_1996,
+  MCLAREN_1998,
+  FERRARI_2002,
+  FERRARI_2004,
+  RENAULT_2006,
+  FERRARI_2007
+]

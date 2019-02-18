@@ -19,7 +19,7 @@
 }
 
 .telemetryPanels {
-  background-color: grey;
+  background-color: #222328;
   display: flex;
   width: 100%;
   flex-direction: row;

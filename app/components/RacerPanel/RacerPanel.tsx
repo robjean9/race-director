@@ -6,15 +6,14 @@ const styles = require('./RacerPanel.css');
 export default class RacerPanel extends PureComponent<IProps, any> {
   renderNames = () => {
     const { currentParticipants } = this.props;
-    return currentParticipants.map(participant => participant.abbr);
+    return currentParticipants.map((participant, index) => (
+      <div key={index} className={styles.participantLabel}>
+        {participant.abbr}
+      </div>
+    ));
   };
 
   render() {
-    return (
-      <div className={styles.racerPanelWrapper}>
-        <span>Racer Panel</span>
-        {this.renderNames()}
-      </div>
-    );
+    return <div className={styles.racerPanelWrapper}>{this.renderNames()}</div>;
   }
 }

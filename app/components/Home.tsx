@@ -89,7 +89,14 @@ export default class Home extends PureComponent<any, IState> {
     }
     const currentParticipants = participantList.map(participant => {
       const driver = DRIVERS[participant.m_driverId];
-      return driver || createDriverObject('', '', '');
+      return (
+        driver ||
+        createDriverObject(
+          participant.m_name.substr(0, 3),
+          participant.m_name,
+          ''
+        )
+      );
     });
     this.setState({ currentParticipants });
   };
