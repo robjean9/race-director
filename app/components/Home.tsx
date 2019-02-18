@@ -21,6 +21,8 @@ import {
   IState,
   IPacketParticipantsData
 } from './types';
+
+import ParticipantsMock from '../../mocks/ParticipantsMock';
 import SpeedChart from './SpeedChart';
 import RacerPanel from './RacerPanel/RacerPanel';
 
@@ -40,10 +42,14 @@ export default class Home extends PureComponent<any, IState> {
   constructor(props) {
     super(props);
     this.state = initialState;
+  }
+
+  componentDidMount() {
     this.openSocket();
   }
 
   openSocket = () => {
+    /*
     const socket = openSocket('http://localhost:24500');
     socket.on(LAP_DATA, e => {
       const { sessionStarted } = this.state;
@@ -69,6 +75,10 @@ export default class Home extends PureComponent<any, IState> {
     socket.on(PARTICIPANTS, e => {
       this.updateParticipants(e);
     });
+    */
+
+    // participants mock
+    this.updateParticipants(ParticipantsMock);
   };
 
   // stores current participants data to state

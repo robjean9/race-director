@@ -1,3 +1,23 @@
+@font-face {
+  font-family: Formula1Bold;
+  src: url("../../resources/fonts/Formula1-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Formula1Black;
+  src: url("../../resources/fonts/Formula1-Black.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Formula1Regular;
+  src: url("../../resources/fonts/Formula1-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: Formula1Wide;
+  src: url("../../resources/fonts/Formula1-Wide.ttf") format("truetype");
+}
+
 .telemetryPanels {
   background-color: grey;
   display: flex;
