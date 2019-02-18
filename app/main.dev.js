@@ -1,8 +1,15 @@
-import { app, BrowserWindow } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import {
+  app,
+  BrowserWindow
+} from 'electron';
+import {
+  autoUpdater
+} from 'electron-updater';
 import log from 'electron-log';
 
-const { ipcMain } = require('electron');
+const {
+  ipcMain
+} = require('electron');
 
 // Mongo database
 const mongojs = require('mongojs');
@@ -156,7 +163,7 @@ io.on('connection', socket => {
     registerClient(PARTICIPANTS, db.participants, data, socket)
   );
   client.on(CAR_SETUPS, data =>
-    registerClient(PARTICIPANTS, db.carSetups, data, socket)
+    registerClient(CAR_SETUPS, db.carSetups, data, socket)
   );
   client.on(CAR_TELEMETRY, data =>
     registerClient(CAR_TELEMETRY, db.carTelemetry, data, socket)

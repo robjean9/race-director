@@ -1,41 +1,26 @@
-body {
-  position: relative;
-  color: white;
-  height: 100vh;
-  background-color: #232c39;
-  background-image: linear-gradient(
-    45deg,
-    rgba(0, 216, 255, 0.5) 10%,
-    rgba(0, 1, 127, 0.7)
-  );
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
-  overflow-y: hidden;
+@font-face {
+  font-family: Formula1Bold;
+  src: url("../../resources/fonts/Formula1-Bold.ttf") format("truetype");
 }
 
-h2 {
-  margin: 0;
-  font-size: 2.25rem;
-  font-weight: bold;
-  letter-spacing: -0.025em;
-  color: #fff;
+@font-face {
+  font-family: Formula1Black;
+  src: url("../../resources/fonts/Formula1-Black.ttf") format("truetype");
 }
 
-p {
-  font-size: 24px;
+@font-face {
+  font-family: Formula1Regular;
+  src: url("../../resources/fonts/Formula1-Regular.ttf") format("truetype");
 }
 
-li {
-  list-style: none;
+@font-face {
+  font-family: Formula1Wide;
+  src: url("../../resources/fonts/Formula1-Wide.ttf") format("truetype");
 }
 
-a {
-  color: white;
-  opacity: 0.75;
-  text-decoration: none;
-}
-
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-  cursor: pointer;
+.telemetryPanels {
+  background-color: #222328;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
 }

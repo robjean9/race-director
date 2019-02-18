@@ -1,7 +1,9 @@
-export interface ISession {
-  PARTICIPANTS?: IPacketParticipantsData[];
-  CAR_TELEMETRY?: IPacketCarTelemetryData[];
-  LAP_DATA?: IPacketLapData[];
+import { ICoordinate } from './Track/RaceLine/types';
+
+export interface IDriver {
+  firstName: string;
+  lastName: string;
+  abbreviation: string;
 }
 
 export interface IState {
@@ -9,11 +11,48 @@ export interface IState {
   currentLapTimes: number[][];
   // lap x speed
   currentPlayerSpeeds: number[][];
+  // world positions
+  currentWorldPosition: ICoordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
+  currentTrackId: number;
+  currentParticipants: any[];
 }
 
-interface IPacketLapData {
+// TODO: Move typings to f1-telemetry-client
+export interface ISession {
+  PARTICIPANTS?: IPacketParticipantsData[];
+  CAR_TELEMETRY?: IPacketCarTelemetryData[];
+  LAP_DATA?: IPacketLapData[];
+}
+
+export interface IPacketMotionData {
+  m_header: IPacketHeader;
+  m_carMotionData: IMotionData[];
+}
+
+export interface IMotionData {
+  m_worldPositionX: number;
+  m_worldPositionY: number;
+  m_worldPositionZ: number;
+  m_worldVelocityX: number;
+  m_worldVelocityY: number;
+  m_worldVelocityZ: number;
+  m_worldForwardDirX: number;
+  m_worldForwardDirY: number;
+  m_worldForwardDirZ: number;
+  m_worldRightDirX: number;
+  m_worldRightDirY: number;
+  m_worldRightDirZ: number;
+  m_gForceLateral: number;
+  m_gForceLongitudinal: number;
+  m_gForceVertical: number;
+  m_yaw: number;
+  m_pitch: number;
+  m_roll: number;
+}
+
+export interface IPacketLapData {
   m_header: IPacketHeader;
   m_lapData: ILapData[];
 }
@@ -38,12 +77,13 @@ export interface ILapData {
   m_resultStatus: number;
 }
 
-interface IPacketParticipantsData {
+export interface IPacketParticipantsData {
+  m_header: IPacketHeader;
   m_numCars: number;
   m_participants: IParticipantData[];
 }
 
-interface IPacketCarTelemetryData {
+export interface IPacketCarTelemetryData {
   m_header: IPacketHeader;
   m_buttonStatus: number;
   m_carTelemetryData: ICarTelemetryData[];
