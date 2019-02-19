@@ -6,14 +6,13 @@ import Track from './Track';
 import {
   START_F1_CLIENT,
   STOP_F1_CLIENT,
-  SESSION,
   LAP_DATA,
-  PARTICIPANTS,
   CAR_TELEMETRY,
+  SESSION,
   MOTION,
-  DRIVERS,
-  createDriverObject
+  PARTICIPANTS
 } from '../constants/f1client';
+import { DRIVERS, TEAMS } from '../constants/typings';
 import {
   IPacketCarTelemetryData,
   IPacketLapData,
@@ -21,10 +20,10 @@ import {
   IState,
   IPacketParticipantsData
 } from './types';
-
 import ParticipantsMock from '../../mocks/ParticipantsMock';
 import SpeedChart from './SpeedChart';
-import RacerPanel from './RacerPanel/RacerPanel';
+import ParticipantPanel from './ParticipantPanel';
+import { IParticipant } from './ParticipantPanel/types';
 
 const styles = require('./Home.css');
 
@@ -34,8 +33,9 @@ const initialState: IState = {
   currentParticipants: [],
   currentWorldPosition: { x: 0, y: 0 },
   currentLapNumber: 0,
-  sessionStarted: false,
-  currentTrackId: undefined
+  participantIndex: 0,
+  currentTrackId: undefined,
+  sessionStarted: false
 };
 
 export default class Home extends PureComponent<any, IState> {
@@ -49,7 +49,6 @@ export default class Home extends PureComponent<any, IState> {
   }
 
   openSocket = () => {
-    /*
     const socket = openSocket('http://localhost:24500');
     socket.on(LAP_DATA, e => {
       const { sessionStarted } = this.state;
@@ -75,10 +74,9 @@ export default class Home extends PureComponent<any, IState> {
     socket.on(PARTICIPANTS, e => {
       this.updateParticipants(e);
     });
-    */
 
     // participants mock
-    this.updateParticipants(ParticipantsMock);
+    //this.updateParticipants(ParticipantsMock);
   };
 
   // stores current participants data to state
@@ -87,40 +85,45 @@ export default class Home extends PureComponent<any, IState> {
     if (participantList.length === 0) {
       return;
     }
-    const currentParticipants = participantList.map(participant => {
-      const driver = DRIVERS[participant.m_driverId];
-      return (
-        driver ||
-        createDriverObject(
-          participant.m_name.substr(0, 3),
-          participant.m_name,
-          ''
-        )
-      );
-    });
+    const currentParticipants: IParticipant[] = participantList.map(
+      (participant, index) => {
+        // move this to Participant class constructor
+        const driver: IParticipant = DRIVERS[participant.m_driverId] || {
+          abbreviation: participant.m_name.substr(0, 3),
+          firstName: participant.m_name
+        };
+        driver.team = TEAMS[participant.m_teamId];
+        driver.index = index;
+
+        return driver;
+      }
+    );
     this.setState({ currentParticipants });
   };
 
   // Update track position
   updateTrack = (motionPackage: IPacketMotionData) => {
-    const playerIndex = motionPackage.m_header.m_playerCarIndex;
+    const { participantIndex } = this.state;
     // Note: this transformation only works for Catalunya
     const x =
-      motionPackage.m_carMotionData[playerIndex].m_worldPositionX / 4 + 175;
+      motionPackage.m_carMotionData[participantIndex].m_worldPositionX / 4 +
+      175;
     const y =
-      motionPackage.m_carMotionData[playerIndex].m_worldPositionZ / 4 + 175;
+      motionPackage.m_carMotionData[participantIndex].m_worldPositionZ / 4 +
+      175;
 
     this.setState({ currentWorldPosition: { x, y } });
   };
 
   // stores current lap time to state
   updateCurrentLapTime = (lapTimePackage: IPacketLapData) => {
-    const playerIndex = lapTimePackage.m_header.m_playerCarIndex;
+    const { participantIndex } = this.state;
     const newLapNumber =
-      lapTimePackage.m_lapData[playerIndex].m_currentLapNum - 1;
+      lapTimePackage.m_lapData[participantIndex].m_currentLapNum - 1;
     const currentTime =
-      Math.round(lapTimePackage.m_lapData[playerIndex].m_currentLapTime * 1e3) /
-      1e3;
+      Math.round(
+        lapTimePackage.m_lapData[participantIndex].m_currentLapTime * 1e3
+      ) / 1e3;
 
     this.setState(prevState => {
       // add time to current lap, slices to rerender
@@ -138,9 +141,9 @@ export default class Home extends PureComponent<any, IState> {
 
   // stores current player speed to state
   updateCurrentPlayerSpeed = (carTelemetryPackage: IPacketCarTelemetryData) => {
-    const playerIndex = carTelemetryPackage.m_header.m_playerCarIndex;
+    const { participantIndex } = this.state;
     const currentPlayerSpeed =
-      carTelemetryPackage.m_carTelemetryData[playerIndex].m_speed;
+      carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
 
     this.setState(prevState => {
       const { currentLapNumber } = this.state;
@@ -155,6 +158,9 @@ export default class Home extends PureComponent<any, IState> {
       return { currentPlayerSpeeds };
     });
   };
+
+  handleParticipantChange = (participant: IParticipant) =>
+    this.setState({ participantIndex: participant.index });
 
   // resets state
   handleSessionRestart = () => this.setState(initialState);
@@ -172,7 +178,7 @@ export default class Home extends PureComponent<any, IState> {
       currentParticipants
     } = this.state;
     return (
-      <div>
+      <div className={styles.homeWrapper}>
         <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>
@@ -183,7 +189,10 @@ export default class Home extends PureComponent<any, IState> {
           Restart Session
         </button>
         <div className={styles.telemetryPanels}>
-          <RacerPanel currentParticipants={currentParticipants} />
+          <ParticipantPanel
+            handleParticipantChange={this.handleParticipantChange}
+            currentParticipants={currentParticipants}
+          />
           <SpeedChart
             currentLapTimes={currentLapTimes}
             currentPlayerSpeeds={currentPlayerSpeeds}

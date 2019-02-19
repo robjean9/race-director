@@ -19,8 +19,12 @@
 }
 
 .telemetryPanels {
-  background-color: #222328;
+  background-color: #17171f;
   display: flex;
   width: 100%;
   flex-direction: row;
+}
+
+.homeWrapper {
+  background-color: #17171f;
 }

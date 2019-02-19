@@ -17,6 +17,7 @@ export interface IState {
   sessionStarted: boolean;
   currentTrackId: number;
   currentParticipants: any[];
+  participantIndex: number;
 }
 
 // TODO: Move typings to f1-telemetry-client
