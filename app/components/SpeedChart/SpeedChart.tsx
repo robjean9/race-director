@@ -24,9 +24,6 @@ export default class SpeedChart extends PureComponent<IProps, any> {
     }));
 
     return {
-      title: {
-        text: 'Speed'
-      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {

@@ -3,9 +3,10 @@ import { PureComponent } from 'react';
 import { Stage, Layer } from 'react-konva';
 import { IProps } from './types';
 import RaceLine from './RaceLine';
+import { ICoordinate } from './RaceLine/types';
 
-const WIDTH = 350;
-const HEIGHT = 350;
+const WIDTH = 400;
+const HEIGHT = 400;
 
 export default class Track extends PureComponent<IProps, undefined> {
   render() {
@@ -16,6 +17,11 @@ export default class Track extends PureComponent<IProps, undefined> {
       console.log(TRACKS[trackId]);
     }
     */
+
+    const centeredWorldPosition: ICoordinate = {
+      x: worldPosition.x + WIDTH / 2,
+      y: worldPosition.y + HEIGHT / 2
+    };
 
     return (
       <Stage
@@ -31,7 +37,7 @@ export default class Track extends PureComponent<IProps, undefined> {
           <RaceLine
             width={WIDTH}
             height={HEIGHT}
-            worldPosition={worldPosition}
+            worldPosition={centeredWorldPosition}
           />
         </Layer>
       </Stage>

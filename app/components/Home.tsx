@@ -30,8 +30,8 @@ const styles = require('./Home.css');
 const initialState: IState = {
   currentLapTimes: [[]],
   currentPlayerSpeeds: [[]],
-  currentParticipants: [],
   currentWorldPosition: { x: 0, y: 0 },
+  currentParticipants: [],
   currentLapNumber: 0,
   participantIndex: 0,
   currentTrackId: undefined,
@@ -106,11 +106,9 @@ export default class Home extends PureComponent<any, IState> {
     const { participantIndex } = this.state;
     // Note: this transformation only works for Catalunya
     const x =
-      motionPackage.m_carMotionData[participantIndex].m_worldPositionX / 4 +
-      175;
+      motionPackage.m_carMotionData[participantIndex].m_worldPositionX / 4;
     const y =
-      motionPackage.m_carMotionData[participantIndex].m_worldPositionZ / 4 +
-      175;
+      motionPackage.m_carMotionData[participantIndex].m_worldPositionZ / 4;
 
     this.setState({ currentWorldPosition: { x, y } });
   };
@@ -159,9 +157,14 @@ export default class Home extends PureComponent<any, IState> {
     });
   };
 
-  handleParticipantChange = (participant: IParticipant) =>
-    this.setState({ participantIndex: participant.index });
-
+  handleParticipantChange = (participant: IParticipant) => {
+    this.setState({
+      currentLapTimes: [[]],
+      currentPlayerSpeeds: [[]],
+      currentWorldPosition: { x: 0, y: 0 },
+      participantIndex: participant.index
+    });
+  };
   // resets state
   handleSessionRestart = () => this.setState(initialState);
 
@@ -193,10 +196,12 @@ export default class Home extends PureComponent<any, IState> {
             handleParticipantChange={this.handleParticipantChange}
             currentParticipants={currentParticipants}
           />
-          <SpeedChart
-            currentLapTimes={currentLapTimes}
-            currentPlayerSpeeds={currentPlayerSpeeds}
-          />
+          <div className={styles.chartsWrapper}>
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+            />
+          </div>
           <Track
             trackId={currentTrackId}
             worldPosition={currentWorldPosition}

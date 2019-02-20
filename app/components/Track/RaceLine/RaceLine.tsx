@@ -20,6 +20,15 @@ export default class RaceLine extends PureComponent<IProps, IState> {
     this.state = { canvas, context };
   }
 
+  distanceBetweenCoordinates = (
+    coordinateA: ICoordinate,
+    coordinateB: ICoordinate
+  ): number => {
+    var a = coordinateA.x - coordinateB.x;
+    var b = coordinateA.y - coordinateB.y;
+    return Math.sqrt(a * a + b * b);
+  };
+
   drawToCoordinate = (coordinate: ICoordinate) => {
     const { context } = this.state;
 
@@ -27,7 +36,10 @@ export default class RaceLine extends PureComponent<IProps, IState> {
       return;
     }
 
-    if (!this.lastPointerPosition) {
+    if (
+      !this.lastPointerPosition ||
+      this.distanceBetweenCoordinates(this.lastPointerPosition, coordinate) > 5
+    ) {
       this.lastPointerPosition = coordinate;
     }
 
