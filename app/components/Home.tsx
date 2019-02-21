@@ -162,7 +162,8 @@ export default class Home extends PureComponent<any, IState> {
       currentLapTimes: [[]],
       currentPlayerSpeeds: [[]],
       currentWorldPosition: { x: 0, y: 0 },
-      participantIndex: participant.index
+      participantIndex: participant.index,
+      currentLapNumber: 0
     });
   };
   // resets state

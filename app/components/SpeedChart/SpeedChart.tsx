@@ -8,20 +8,26 @@ export default class SpeedChart extends PureComponent<IProps, any> {
 
     // converts to chartable data (adds echarts properties)
     // maps by lap
-    const xAxis = currentLapTimes.map(data => ({
+    let xAxis = currentLapTimes.map(data => ({
       boundaryGap: false,
       silent: true,
       data
     }));
 
-    const series = currentPlayerSpeeds.map((data, idx) => ({
-      name: `Lap ${idx + 1}`,
-      smooth: true,
-      type: 'line',
-      large: true,
-      // if we dont copy the array then the chart does not render
-      data: data.slice()
-    }));
+    if (xAxis.length > 1) {
+      xAxis = xAxis.filter(x => !!x && x.data.length > 0);
+    }
+
+    const series = currentPlayerSpeeds
+      .filter(data => !!data && data.length > 0)
+      .map((data, idx) => ({
+        name: `Lap ${idx + 1}`,
+        smooth: true,
+        type: 'line',
+        large: true,
+        // if we dont copy the array then the chart does not render
+        data: data.slice()
+      }));
 
     return {
       tooltip: {
