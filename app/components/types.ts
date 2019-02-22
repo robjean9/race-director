@@ -9,8 +9,9 @@ export interface IDriver {
 export interface IState {
   // lap x time
   currentLapTimes: number[][];
+  currentLapTime: number;
   // lap x speed
-  currentPlayerSpeeds: number[][];
+  currentPlayerSpeeds: any;
   // world positions
   currentWorldPosition: ICoordinate;
   currentLapNumber: number;

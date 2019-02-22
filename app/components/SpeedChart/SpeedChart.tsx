@@ -4,30 +4,16 @@ import { IProps } from './types';
 
 export default class SpeedChart extends PureComponent<IProps, any> {
   getSpeedChart = () => {
-    const { currentLapTimes, currentPlayerSpeeds } = this.props;
+    const { currentLapTimes, currentLapNumber } = this.props;
 
-    // converts to chartable data (adds echarts properties)
-    // maps by lap
-    let xAxis = currentLapTimes.map(data => ({
-      boundaryGap: false,
-      silent: true,
-      data
+    const series = currentLapTimes.map((data, idx) => ({
+      name: `Lap ${idx + 1}`,
+      smooth: true,
+      type: 'line',
+      large: true,
+      // if we dont copy the array then the chart does not render
+      data: data[currentLapNumber]
     }));
-
-    if (xAxis.length > 1) {
-      xAxis = xAxis.filter(x => !!x && x.data.length > 0);
-    }
-
-    const series = currentPlayerSpeeds
-      .filter(data => !!data && data.length > 0)
-      .map((data, idx) => ({
-        name: `Lap ${idx + 1}`,
-        smooth: true,
-        type: 'line',
-        large: true,
-        // if we dont copy the array then the chart does not render
-        data: data.slice()
-      }));
 
     return {
       tooltip: {
@@ -41,10 +27,15 @@ export default class SpeedChart extends PureComponent<IProps, any> {
         }
       },
       legend: {
-        data: series.map(serie => serie.name)
+        data: 'Pirule'
       },
-      // matrix here, one element per lap
-      xAxis,
+      xAxis: [
+        {
+          boundaryGap: false,
+          silent: true,
+          data: currentLapTimes.map((_, index) => index) //.filter(lap => !!lap)
+        }
+      ],
       yAxis: [
         {
           type: 'value'

@@ -29,7 +29,8 @@ const styles = require('./Home.css');
 
 const initialState: IState = {
   currentLapTimes: [[]],
-  currentPlayerSpeeds: [[]],
+  currentLapTime: 0,
+  currentPlayerSpeeds: [],
   currentWorldPosition: { x: 0, y: 0 },
   currentParticipants: [],
   currentLapNumber: 0,
@@ -116,24 +117,17 @@ export default class Home extends PureComponent<any, IState> {
   // stores current lap time to state
   updateCurrentLapTime = (lapTimePackage: IPacketLapData) => {
     const { participantIndex } = this.state;
-    const newLapNumber =
+    const currentLapNumber =
       lapTimePackage.m_lapData[participantIndex].m_currentLapNum - 1;
-    const currentTime =
-      Math.round(
-        lapTimePackage.m_lapData[participantIndex].m_currentLapTime * 1e3
-      ) / 1e3;
+    const currentLapTime = Math.round(
+      lapTimePackage.m_lapData[participantIndex].m_currentLapTime * 1e3
+    );
 
     this.setState(prevState => {
-      // add time to current lap, slices to rerender
-      const currentLapTimes = prevState.currentLapTimes.slice();
-      // creates a new lap
-      if (!currentLapTimes[newLapNumber]) {
-        currentLapTimes[newLapNumber] = [];
-      }
-      // saves the data in the new lap
-      currentLapTimes[newLapNumber].push(currentTime);
-      // updates lap times and current lap
-      return { currentLapTimes, currentLapNumber: newLapNumber };
+      // TODO: avoid slicing currentLapTimes if lap already exist, but return currentLapNumber either way
+      let currentLapTimes = prevState.currentLapTimes.slice();
+      currentLapTimes[currentLapTime] = [];
+      return { currentLapTimes, currentLapTime, currentLapNumber };
     });
   };
 
@@ -144,23 +138,19 @@ export default class Home extends PureComponent<any, IState> {
       carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
 
     this.setState(prevState => {
-      const { currentLapNumber } = this.state;
-      // add time to current lap, slices to rerender
-      const currentPlayerSpeeds = prevState.currentPlayerSpeeds.slice();
-      // creates a new lap
-      if (!currentPlayerSpeeds[currentLapNumber]) {
-        currentPlayerSpeeds[currentLapNumber] = [];
+      const { currentLapNumber, currentLapTime, currentLapTimes } = prevState;
+      if (!currentLapTimes || currentLapTimes.length === 0) {
+        return;
       }
-      // saves the data in the new lap
-      currentPlayerSpeeds[currentLapNumber].push(currentPlayerSpeed);
-      return { currentPlayerSpeeds };
+      currentLapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
+      return { currentLapTimes };
     });
   };
 
   handleParticipantChange = (participant: IParticipant) => {
     this.setState({
-      currentLapTimes: [[]],
-      currentPlayerSpeeds: [[]],
+      currentLapTimes: [],
+      currentPlayerSpeeds: [],
       currentWorldPosition: { x: 0, y: 0 },
       participantIndex: participant.index,
       currentLapNumber: 0
@@ -171,16 +161,18 @@ export default class Home extends PureComponent<any, IState> {
 
   handleStartRecording = () => ipcRenderer.send(START_F1_CLIENT);
 
-  handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
+  handleStopRecording = () => console.log(this.state.currentLapTimes); //ipcRenderer.send(STOP_F1_CLIENT);
 
   render() {
     const {
       currentTrackId,
       currentWorldPosition,
       currentLapTimes,
+      currentLapNumber,
       currentPlayerSpeeds,
       currentParticipants
     } = this.state;
+
     return (
       <div className={styles.homeWrapper}>
         <button type="button" onClick={this.handleStartRecording}>
@@ -198,10 +190,11 @@ export default class Home extends PureComponent<any, IState> {
             currentParticipants={currentParticipants}
           />
           <div className={styles.chartsWrapper}>
-            <SpeedChart
+            {/*<SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
-            />
+              currentLapNumber={currentLapNumber}
+            />*/}
           </div>
           <Track
             trackId={currentTrackId}
