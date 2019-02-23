@@ -20,7 +20,6 @@ import {
   IState,
   IPacketParticipantsData
 } from './types';
-import ParticipantsMock from '../../mocks/ParticipantsMock';
 import SpeedChart from './SpeedChart';
 import ParticipantPanel from './ParticipantPanel';
 import { IParticipant } from './ParticipantPanel/types';
@@ -124,8 +123,9 @@ export default class Home extends PureComponent<any, IState> {
     );
 
     this.setState(prevState => {
-      // TODO: avoid slicing currentLapTimes if lap already exist, but return currentLapNumber either way
-      let currentLapTimes = prevState.currentLapTimes.slice();
+      // TODO: avoid slicing currentLapTimes if lap already exist,
+      //       but return currentLapNumber either way
+      const currentLapTimes = prevState.currentLapTimes.slice();
       currentLapTimes[currentLapTime] = [];
       return { currentLapTimes, currentLapTime, currentLapNumber };
     });
@@ -156,12 +156,13 @@ export default class Home extends PureComponent<any, IState> {
       currentLapNumber: 0
     });
   };
+
   // resets state
   handleSessionRestart = () => this.setState(initialState);
 
   handleStartRecording = () => ipcRenderer.send(START_F1_CLIENT);
 
-  handleStopRecording = () => console.log(this.state.currentLapTimes); //ipcRenderer.send(STOP_F1_CLIENT);
+  handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
   render() {
     const {
@@ -190,11 +191,11 @@ export default class Home extends PureComponent<any, IState> {
             currentParticipants={currentParticipants}
           />
           <div className={styles.chartsWrapper}>
-            {/*<SpeedChart
+            <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
-            />*/}
+            />
           </div>
           <Track
             trackId={currentTrackId}

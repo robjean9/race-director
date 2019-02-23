@@ -6,14 +6,23 @@ export default class SpeedChart extends PureComponent<IProps, any> {
   getSpeedChart = () => {
     const { currentLapTimes, currentLapNumber } = this.props;
 
-    const series = currentLapTimes.map((data, idx) => ({
-      name: `Lap ${idx + 1}`,
+    const xAxisData = currentLapTimes
+      .map((_, index) => index)
+      .filter(lap => !!lap);
+
+    const yAxisData = xAxisData.map(
+      time => currentLapTimes[time][currentLapNumber]
+    );
+
+    const series = {
+      name: `Lap ${currentLapNumber + 1}`,
       smooth: true,
+      connectNulls: true,
       type: 'line',
       large: true,
       // if we dont copy the array then the chart does not render
-      data: data[currentLapNumber]
-    }));
+      data: yAxisData
+    };
 
     return {
       tooltip: {
@@ -26,14 +35,11 @@ export default class SpeedChart extends PureComponent<IProps, any> {
           }
         }
       },
-      legend: {
-        data: 'Pirule'
-      },
       xAxis: [
         {
           boundaryGap: false,
           silent: true,
-          data: currentLapTimes.map((_, index) => index) //.filter(lap => !!lap)
+          data: xAxisData
         }
       ],
       yAxis: [
