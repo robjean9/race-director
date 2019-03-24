@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { Image } from 'react-konva';
+import { Image, Circle, Layer } from 'react-konva';
 import { IProps, IState, ICoordinate } from './types';
 
 export default class RaceLine extends PureComponent<IProps, IState> {
@@ -75,12 +75,22 @@ export default class RaceLine extends PureComponent<IProps, IState> {
     this.drawToCoordinate(worldPosition);
 
     return (
-      <Image
-        image={canvas}
-        ref={node => (this.image = node)}
-        width={width}
-        height={height}
-      />
+      <Layer>
+        <Image
+          image={canvas}
+          ref={node => (this.image = node)}
+          width={width}
+          height={height}
+        />
+        <Circle
+          x={worldPosition.x}
+          y={worldPosition.y}
+          fill="red"
+          stroke={'black'}
+          strokeWidth={4}
+          radius={7}
+        />
+      </Layer>
     );
   }
 }

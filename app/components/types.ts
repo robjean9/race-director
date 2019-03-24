@@ -118,7 +118,7 @@ export interface ICarTelemetryData {
   m_engineTemperature: number;
 }
 
-interface IParticipantData {
+export interface IParticipantData {
   m_aiControlled: number;
   m_driverId: number;
   m_name: string;

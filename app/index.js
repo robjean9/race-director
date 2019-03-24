@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import Root from './components/Home';
+import Root from './components/App';
 
 render(
   <AppContainer>
@@ -11,9 +11,9 @@ render(
 );
 
 if (module.hot) {
-  module.hot.accept('./components/Home', () => {
+  module.hot.accept('./components/App', () => {
     // eslint-disable-next-line global-require
-    const NextRoot = require('./components/Home').default;
+    const NextRoot = require('./components/App').default;
     render(
       <AppContainer>
         <NextRoot />
