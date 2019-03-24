@@ -1,15 +1,8 @@
-import {
-  app,
-  BrowserWindow
-} from 'electron';
-import {
-  autoUpdater
-} from 'electron-updater';
+import { app, BrowserWindow } from 'electron';
+import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
-const {
-  ipcMain
-} = require('electron');
+const { ipcMain } = require('electron');
 
 // Mongo database
 const mongojs = require('mongojs');
@@ -20,14 +13,14 @@ const io = require('socket.io')();
 // F1 telemetry client
 const {
   F1TelemetryClient,
-  PacketTypes,
+  Packets,
   DRIVERS,
   TEAMS,
   TRACKS
 } = require('f1-telemetry-client');
 
 // exposes telemetry client constants to renderer
-global.telemetryClientConstants = { PacketTypes, DRIVERS, TEAMS, TRACKS };
+global.telemetryClientConstants = { Packets, DRIVERS, TEAMS, TRACKS };
 
 const {
   MONGO_CONNECTION_STRING,
@@ -152,7 +145,7 @@ ipcMain.on(STOP_F1_CLIENT, () => isRecording && stopRecording());
 // Handle ipcMain message
 /*
 ipcMain.on(GET_CONSTANTS, event => {
-  event.sender.send(SEND_CONSTANTS, PacketTypes);
+  event.sender.send(SEND_CONSTANTS, Packets);
 });
 */
 
@@ -161,29 +154,29 @@ io.on('connection', socket => {
   console.log('Socket connection opened');
   // Start listening to F1 client
   startRecording();
-  client.on(PacketTypes.MOTION, data =>
-    registerClient(PacketTypes.MOTION, db.motion, data, socket)
+  client.on(Packets.MOTION, data =>
+    registerClient(Packets.MOTION, db.motion, data, socket)
   );
-  client.on(PacketTypes.SESSION, data =>
-    registerClient(PacketTypes.SESSION, db.session, data, socket)
+  client.on(Packets.SESSION, data =>
+    registerClient(Packets.SESSION, db.session, data, socket)
   );
-  client.on(PacketTypes.LAP_DATA, data =>
-    registerClient(PacketTypes.LAP_DATA, db.lapData, data, socket)
+  client.on(Packets.LAP_DATA, data =>
+    registerClient(Packets.LAP_DATA, db.lapData, data, socket)
   );
-  client.on(PacketTypes.EVENT, data =>
-    registerClient(PacketTypes.EVENT, db.event, data, socket)
+  client.on(Packets.EVENT, data =>
+    registerClient(Packets.EVENT, db.event, data, socket)
   );
-  client.on(PacketTypes.PARTICIPANTS, data =>
-    registerClient(PacketTypes.PARTICIPANTS, db.participants, data, socket)
+  client.on(Packets.PARTICIPANTS, data =>
+    registerClient(Packets.PARTICIPANTS, db.participants, data, socket)
   );
-  client.on(PacketTypes.CAR_SETUPS, data =>
-    registerClient(PacketTypes.CAR_SETUPS, db.carSetups, data, socket)
+  client.on(Packets.CAR_SETUPS, data =>
+    registerClient(Packets.CAR_SETUPS, db.carSetups, data, socket)
   );
-  client.on(PacketTypes.CAR_TELEMETRY, data =>
-    registerClient(PacketTypes.CAR_TELEMETRY, db.carTelemetry, data, socket)
+  client.on(Packets.CAR_TELEMETRY, data =>
+    registerClient(Packets.CAR_TELEMETRY, db.carTelemetry, data, socket)
   );
-  client.on(PacketTypes.CAR_STATUS, data =>
-    registerClient(PacketTypes.CAR_STATUS, db.carStatus, data, socket)
+  client.on(Packets.CAR_STATUS, data =>
+    registerClient(Packets.CAR_STATUS, db.carStatus, data, socket)
   );
 });
 

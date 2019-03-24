@@ -5258,10 +5258,10 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
-f1-telemetry-client@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.0.9.tgz#57e15b12bf8c0e27838d48492c87017183653bc2"
-  integrity sha512-TzLnDz/Md+uuRck+nwYvdnvyAc9S2TMAgcqO99jWpwqOCahSv5Y5NfMoMMGpFtWY5UPdTTnABqGOoVpvb2WLDA==
+f1-telemetry-client@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.1.tgz#9bb00c4010a2243b036e5b4ae3b7688e061545ee"
+  integrity sha512-N6hkBUhAEB8ZcmgRo746DgfpZt+Nf7lVAv8JDLa1sQUYAOqNigjpnzqie4D38BI9nQdfu/qu35LTqFXYmLtXhQ==
   dependencies:
     "@babel/node" "^7.0.0"
     "@babel/preset-env" "^7.1.0"
