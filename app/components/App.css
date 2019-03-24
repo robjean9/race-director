@@ -1,0 +1,35 @@
+@font-face {
+  font-family: Formula1Bold;
+  src: url('../../resources/fonts/Formula1-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: Formula1Black;
+  src: url('../../resources/fonts/Formula1-Black.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: Formula1Regular;
+  src: url('../../resources/fonts/Formula1-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: Formula1Wide;
+  src: url('../../resources/fonts/Formula1-Wide.ttf') format('truetype');
+}
+
+.telemetryPanels {
+  background-color: #17171f;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+
+.homeWrapper {
+  background-color: #17171f;
+}
+
+.chartsWrapper {
+  height: 100%;
+  width: 100%;
+}

@@ -9,14 +9,16 @@ export interface IDriver {
 export interface IState {
   // lap x time
   currentLapTimes: number[][];
+  currentLapTime: number;
   // lap x speed
-  currentPlayerSpeeds: number[][];
+  currentPlayerSpeeds: any;
   // world positions
   currentWorldPosition: ICoordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
   currentTrackId: number;
   currentParticipants: any[];
+  participantIndex: number;
 }
 
 // TODO: Move typings to f1-telemetry-client
@@ -116,7 +118,7 @@ export interface ICarTelemetryData {
   m_engineTemperature: number;
 }
 
-interface IParticipantData {
+export interface IParticipantData {
   m_aiControlled: number;
   m_driverId: number;
   m_name: string;
