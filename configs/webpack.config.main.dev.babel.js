@@ -7,6 +7,7 @@ import merge from 'webpack-merge';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
+const CleanWebpackPlugin = require('clean-webpack-plugin'); // installed via npm
 
 CheckNodeEnv('development');
 
@@ -38,6 +39,10 @@ export default merge.smart(baseConfig, {
   },
 
   plugins: [
+    new CleanWebpackPlugin({
+      verbose: true,
+      cleanOnceBeforeBuildPatterns: ['app/main.dev.js', 'app/main.dev.js.map']
+    }),
     new BundleAnalyzerPlugin({
       analyzerMode:
         process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',

@@ -19,6 +19,7 @@ module.exports = api => {
   const development = api.env(developmentEnvironments);
 
   return {
+    compact: true,
     presets: [
       [
         require('@babel/preset-env'),
