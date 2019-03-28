@@ -11,16 +11,13 @@ const mongojs = require('mongojs');
 const io = require('socket.io')();
 
 // F1 telemetry client
-const {
-  F1TelemetryClient,
-  Packets,
-  DRIVERS,
-  TEAMS,
-  TRACKS
-} = require('f1-telemetry-client');
+const { F1TelemetryClient, constants } = require('f1-telemetry-client');
+const { PACKETS } = constants;
 
 // exposes telemetry client constants to renderer
-global.telemetryClientConstants = { Packets, DRIVERS, TEAMS, TRACKS };
+(global as any).telemetryClientConstants = {
+  PACKETS
+};
 
 const {
   MONGO_CONNECTION_STRING,
@@ -92,15 +89,21 @@ app.on('ready', async () => {
   }
 
   mainWindow = new BrowserWindow({
+    titleBarStyle: 'default',
     show: false,
-    width: 1024,
-    height: 728
+    width: 1281,
+    height: 800,
+    minWidth: 1281,
+    minHeight: 800,
+    backgroundColor: '#17171f'
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -108,7 +111,6 @@ app.on('ready', async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
-      mainWindow.show();
       mainWindow.focus();
     }
   });
@@ -145,7 +147,7 @@ ipcMain.on(STOP_F1_CLIENT, () => isRecording && stopRecording());
 // Handle ipcMain message
 /*
 ipcMain.on(GET_CONSTANTS, event => {
-  event.sender.send(SEND_CONSTANTS, Packets);
+  event.sender.send(SEND_CONSTANTS, PACKETS);
 });
 */
 
@@ -154,29 +156,29 @@ io.on('connection', socket => {
   console.log('Socket connection opened');
   // Start listening to F1 client
   startRecording();
-  client.on(Packets.MOTION, data =>
-    registerClient(Packets.MOTION, db.motion, data, socket)
+  client.on(PACKETS.motion, data =>
+    registerClient(PACKETS.motion, db.motion, data, socket)
   );
-  client.on(Packets.SESSION, data =>
-    registerClient(Packets.SESSION, db.session, data, socket)
+  client.on(PACKETS.session, data =>
+    registerClient(PACKETS.session, db.session, data, socket)
   );
-  client.on(Packets.LAP_DATA, data =>
-    registerClient(Packets.LAP_DATA, db.lapData, data, socket)
+  client.on(PACKETS.lapData, data =>
+    registerClient(PACKETS.lapData, db.lapData, data, socket)
   );
-  client.on(Packets.EVENT, data =>
-    registerClient(Packets.EVENT, db.event, data, socket)
+  client.on(PACKETS.event, data =>
+    registerClient(PACKETS.event, db.event, data, socket)
   );
-  client.on(Packets.PARTICIPANTS, data =>
-    registerClient(Packets.PARTICIPANTS, db.participants, data, socket)
+  client.on(PACKETS.participants, data =>
+    registerClient(PACKETS.participants, db.participants, data, socket)
   );
-  client.on(Packets.CAR_SETUPS, data =>
-    registerClient(Packets.CAR_SETUPS, db.carSetups, data, socket)
+  client.on(PACKETS.carSetups, data =>
+    registerClient(PACKETS.carSetups, db.carSetups, data, socket)
   );
-  client.on(Packets.CAR_TELEMETRY, data =>
-    registerClient(Packets.CAR_TELEMETRY, db.carTelemetry, data, socket)
+  client.on(PACKETS.carTelemetry, data =>
+    registerClient(PACKETS.carTelemetry, db.carTelemetry, data, socket)
   );
-  client.on(Packets.CAR_STATUS, data =>
-    registerClient(Packets.CAR_STATUS, db.carStatus, data, socket)
+  client.on(PACKETS.carStatus, data =>
+    registerClient(PACKETS.carStatus, db.carStatus, data, socket)
   );
 });
 

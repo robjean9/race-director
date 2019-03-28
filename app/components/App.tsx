@@ -33,7 +33,7 @@ const initialState: IState = {
   sessionStarted: false
 };
 
-const { Packets } = remote.getGlobal('telemetryClientConstants');
+const { PACKETS } = remote.getGlobal('telemetryClientConstants');
 
 // bigger package loss means more package being skipped
 // (improves performance, lowers accuracy)
@@ -56,14 +56,14 @@ export default class App extends PureComponent<any, IState> {
   openSocket = () => {
     const socket = openSocket('http://localhost:24500');
 
-    socket.on(Packets.LAP_DATA, e => {
+    socket.on(PACKETS.lapData, e => {
       const { sessionStarted } = this.state;
       if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
         this.updateCurrentLapTime(e);
       }
       this.lapDataPackageCount++;
     });
-    socket.on(Packets.CAR_TELEMETRY, e => {
+    socket.on(PACKETS.carTelemetry, e => {
       const { sessionStarted } = this.state;
       if (
         sessionStarted &&
@@ -73,19 +73,19 @@ export default class App extends PureComponent<any, IState> {
       }
       this.carTelemetryPackageCount++;
     });
-    socket.on(Packets.SESSION, e => {
+    socket.on(PACKETS.session, e => {
       if (e.m_sessionTimeLeft < e.m_sessionDuration) {
         this.setState({ sessionStarted: true });
       }
       this.setState({ currentTrackId: e.m_trackId });
     });
-    socket.on(Packets.MOTION, e => {
+    socket.on(PACKETS.motion, e => {
       if (this.motionPackageCount % PACKAGE_LOSS === 0) {
         this.updateTrack(e);
       }
       this.motionPackageCount++;
     });
-    socket.on(Packets.PARTICIPANTS, e => {
+    socket.on(PACKETS.participants, e => {
       this.updateParticipants(e);
     });
   };
