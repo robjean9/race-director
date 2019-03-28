@@ -245,14 +245,15 @@
     "testcafe-live": "^0.1.4",
     "testcafe-react-selectors": "^3.0.0",
     "ts-loader": "^5.3.3",
-    "typescript": "^3.2.2",
+    "typescript": "~3.1.0",
     "url-loader": "^1.1.2",
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.0.3",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
     "webpack-merge": "^4.1.4",
-    "yarn": "^1.12.3"
+    "yarn": "^1.12.3",
+    "gts": "^0.9.0"
   },
   "dependencies": {
     "electron-debug": "^2.0.0",
