@@ -41,7 +41,6 @@ let mainWindow: BrowserWindow | null = null;
 io.listen(24500);
 
 if (process.env.NODE_ENV === 'production') {
-  // eslint-disable-next-line global-require
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
 }
@@ -50,12 +49,10 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
-  // eslint-disable-next-line global-require
   require('electron-debug')();
 }
 
 const installExtensions = async () => {
-  // eslint-disable-next-line global-require
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS'];
@@ -122,7 +119,6 @@ app.on('ready', async () => {
   });
 
   // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
   // tslint:disable-next-line:no-unused-expression
   new AppUpdater();
 });

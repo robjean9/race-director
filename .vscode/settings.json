@@ -1,16 +1,13 @@
 {
   "files.associations": {
     ".babelrc": "jsonc",
-    ".eslintrc": "jsonc",
     ".prettierrc": "jsonc",
     ".stylelintrc": "json",
-    ".dockerignore": "ignore",
-    ".eslintignore": "ignore"
+    ".dockerignore": "ignore"
   },
 
   "search.exclude": {
     ".git": true,
-    ".eslintcache": true,
     "app/dist": true,
     "app/main.prod.js": true,
     "app/main.prod.js.map": true,
