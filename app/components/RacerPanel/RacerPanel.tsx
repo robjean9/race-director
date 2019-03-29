@@ -1,9 +1,11 @@
-import React, { PureComponent } from 'react';
+import * as React from 'react';
+import { PureComponent } from 'react';
 import { IProps } from './types';
 
 const styles = require('./RacerPanel.css');
 
-export default class RacerPanel extends PureComponent<IProps, any> {
+// tslint:disable-next-line:no-any
+export class RacerPanel extends PureComponent<IProps, any> {
   renderNames = () => {
     const { currentParticipants } = this.props;
     return currentParticipants.map((participant, index) => (

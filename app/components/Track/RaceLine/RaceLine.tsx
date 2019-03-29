@@ -24,8 +24,8 @@ export default class RaceLine extends PureComponent<IProps, IState> {
     coordinateA: ICoordinate,
     coordinateB: ICoordinate
   ): number => {
-    var a = coordinateA.x - coordinateB.x;
-    var b = coordinateA.y - coordinateB.y;
+    const a = coordinateA.x - coordinateB.x;
+    const b = coordinateA.y - coordinateB.y;
     return Math.sqrt(a * a + b * b);
   };
 

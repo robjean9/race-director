@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { ipcRenderer } from 'electron';
-import openSocket from 'socket.io-client';
+import * as openSocket from 'socket.io-client';
 import Track from './Track';
 import { START_F1_CLIENT, STOP_F1_CLIENT } from '../constants/f1client';
 import {
@@ -29,7 +29,6 @@ const initialState: IState = {
   currentParticipants: [],
   currentLapNumber: 0,
   participantIndex: 0,
-  currentTrackId: undefined,
   sessionStarted: false
 };
 
@@ -39,12 +38,14 @@ const { PACKETS } = remote.getGlobal('telemetryClientConstants');
 // (improves performance, lowers accuracy)
 const PACKAGE_LOSS = 3;
 
-export default class App extends PureComponent<any, IState> {
+// tslint:disable-next-line:no-any
+export class App extends PureComponent<any, IState> {
   lapDataPackageCount = 0;
   carTelemetryPackageCount = 0;
   motionPackageCount = 0;
 
-  constructor(props) {
+  // tslint:disable-next-line:no-any
+  constructor(props: any) {
     super(props);
     this.state = initialState;
   }
@@ -56,14 +57,14 @@ export default class App extends PureComponent<any, IState> {
   openSocket = () => {
     const socket = openSocket('http://localhost:24500');
 
-    socket.on(PACKETS.lapData, e => {
+    socket.on(PACKETS.lapData, (e: IPacketLapData) => {
       const { sessionStarted } = this.state;
       if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
         this.updateCurrentLapTime(e);
       }
       this.lapDataPackageCount++;
     });
-    socket.on(PACKETS.carTelemetry, e => {
+    socket.on(PACKETS.carTelemetry, (e: IPacketCarTelemetryData) => {
       const { sessionStarted } = this.state;
       if (
         sessionStarted &&
@@ -73,19 +74,26 @@ export default class App extends PureComponent<any, IState> {
       }
       this.carTelemetryPackageCount++;
     });
-    socket.on(PACKETS.session, e => {
-      if (e.m_sessionTimeLeft < e.m_sessionDuration) {
-        this.setState({ sessionStarted: true });
+    socket.on(
+      PACKETS.session,
+      (e: {
+        m_sessionTimeLeft: number;
+        m_sessionDuration: number;
+        m_trackId: number;
+      }) => {
+        if (e.m_sessionTimeLeft < e.m_sessionDuration) {
+          this.setState({ sessionStarted: true });
+        }
+        this.setState({ currentTrackId: e.m_trackId });
       }
-      this.setState({ currentTrackId: e.m_trackId });
-    });
-    socket.on(PACKETS.motion, e => {
+    );
+    socket.on(PACKETS.motion, (e: IPacketMotionData) => {
       if (this.motionPackageCount % PACKAGE_LOSS === 0) {
         this.updateTrack(e);
       }
       this.motionPackageCount++;
     });
-    socket.on(PACKETS.participants, e => {
+    socket.on(PACKETS.participants, (e: IPacketParticipantsData) => {
       this.updateParticipants(e);
     });
   };
@@ -95,6 +103,7 @@ export default class App extends PureComponent<any, IState> {
     const currentParticipants = getCurrentParticipants(
       participantsPackage.m_participants
     );
+    // tslint:disable-next-line:no-unused-expression
     currentParticipants && this.setState({ currentParticipants });
   };
 
@@ -132,14 +141,16 @@ export default class App extends PureComponent<any, IState> {
     const currentPlayerSpeed =
       carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
 
-    this.setState(prevState => {
-      const { currentLapNumber, currentLapTime, currentLapTimes } = prevState;
-      if (!currentLapTimes || currentLapTimes.length === 0) {
-        return;
+    this.setState(
+      (prevState): IState | undefined => {
+        const { currentLapNumber, currentLapTime, currentLapTimes } = prevState;
+        if (!currentLapTimes || currentLapTimes.length === 0) {
+          return;
+        }
+        currentLapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
+        return { ...prevState, currentLapTimes };
       }
-      currentLapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
-      return { currentLapTimes };
-    });
+    );
   };
 
   handleParticipantChange = (participant: IParticipant) => {
@@ -192,10 +203,12 @@ export default class App extends PureComponent<any, IState> {
               currentLapNumber={currentLapNumber}
             />
           </div>
-          <Track
-            trackId={currentTrackId}
-            worldPosition={currentWorldPosition}
-          />
+          {currentTrackId && (
+            <Track
+              trackId={currentTrackId}
+              worldPosition={currentWorldPosition}
+            />
+          )}
         </div>
       </div>
     );

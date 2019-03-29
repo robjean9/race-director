@@ -1,8 +1,10 @@
-import React, { PureComponent } from 'react';
+import * as React from 'react';
+import { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
-import { IProps } from './types';
+import { Props } from './types';
 
-export default class SpeedChart extends PureComponent<IProps, any> {
+// tslint:disable-next-line:no-any
+export class SpeedChart extends PureComponent<Props, any> {
   getSpeedChart = () => {
     const { currentLapTimes, currentLapNumber } = this.props;
 
@@ -10,12 +12,14 @@ export default class SpeedChart extends PureComponent<IProps, any> {
     // every lap cover a different set of milliseconds
     const xAxisData = currentLapTimes
       // gets times (each index represents a time)
-      .map((_, index) => index)
+      // tslint:disable-next-line:no-any
+      .map((_: any, index: any) => index)
       // takes out null values (times that were not recorded)
       // eg. received a package about 1424 ms and then 1429 ms
       // doing a !!time filter takes out empty
       // array positions from 1425 to 1428
-      .filter(time => !!time);
+      // tslint:disable-next-line:no-any
+      .filter((time: any) => !!time);
 
     // prints last two laps
     const series = [
@@ -25,7 +29,10 @@ export default class SpeedChart extends PureComponent<IProps, any> {
         connectNulls: true,
         type: 'line',
         large: true,
-        data: xAxisData.map(time => currentLapTimes[time][currentLapNumber])
+        data: xAxisData.map(
+          // tslint:disable-next-line:no-any
+          (time: any) => currentLapTimes[time][currentLapNumber]
+        )
       },
       {
         name: `Lap ${currentLapNumber}`,
@@ -33,7 +40,10 @@ export default class SpeedChart extends PureComponent<IProps, any> {
         connectNulls: true,
         type: 'line',
         large: true,
-        data: xAxisData.map(time => currentLapTimes[time][currentLapNumber - 1])
+        data: xAxisData.map(
+          // tslint:disable-next-line:no-any
+          (time: any) => currentLapTimes[time][currentLapNumber - 1]
+        )
       }
     ];
 
@@ -54,26 +64,27 @@ export default class SpeedChart extends PureComponent<IProps, any> {
           silent: true,
           data: xAxisData,
           axisLabel: {
-            formatter: function(value) {
+            // tslint:disable-next-line:no-any
+            formatter(value: any) {
               // Formatted to be month/day; display year only in the first label]
               // Get hours from milliseconds
-              var hours = value / (1000 * 60 * 60);
-              var absoluteHours = Math.floor(hours);
+              const hours = value / (1000 * 60 * 60);
+              const absoluteHours = Math.floor(hours);
 
               // Get remainder from hours and convert to minutes
-              var minutes = (hours - absoluteHours) * 60;
-              var absoluteMinutes = Math.floor(minutes);
-              var m = absoluteMinutes;
+              const minutes = (hours - absoluteHours) * 60;
+              const absoluteMinutes = Math.floor(minutes);
+              const m = absoluteMinutes;
 
               // Get remainder from minutes and convert to seconds
-              var seconds = (minutes - absoluteMinutes) * 60;
-              var absoluteSeconds = Math.floor(seconds);
-              var s =
+              const seconds = (minutes - absoluteMinutes) * 60;
+              const absoluteSeconds = Math.floor(seconds);
+              const s =
                 absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
 
-              var milliseconds = (seconds - absoluteSeconds) * 60;
-              var absoluteMilliseconds = Math.floor(milliseconds);
-              var ms =
+              const milliseconds = (seconds - absoluteSeconds) * 60;
+              const absoluteMilliseconds = Math.floor(milliseconds);
+              const ms =
                 absoluteMilliseconds > 9
                   ? absoluteMilliseconds
                   : '0' + absoluteMilliseconds;

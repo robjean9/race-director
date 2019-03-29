@@ -15,6 +15,7 @@ const { F1TelemetryClient, constants } = require('f1-telemetry-client');
 const { PACKETS } = constants;
 
 // exposes telemetry client constants to renderer
+// tslint:disable-next-line:no-any
 (global as any).telemetryClientConstants = {
   PACKETS
 };
@@ -27,7 +28,7 @@ const {
 
 const client = new F1TelemetryClient();
 
-export default class AppUpdater {
+export class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
@@ -35,7 +36,7 @@ export default class AppUpdater {
   }
 }
 
-let mainWindow = null;
+let mainWindow: BrowserWindow | null = null;
 
 io.listen(24500);
 
@@ -101,7 +102,8 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.once('ready-to-show', () => {
-    mainWindow.show();
+    // tslint:disable-next-line:no-unused-expression
+    mainWindow && mainWindow.show();
   });
 
   mainWindow.webContents.on('did-finish-load', () => {
@@ -121,6 +123,7 @@ app.on('ready', async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
+  // tslint:disable-next-line:no-unused-expression
   new AppUpdater();
 });
 
@@ -152,37 +155,55 @@ ipcMain.on(GET_CONSTANTS, event => {
 */
 
 // Communication with renderer
-io.on('connection', socket => {
+// tslint:disable-next-line:no-any
+io.on('connection', (socket: any) => {
   console.log('Socket connection opened');
   // Start listening to F1 client
   startRecording();
-  client.on(PACKETS.motion, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.motion, (data: any) =>
     registerClient(PACKETS.motion, db.motion, data, socket)
   );
-  client.on(PACKETS.session, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.session, (data: any) =>
     registerClient(PACKETS.session, db.session, data, socket)
   );
-  client.on(PACKETS.lapData, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.lapData, (data: any) =>
     registerClient(PACKETS.lapData, db.lapData, data, socket)
   );
-  client.on(PACKETS.event, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.event, (data: any) =>
     registerClient(PACKETS.event, db.event, data, socket)
   );
-  client.on(PACKETS.participants, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.participants, (data: any) =>
     registerClient(PACKETS.participants, db.participants, data, socket)
   );
-  client.on(PACKETS.carSetups, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.carSetups, (data: any) =>
     registerClient(PACKETS.carSetups, db.carSetups, data, socket)
   );
-  client.on(PACKETS.carTelemetry, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.carTelemetry, (data: any) =>
     registerClient(PACKETS.carTelemetry, db.carTelemetry, data, socket)
   );
-  client.on(PACKETS.carStatus, data =>
+  // tslint:disable-next-line:no-any
+  client.on(PACKETS.carStatus, (data: any) =>
     registerClient(PACKETS.carStatus, db.carStatus, data, socket)
   );
 });
 
-const registerClient = (packet, collection, data, socket) => {
+const registerClient = (
+  // tslint:disable-next-line:no-any
+  packet: any,
+  // tslint:disable-next-line:no-any
+  collection: any,
+  // tslint:disable-next-line:no-any
+  data: any,
+  // tslint:disable-next-line:no-any
+  socket: { emit: (arg0: any, arg1: any) => void }
+) => {
   storeInCollection(collection, data);
   socket.emit(packet, data);
 };
@@ -198,6 +219,13 @@ const stopRecording = () => {
 };
 
 // Stores value to mongodb
-const storeInCollection = (collection, data) => {
+// tslint:disable-next-line:no-any
+const storeInCollection = (
+  // tslint:disable-next-line:no-any
+  collection: { insert: (arg0: any) => void },
+  // tslint:disable-next-line:no-any
+  data: any
+) => {
+  // tslint:disable-next-line:no-unused-expression
   isRecording && collection.insert(data);
 };

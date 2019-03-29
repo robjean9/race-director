@@ -16,7 +16,7 @@ export interface IState {
   currentWorldPosition: ICoordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
-  currentTrackId: number;
+  currentTrackId?: number;
   currentParticipants: any[];
   participantIndex: number;
 }
