@@ -1,3 +1,3 @@
-import ParticipantPanel from './ParticipantPanel';
+import { ParticipantPanel } from './ParticipantPanel';
 
-export default ParticipantPanel;
+export { ParticipantPanel };

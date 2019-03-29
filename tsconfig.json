@@ -6,7 +6,8 @@
     "paths": { "*": ["types/*"] },
     "rootDir": ".",
     "outDir": "build",
-    "jsx": "react"
+    "jsx": "react",
+    "lib": ["es6", "dom"]
   },
   "exclude": ["node_modules"]
 }

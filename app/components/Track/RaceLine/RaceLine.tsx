@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
 import { Image, Circle, Layer } from 'react-konva';
-import { IProps, IState, ICoordinate } from './types';
+import { Props, State, Coordinate } from './types';
 
-export default class RaceLine extends PureComponent<IProps, IState> {
-  image;
-  lastPointerPosition;
+export class RaceLine extends PureComponent<Props, State> {
+  // tslint:disable-next-line:no-any
+  image: any;
+  lastPointerPosition?: Coordinate;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     const { width, height } = this.props;
@@ -21,15 +22,15 @@ export default class RaceLine extends PureComponent<IProps, IState> {
   }
 
   distanceBetweenCoordinates = (
-    coordinateA: ICoordinate,
-    coordinateB: ICoordinate
+    coordinateA: Coordinate,
+    coordinateB: Coordinate
   ): number => {
     const a = coordinateA.x - coordinateB.x;
     const b = coordinateA.y - coordinateB.y;
     return Math.sqrt(a * a + b * b);
   };
 
-  drawToCoordinate = (coordinate: ICoordinate) => {
+  drawToCoordinate = (coordinate: Coordinate) => {
     const { context } = this.state;
 
     if (!this.image) {
@@ -50,7 +51,7 @@ export default class RaceLine extends PureComponent<IProps, IState> {
     context.globalCompositeOperation = 'source-over';
     context.beginPath();
 
-    var localPos = {
+    let localPos = {
       x: this.lastPointerPosition.x - this.image.x(),
       y: this.lastPointerPosition.y - this.image.y()
     };
@@ -78,7 +79,8 @@ export default class RaceLine extends PureComponent<IProps, IState> {
       <Layer>
         <Image
           image={canvas}
-          ref={node => (this.image = node)}
+          // tslint:disable-next-line:no-any
+          ref={(node: any) => (this.image = node)}
           width={width}
           height={height}
         />

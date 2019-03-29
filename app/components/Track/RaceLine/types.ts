@@ -1,15 +1,17 @@
-export interface IState {
+export interface State {
+  // tslint:disable-next-line:no-any
   canvas: any;
+  // tslint:disable-next-line:no-any
   context: any;
 }
 
-export interface IProps {
+export interface Props {
   width: number;
   height: number;
-  worldPosition: ICoordinate;
+  worldPosition: Coordinate;
 }
 
-export interface ICoordinate {
+export interface Coordinate {
   x: number;
   y: number;
 }

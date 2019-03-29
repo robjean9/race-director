@@ -1,10 +1,12 @@
-import React, { PureComponent } from 'react';
-import { IProps, IParticipant } from './types';
+import * as React from 'react';
+import { PureComponent } from 'react';
+import { Props, Participant } from './types';
 
 const styles = require('./ParticipantPanel.css');
 
-export default class ParticipantPanel extends PureComponent<IProps, any> {
-  selectParticipant = (participant: IParticipant) =>
+// tslint:disable-next-line:no-any
+export class ParticipantPanel extends PureComponent<Props, any> {
+  selectParticipant = (participant: Participant) =>
     this.props.handleParticipantChange(participant);
 
   renderNames = () => {

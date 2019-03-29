@@ -1,3 +1,3 @@
-import SpeedChart from './SpeedChart';
+import { SpeedChart } from './SpeedChart';
 
-export default SpeedChart;
+export { SpeedChart };

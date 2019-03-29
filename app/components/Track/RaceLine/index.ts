@@ -1,3 +1,3 @@
-import RaceLine from './RaceLine';
+import { RaceLine } from './RaceLine';
 
-export default RaceLine;
+export { RaceLine };

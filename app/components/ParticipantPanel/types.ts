@@ -1,12 +1,13 @@
-import { ITeam } from '../../constants/typings';
+import { Team } from '../../constants/typings';
 
-export interface IProps {
-  handleParticipantChange: (participant) => void;
-  currentParticipants: IParticipant[];
+export interface Props {
+  // tslint:disable-next-line:no-any
+  handleParticipantChange: (participant: any) => void;
+  currentParticipants: Participant[];
 }
 
-export interface IParticipant {
-  team: ITeam;
+export interface Participant {
+  team: Team;
   abbreviation: string;
   firstName: string;
   lastName: string;

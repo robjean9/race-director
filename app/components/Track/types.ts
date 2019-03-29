@@ -1,6 +1,6 @@
-import { ICoordinate } from './RaceLine/types';
+import { Coordinate } from './RaceLine/types';
 
-export interface IProps {
-  worldPosition: ICoordinate;
+export interface Props {
+  worldPosition: Coordinate;
   trackId: number;
 }

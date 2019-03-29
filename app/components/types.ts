@@ -1,39 +1,41 @@
-import { ICoordinate } from './Track/RaceLine/types';
+import { Coordinate } from './Track/RaceLine/types';
 
-export interface IDriver {
+export interface Driver {
   firstName: string;
   lastName: string;
   abbreviation: string;
 }
 
-export interface IState {
+export interface State {
   // lap x time
   currentLapTimes: number[][];
   currentLapTime: number;
   // lap x speed
+  // tslint:disable-next-line:no-any
   currentPlayerSpeeds: any;
   // world positions
-  currentWorldPosition: ICoordinate;
+  currentWorldPosition: Coordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
   currentTrackId?: number;
+  // tslint:disable-next-line:no-any
   currentParticipants: any[];
   participantIndex: number;
 }
 
 // TODO: Move typings to f1-telemetry-client
-export interface ISession {
-  PARTICIPANTS?: IPacketParticipantsData[];
-  CAR_TELEMETRY?: IPacketCarTelemetryData[];
-  LAP_DATA?: IPacketLapData[];
+export interface Session {
+  PARTICIPANTS?: PacketParticipantsData[];
+  CAR_TELEMETRY?: PacketCarTelemetryData[];
+  LAP_DATA?: PacketLapData[];
 }
 
-export interface IPacketMotionData {
-  m_header: IPacketHeader;
-  m_carMotionData: IMotionData[];
+export interface PacketMotionData {
+  m_header: PacketHeader;
+  m_carMotionData: MotionData[];
 }
 
-export interface IMotionData {
+export interface MotionData {
   m_worldPositionX: number;
   m_worldPositionY: number;
   m_worldPositionZ: number;
@@ -54,12 +56,12 @@ export interface IMotionData {
   m_roll: number;
 }
 
-export interface IPacketLapData {
-  m_header: IPacketHeader;
-  m_lapData: ILapData[];
+export interface PacketLapData {
+  m_header: PacketHeader;
+  m_lapData: LapData[];
 }
 
-export interface ILapData {
+export interface LapData {
   m_lastLapTime: number;
   m_currentLapTime: number;
   m_bestLapTime: number;
@@ -79,19 +81,19 @@ export interface ILapData {
   m_resultStatus: number;
 }
 
-export interface IPacketParticipantsData {
-  m_header: IPacketHeader;
+export interface PacketParticipantsData {
+  m_header: PacketHeader;
   m_numCars: number;
-  m_participants: IParticipantData[];
+  m_participants: ParticipantData[];
 }
 
-export interface IPacketCarTelemetryData {
-  m_header: IPacketHeader;
+export interface PacketCarTelemetryData {
+  m_header: PacketHeader;
   m_buttonStatus: number;
-  m_carTelemetryData: ICarTelemetryData[];
+  m_carTelemetryData: CarTelemetryData[];
 }
 
-interface IPacketHeader {
+interface PacketHeader {
   m_packetFormat: number;
   m_packetVersion: number;
   m_packetId: number;
@@ -101,7 +103,7 @@ interface IPacketHeader {
   m_playerCarIndex: number;
 }
 
-export interface ICarTelemetryData {
+export interface CarTelemetryData {
   m_speed: number;
   m_throttle: number;
   m_steer: number;
@@ -118,7 +120,7 @@ export interface ICarTelemetryData {
   m_engineTemperature: number;
 }
 
-export interface IParticipantData {
+export interface ParticipantData {
   m_aiControlled: number;
   m_driverId: number;
   m_name: string;
