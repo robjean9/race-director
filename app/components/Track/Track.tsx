@@ -19,11 +19,12 @@ export class Track extends PureComponent<Props> {
 
     return (
       <Stage
-        //width={WIDTH}
-        //height={HEIGHT}
         style={{
+          flexBasis: 'auto',
           width: `${WIDTH}px`,
+          minWidth: `${WIDTH}px`,
           height: `${HEIGHT}px`,
+          minHeight: `${HEIGHT}px`,
           border: '1px black solid'
         }}
       >

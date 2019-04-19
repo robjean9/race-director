@@ -39,8 +39,8 @@ const { PACKETS } = remote.getGlobal('telemetryClientConstants');
 // (improves performance, lowers accuracy)
 const PACKAGE_LOSS = 3;
 
-// tslint:disable-next-line:no-any
-export class App extends PureComponent<any, State> {
+// tslint:disable-next-line:no-default-export
+export default class App extends PureComponent<{}, State> {
   lapDataPackageCount = 0;
   carTelemetryPackageCount = 0;
   motionPackageCount = 0;
@@ -132,7 +132,12 @@ export class App extends PureComponent<any, State> {
       //       but return currentLapNumber either way
       const currentLapTimes = prevState.currentLapTimes.slice();
       currentLapTimes[currentLapTime] = [];
-      return { currentLapTimes, currentLapTime, currentLapNumber };
+      return {
+        ...prevState,
+        currentLapTimes,
+        currentLapTime,
+        currentLapNumber
+      };
     });
   };
 
@@ -171,10 +176,22 @@ export class App extends PureComponent<any, State> {
 
   handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
+  handleSaveState = () => {
+    const fs = require('fs');
+    // tslint:disable-next-line:no-any
+    fs.writeFile('state.json', JSON.stringify(this.state), (err: any) => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log('The state was saved!');
+    });
+  };
+
   render() {
     const {
       currentTrackId,
       currentWorldPosition,
+      //currentLapTime,
       currentLapTimes,
       currentLapNumber,
       currentPlayerSpeeds,
@@ -192,18 +209,20 @@ export class App extends PureComponent<any, State> {
         <button type="button" onClick={this.handleSessionRestart}>
           Restart Session
         </button>
+        <button type="button" onClick={this.handleSaveState}>
+          Save State
+        </button>
         <div className={styles.telemetryPanels}>
           <ParticipantPanel
             handleParticipantChange={this.handleParticipantChange}
             currentParticipants={currentParticipants}
           />
-          <div className={styles.chartsWrapper}>
-            <SpeedChart
-              currentLapTimes={currentLapTimes}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />
-          </div>
+          <SpeedChart
+            currentLapTimes={currentLapTimes}
+            currentPlayerSpeeds={currentPlayerSpeeds}
+            currentLapNumber={currentLapNumber}
+          />
+          {/*<span>{currentLapTime}</span>*/}
           {currentTrackId && (
             <Track
               trackId={currentTrackId}

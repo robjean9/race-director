@@ -997,13 +997,6 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@types/binary-parser@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@types/binary-parser/-/binary-parser-1.3.1.tgz#62306a7b26cca52fe15e33c6ade0d988a099ea01"
-  integrity sha512-m2XTph97N0wxAm/cyoD6Taj1eyPC72wkp5G8Fnkv33fuJIQH3T+KoBUKGWtj9WZjzkKhxmkvmnus5Q8Uo7uLNw==
-  dependencies:
-    "@types/node" "*"
-
 "@types/error-stack-parser@^1.3.18":
   version "1.3.18"
   resolved "https://registry.yarnpkg.com/@types/error-stack-parser/-/error-stack-parser-1.3.18.tgz#e01c9f8c85ca83b610320c62258b0c9026ade0f7"
@@ -5124,12 +5117,11 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-f1-telemetry-client@0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.4.tgz#cc6b3dda9f886624cfb80a42f77bb1a090972c73"
-  integrity sha512-pkxm85l4VNifitLTg/Xn3bQx+hBAqmIExKKQt5r4roFWSrbppFMBPQMdnu5Fw935c3mRgnOVnM7wcnT7tbq1vw==
+f1-telemetry-client@0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.6.tgz#f729280febeee417ba77a7ae29a9539c8ad2b684"
+  integrity sha512-YXui/0i1HH/q24zNFYagqwy6z9CqKy3rsIFPLvbFrdPfHaP2L3Fq/d3zAZNX62fByHNae3BXA0NYpvGE+MMp1w==
   dependencies:
-    "@types/binary-parser" "^1.3.1"
     binary-parser "^1.3.2"
     struct "^0.0.12"
 

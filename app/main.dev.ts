@@ -11,13 +11,16 @@ const mongojs = require('mongojs');
 const io = require('socket.io')();
 
 // F1 telemetry client
-const { F1TelemetryClient, constants } = require('f1-telemetry-client');
-const { PACKETS } = constants;
+import { F1TelemetryClient, constants } from 'f1-telemetry-client';
+const { PACKETS, DRIVERS, TEAMS, TRACKS } = constants;
 
 // exposes telemetry client constants to renderer
 // tslint:disable-next-line:no-any
 (global as any).telemetryClientConstants = {
-  PACKETS
+  PACKETS,
+  DRIVERS,
+  TEAMS,
+  TRACKS
 };
 
 const {
@@ -26,7 +29,7 @@ const {
   STOP_F1_CLIENT
 } = require('./constants/f1client');
 
-const client = new F1TelemetryClient();
+const client = new F1TelemetryClient({ port: 20789 });
 
 export class AppUpdater {
   constructor() {

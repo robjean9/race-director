@@ -13,7 +13,7 @@ export class SpeedChart extends PureComponent<Props, any> {
     const xAxisData = currentLapTimes
       // gets times (each index represents a time)
       // tslint:disable-next-line:no-any
-      .map((_: any, index: any) => index)
+      .map((_: any, index: number) => index)
       // takes out null values (times that were not recorded)
       // eg. received a package about 1424 ms and then 1429 ms
       // doing a !!time filter takes out empty
@@ -118,7 +118,7 @@ export class SpeedChart extends PureComponent<Props, any> {
     return (
       <ReactEcharts
         option={this.getSpeedChart()}
-        style={{ height: '350px', width: '100%' }}
+        style={{ height: '350px', width: '50vw' }}
         className="react_for_echarts"
       />
     );

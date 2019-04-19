@@ -3,7 +3,7 @@ import { ParticipantData, PacketMotionData } from '../components/types';
 const remote = require('electron').remote;
 const { DRIVERS, TEAMS } = remote.getGlobal('telemetryClientConstants');
 
-// Returns IParticipant[] or void
+// Returns Participant[] or void
 export const getCurrentParticipants = (
   participantList: ParticipantData[]
 ): Participant[] | void => {

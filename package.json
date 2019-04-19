@@ -1,6 +1,6 @@
 {
-  "name": "skim-electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "name": "race-director",
+  "productName": "RaceDirector",
   "version": "0.1.0",
   "description": "",
   "scripts": {
@@ -34,8 +34,8 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.jonybur.ElectronReact",
+    "productName": "RaceDirector",
+    "appId": "org.jonybur.RaceDirector",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -78,21 +78,21 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "skim-electron-react-boilerplate",
-      "repo": "skim-electron-react-boilerplate",
+      "owner": "race-director",
+      "repo": "race-director",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jonybur/skim-electron-react-boilerplate.git"
+    "url": "git+https://github.com/jonybur/race-director.git"
   },
   "author": {
     "name": "Jonathan Bursztyn",
     "email": "jonathan@bursztyn.io"
   },
   "bugs": {
-    "url": "https://github.com/jonybur/skim-electron-react-boilerplate/issues"
+    "url": "https://github.com/jonybur/race-director/issues"
   },
   "keywords": [
     "f1 2018",
@@ -114,7 +114,7 @@
     "e sports",
     "e-sports"
   ],
-  "homepage": "https://github.com/jonybur/skim-electron-react-boilerplate#readme",
+  "homepage": "https://github.com/jonybur/race-director#readme",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {
@@ -179,7 +179,7 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "enzyme-to-json": "^3.3.4",
-    "f1-telemetry-client": "0.1.4",
+    "f1-telemetry-client": "0.1.6",
     "file-loader": "^2.0.0",
     "gts": "^0.9.0",
     "husky": "^1.1.4",
