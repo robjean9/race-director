@@ -87,7 +87,7 @@ export class RaceLine extends PureComponent<Props, State> {
         <Circle
           x={worldPosition.x}
           y={worldPosition.y}
-          fill="red"
+          fill={'red'}
           stroke={'black'}
           strokeWidth={4}
           radius={7}

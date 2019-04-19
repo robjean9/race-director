@@ -1,6 +1,7 @@
 .racerPanelWrapper {
   font-family: Formula1;
   user-select: none;
+  width: 10vw;
 }
 
 .participantWrapper {

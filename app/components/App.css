@@ -18,14 +18,45 @@
   src: url('../../resources/fonts/Formula1-Wide.ttf') format('truetype');
 }
 
-.telemetryPanels {
-  background-color: #17171f;
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
 .homeWrapper {
   background-color: #17171f;
+  height: 100%;
+}
+
+.navbar {
+  width: 100%;
+  height: 5vh;
+}
+
+.telemetryPanels {
+  width: 100%;
+  height: 95vh;
+  background-color: #17171f;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.column1 {
+  flex: 0 0 20vw;
+  background-color: red;
+  height: 100%;
+}
+
+.column2 {
+  flex: 1 1 40vw;
+  background-color: blue;
+  height: 100%;
+}
+
+.column3 {
+  flex: 1 1 20vw;
+  background-color: green;
+  height: 100%;
+}
+
+.column4 {
+  flex: 1 1 20vw;
+  background-color: aliceblue;
+  height: 100%;
 }

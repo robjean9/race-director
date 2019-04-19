@@ -1,36 +1,37 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
+
 import { Stage } from 'react-konva';
 import { Props } from './types';
 import { RaceLine } from './RaceLine';
 import { Coordinate } from './RaceLine/types';
 
-const WIDTH = 400;
-const HEIGHT = 400;
-
 export class Track extends PureComponent<Props> {
   render() {
     const { worldPosition } = this.props;
 
+    // 30% of screen
+    const windowWidth = window.innerWidth;
+    const canvasWidth = windowWidth * 0.2;
+
     const centeredWorldPosition: Coordinate = {
-      x: worldPosition.x + WIDTH / 2,
-      y: worldPosition.y + HEIGHT / 2
+      x: worldPosition.x + canvasWidth / 2,
+      y: worldPosition.y + canvasWidth / 2
     };
 
     return (
       <Stage
+        width={canvasWidth}
+        height={canvasWidth}
         style={{
-          flexBasis: 'auto',
-          width: `${WIDTH}px`,
-          minWidth: `${WIDTH}px`,
-          height: `${HEIGHT}px`,
-          minHeight: `${HEIGHT}px`,
+          width: `${canvasWidth}px`,
+          height: `${canvasWidth}px`,
           border: '1px black solid'
         }}
       >
         <RaceLine
-          width={WIDTH}
-          height={HEIGHT}
+          width={canvasWidth}
+          height={canvasWidth}
           worldPosition={centeredWorldPosition}
         />
       </Stage>

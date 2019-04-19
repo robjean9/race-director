@@ -29,7 +29,7 @@ const {
   STOP_F1_CLIENT
 } = require('./constants/f1client');
 
-const client = new F1TelemetryClient({ port: 20789 });
+const client = new F1TelemetryClient({ port: 20790 });
 
 export class AppUpdater {
   constructor() {
@@ -208,7 +208,7 @@ const registerClient = (
 };
 
 const startRecording = () => {
-  client.start();
+  //client.start();
   //isRecording = true;
 };
 

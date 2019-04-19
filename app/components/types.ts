@@ -17,7 +17,7 @@ export interface State {
   currentWorldPosition: Coordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
-  currentTrackId?: number;
+  currentTrackId: number;
   // tslint:disable-next-line:no-any
   currentParticipants: any[];
   participantIndex: number;

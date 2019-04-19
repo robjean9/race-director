@@ -17,6 +17,7 @@ import {
 import { SpeedChart } from './SpeedChart';
 import { ParticipantPanel } from './ParticipantPanel';
 import { Participant } from './ParticipantPanel/types';
+const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
 const START_F1_CLIENT = 'startF1Client';
@@ -30,7 +31,8 @@ const initialState: State = {
   currentParticipants: [],
   currentLapNumber: 0,
   participantIndex: 0,
-  sessionStarted: false
+  sessionStarted: false,
+  currentTrackId: -1
 };
 
 const { PACKETS } = remote.getGlobal('telemetryClientConstants');
@@ -177,7 +179,6 @@ export default class App extends PureComponent<{}, State> {
   handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
   handleSaveState = () => {
-    const fs = require('fs');
     // tslint:disable-next-line:no-any
     fs.writeFile('state.json', JSON.stringify(this.state), (err: any) => {
       if (err) {
@@ -185,6 +186,43 @@ export default class App extends PureComponent<{}, State> {
       }
       console.log('The state was saved!');
     });
+  };
+
+  handleLoadState = () => {
+    const rawState = fs.readFileSync('state.json');
+    const state = JSON.parse(rawState);
+    this.setState({
+      //currentLapTimes: state.currentLapTimes,
+      currentLapTime: state.currentLapTime,
+      currentParticipants: state.currentParticipants,
+      currentWorldPosition: state.currentWorldPosition,
+      currentLapNumber: state.currentLapNumber,
+      participantIndex: state.participantIndex,
+      sessionStarted: state.sessionStarted,
+      currentTrackId: state.currentTrackId
+    });
+  };
+
+  renderButtons = () => {
+    return (
+      <div className={styles.navbar}>
+        <button type="button" onClick={this.handleStartRecording}>
+          Start Recording
+        </button>
+        <button type="button" onClick={this.handleStopRecording}>
+          Stop Recording
+        </button>
+        <button type="button" onClick={this.handleSessionRestart}>
+          Restart Session
+        </button>
+        <button type="button" onClick={this.handleSaveState}>
+          Save State
+        </button>
+        <button type="button" onClick={this.handleLoadState}>
+          Load State
+        </button>
+      </div>
+    );
   };
 
   render() {
@@ -200,35 +238,29 @@ export default class App extends PureComponent<{}, State> {
 
     return (
       <div className={styles.homeWrapper}>
-        <button type="button" onClick={this.handleStartRecording}>
-          Start Recording
-        </button>
-        <button type="button" onClick={this.handleStopRecording}>
-          Stop Recording
-        </button>
-        <button type="button" onClick={this.handleSessionRestart}>
-          Restart Session
-        </button>
-        <button type="button" onClick={this.handleSaveState}>
-          Save State
-        </button>
+        {this.renderButtons()}
         <div className={styles.telemetryPanels}>
-          <ParticipantPanel
-            handleParticipantChange={this.handleParticipantChange}
-            currentParticipants={currentParticipants}
-          />
-          <SpeedChart
-            currentLapTimes={currentLapTimes}
-            currentPlayerSpeeds={currentPlayerSpeeds}
-            currentLapNumber={currentLapNumber}
-          />
-          {/*<span>{currentLapTime}</span>*/}
-          {currentTrackId && (
+          <div className={styles.column1}>
+            <ParticipantPanel
+              handleParticipantChange={this.handleParticipantChange}
+              currentParticipants={currentParticipants}
+            />
+          </div>
+          <div className={styles.column2}>
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+              currentLapNumber={currentLapNumber}
+            />
+          </div>
+          <div className={styles.column3}>Column 3</div>
+          <div className={styles.column4}>
+            Column 4
             <Track
               trackId={currentTrackId}
               worldPosition={currentWorldPosition}
             />
-          )}
+          </div>
         </div>
       </div>
     );

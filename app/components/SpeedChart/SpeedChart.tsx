@@ -19,7 +19,7 @@ export class SpeedChart extends PureComponent<Props, any> {
       // doing a !!time filter takes out empty
       // array positions from 1425 to 1428
       // tslint:disable-next-line:no-any
-      .filter((time: any) => !!time);
+      .filter((time: number) => !!time);
 
     // prints last two laps
     const series = [
@@ -30,8 +30,7 @@ export class SpeedChart extends PureComponent<Props, any> {
         type: 'line',
         large: true,
         data: xAxisData.map(
-          // tslint:disable-next-line:no-any
-          (time: any) => currentLapTimes[time][currentLapNumber]
+          (time: number) => currentLapTimes[time][currentLapNumber]
         )
       },
       {
@@ -41,8 +40,7 @@ export class SpeedChart extends PureComponent<Props, any> {
         type: 'line',
         large: true,
         data: xAxisData.map(
-          // tslint:disable-next-line:no-any
-          (time: any) => currentLapTimes[time][currentLapNumber - 1]
+          (time: number) => currentLapTimes[time][currentLapNumber - 1]
         )
       }
     ];
@@ -118,7 +116,7 @@ export class SpeedChart extends PureComponent<Props, any> {
     return (
       <ReactEcharts
         option={this.getSpeedChart()}
-        style={{ height: '350px', width: '50vw' }}
+        style={{ height: '350px', width: '100%' }}
         className="react_for_echarts"
       />
     );
