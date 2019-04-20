@@ -6,7 +6,7 @@ import { Props } from './types';
 import { RaceLine } from './RaceLine';
 import { Coordinate } from './RaceLine/types';
 
-export class Track extends PureComponent<Props> {
+export class TrackMap extends PureComponent<Props> {
   render() {
     const { worldPosition } = this.props;
 

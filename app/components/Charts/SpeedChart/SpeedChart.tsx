@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Props } from './types';
+
 const styles = require('./SpeedChart.css');
 
-export class SpeedChart extends PureComponent<Props> {
+export class SpeedChart extends React.PureComponent<Props> {
   getSpeedChart = () => {
     const { currentLapTimes, currentLapNumber } = this.props;
 

@@ -1,4 +1,4 @@
-import { Coordinate } from './Track/RaceLine/types';
+import { Coordinate } from './TrackMap/RaceLine/types';
 
 export interface Driver {
   firstName: string;

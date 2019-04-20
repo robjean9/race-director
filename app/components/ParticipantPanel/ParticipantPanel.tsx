@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
 import { Props, Participant } from './types';
 
 const styles = require('./ParticipantPanel.css');
 
-// tslint:disable-next-line:no-any
-export class ParticipantPanel extends PureComponent<Props, any> {
+export class ParticipantPanel extends React.PureComponent<Props> {
   selectParticipant = (participant: Participant) =>
     this.props.handleParticipantChange(participant);
 

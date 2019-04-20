@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import { ipcRenderer } from 'electron';
 import * as openSocket from 'socket.io-client';
-import { Track } from './Track';
+import { TrackMap } from './TrackMap';
 import {
   getCurrentParticipants,
   getCurrentWorldPosition
@@ -14,9 +14,10 @@ import {
   State,
   PacketParticipantsData
 } from './types';
-import { SpeedChart } from './SpeedChart';
+import { SpeedChart } from './Charts/SpeedChart';
 import { ParticipantPanel } from './ParticipantPanel';
 import { Participant } from './ParticipantPanel/types';
+import { QuaternaryTemperatureDisplay } from './Charts/QuaternaryTemperatureDisplay/QuaternaryTemperatureDisplay';
 const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
@@ -280,9 +281,11 @@ export default class App extends PureComponent<{}, State> {
           </div>
           <div className={styles.column3}>
             Car Telemetry
-            <div>Tire temps</div>
+            <div className={styles.temperatureDisplays}>
+              <QuaternaryTemperatureDisplay title="Tire Temp" />
+              <QuaternaryTemperatureDisplay title="Brake Temp" />
+            </div>
             <div>Tyre wear</div>
-            <div>Break temps</div>
             <div>Engine RPM</div>
             <div>Tyre Compound</div>
             <div>Fuel in tank / Fuel capacity</div>
@@ -322,7 +325,7 @@ export default class App extends PureComponent<{}, State> {
             <div>Safety Car Deployed</div>
             <div>Track Temperature</div>
             <div>Air Temperature</div>
-            <Track
+            <TrackMap
               trackId={currentTrackId}
               worldPosition={currentWorldPosition}
             />
