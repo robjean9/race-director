@@ -26,7 +26,7 @@ export class TrackMap extends PureComponent<Props> {
         style={{
           width: `${canvasWidth}px`,
           height: `${canvasWidth}px`,
-          border: '1px black solid'
+          border: '1px #2e2e2e solid'
         }}
       >
         <RaceLine

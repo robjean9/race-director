@@ -17,7 +17,8 @@ import {
 import { SpeedChart } from './Charts/SpeedChart';
 import { ParticipantPanel } from './ParticipantPanel';
 import { Participant } from './ParticipantPanel/types';
-import { QuaternaryTemperatureDisplay } from './Charts/QuaternaryTemperatureDisplay/QuaternaryTemperatureDisplay';
+import { QuaternaryTemperatureDisplay } from './Charts/QuaternaryTemperatureDisplay';
+import { RPMChart } from './Charts/RPMChart/RPMChart';
 const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
@@ -285,6 +286,7 @@ export default class App extends PureComponent<{}, State> {
               <QuaternaryTemperatureDisplay title="Tire Temp" />
               <QuaternaryTemperatureDisplay title="Brake Temp" />
             </div>
+            <RPMChart />
             <div>Tyre wear</div>
             <div>Engine RPM</div>
             <div>Tyre Compound</div>

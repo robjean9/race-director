@@ -10,12 +10,12 @@ export class QuaternaryTemperatureDisplay extends React.PureComponent<Props> {
     return (
       <div className={styles.quaternaryTemperatureDisplay}>
         <div className={styles.quaternaryTemperatureDisplayRow}>
-          <UnitDisplay title={`${title} FL`} value={0} />
-          <UnitDisplay title={`${title} FR`} value={0} />
+          <UnitDisplay title={`${title} FL`} value={120} />
+          <UnitDisplay title={`${title} FR`} value={52} />
         </div>
         <div className={styles.quaternaryTemperatureDisplayRow}>
-          <UnitDisplay title={`${title} RL`} value={0} />
-          <UnitDisplay title={`${title} RR`} value={0} />
+          <UnitDisplay title={`${title} RL`} value={245} />
+          <UnitDisplay title={`${title} RR`} value={1} />
         </div>
       </div>
     );

@@ -1,3 +1,3 @@
-import { TireTemperatureDisplay } from './TireTemperatureDisplay';
+import { QuaternaryTemperatureDisplay } from './QuaternaryTemperatureDisplay';
 
-export { TireTemperatureDisplay };
+export { QuaternaryTemperatureDisplay };
