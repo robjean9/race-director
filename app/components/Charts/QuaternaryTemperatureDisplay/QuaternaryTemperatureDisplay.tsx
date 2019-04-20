@@ -9,6 +9,9 @@ export class QuaternaryTemperatureDisplay extends React.PureComponent<Props> {
     const { title } = this.props;
     return (
       <div className={styles.quaternaryTemperatureDisplay}>
+        <span className={styles.quaternaryTemperatureDisplayTitle}>
+          {title}
+        </span>
         <div className={styles.quaternaryTemperatureDisplayRow}>
           <UnitDisplay title={`${title} FL`} value={120} />
           <UnitDisplay title={`${title} FR`} value={52} />

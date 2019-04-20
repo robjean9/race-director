@@ -288,7 +288,6 @@ export default class App extends PureComponent<{}, State> {
             </div>
             <RPMChart />
             <div>Tyre wear</div>
-            <div>Engine RPM</div>
             <div>Tyre Compound</div>
             <div>Fuel in tank / Fuel capacity</div>
             <div>Fuel mix</div>

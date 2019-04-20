@@ -38,7 +38,7 @@ export class RPMChart extends React.PureComponent {
           itemStyle: {
             color: '#f8614e'
           },
-          data: [{ value: 4.2, name: 'x1000' }]
+          data: [{ value: 3.2, name: 'x1000' }]
         }
       ]
     };
@@ -46,11 +46,14 @@ export class RPMChart extends React.PureComponent {
 
   render() {
     return (
-      <ReactEcharts
-        style={{ width: '20vw' }}
-        option={this.getRPMChart()}
-        className={styles.echart}
-      />
+      <div>
+        <span className={styles.title}>Engine RPM</span>
+        <ReactEcharts
+          style={{ width: '20vw' }}
+          option={this.getRPMChart()}
+          className={styles.echart}
+        />
+      </div>
     );
   }
 }
