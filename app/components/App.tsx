@@ -203,9 +203,10 @@ export default class App extends PureComponent<{}, State> {
     });
   };
 
-  renderButtons = () => {
+  renderNavbar = () => {
     return (
       <div className={styles.navbar}>
+        Tracking Hamilton
         <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>
@@ -238,24 +239,89 @@ export default class App extends PureComponent<{}, State> {
 
     return (
       <div className={styles.homeWrapper}>
-        {this.renderButtons()}
+        {this.renderNavbar()}
         <div className={styles.telemetryPanels}>
           <div className={styles.column1}>
+            Session Data
+            <div>Session Type</div>
             <ParticipantPanel
               handleParticipantChange={this.handleParticipantChange}
               currentParticipants={currentParticipants}
             />
           </div>
           <div className={styles.column2}>
+            Telemetry Charts
             <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+              currentLapNumber={currentLapNumber}
+            />
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+              currentLapNumber={currentLapNumber}
+            />
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+              currentLapNumber={currentLapNumber}
+            />
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+              currentLapNumber={currentLapNumber}
+            />
+            Throttle, Gear, Throttle, Break, Steer
           </div>
-          <div className={styles.column3}>Column 3</div>
+          <div className={styles.column3}>
+            Car Telemetry
+            <div>Tire temps</div>
+            <div>Tyre wear</div>
+            <div>Break temps</div>
+            <div>Engine RPM</div>
+            <div>Tyre Compound</div>
+            <div>Fuel in tank / Fuel capacity</div>
+            <div>Fuel mix</div>
+            <div>ERS Deploy Mode</div>
+            <div>ERS Stored Energy</div>
+            {/*
+            Car Setup
+            <div>Front wing</div>
+            <div>Rear wing</div>
+            <div>Differential adjustment on throttle</div>
+            <div>Differential adjustment off throttle</div>
+            <div>Front camber angle</div>
+            <div>Rear camber angle</div>
+            <div>Front toe angle</div>
+            <div>Rear toe angle</div>
+            <div>Front suspension</div>
+            <div>Rear suspension</div>
+            <div>
+              Front anti-roll bar Front anti-roll bar Front ride height Rear
+              ride height Brake pressure (percentage) Brake bias Front tyre
+              pressure Rear tyre pressure Ballast Fuel load
+            </div>
+             */}
+            Lap Timing
+            <div>Last Lap Time</div>
+            <div>Current Lap Time</div>
+            <div>Best Lap Time</div>
+            <div>Sector 1 Time</div>
+            <div>Sector 2 Time</div>
+            <div>Current Lap Num</div>
+            <div>Penalties</div>
+          </div>
           <div className={styles.column4}>
-            Column 4
+            Track Data
+            <div>Weather</div>
+            <div>Safety Car Deployed</div>
+            <div>Track Temperature</div>
+            <div>Air Temperature</div>
             <Track
               trackId={currentTrackId}
               worldPosition={currentWorldPosition}

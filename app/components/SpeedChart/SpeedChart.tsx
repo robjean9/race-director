@@ -2,9 +2,9 @@ import * as React from 'react';
 import { PureComponent } from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Props } from './types';
+const styles = require('./SpeedChart.css');
 
-// tslint:disable-next-line:no-any
-export class SpeedChart extends PureComponent<Props, any> {
+export class SpeedChart extends PureComponent<Props> {
   getSpeedChart = () => {
     const { currentLapTimes, currentLapNumber } = this.props;
 
@@ -46,6 +46,22 @@ export class SpeedChart extends PureComponent<Props, any> {
     ];
 
     return {
+      title: {
+        text: 'Speed [km/h]',
+        //left: '60px',
+        //top: '30px',
+        textStyle: {
+          color: '#00d2be',
+          fontWeight: 'lighter',
+          fontSize: '12px'
+        }
+      },
+      grid: {
+        left: 5,
+        top: 25,
+        right: 15,
+        bottom: 10
+      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -100,24 +116,16 @@ export class SpeedChart extends PureComponent<Props, any> {
           }
         }
       ],
-      series,
-      dataZoom: [
-        {
-          type: 'inside'
-        },
-        {
-          type: 'slider'
-        }
-      ]
+      series
     };
   };
 
   render() {
     return (
       <ReactEcharts
+        style={{ height: '20vh' }}
         option={this.getSpeedChart()}
-        style={{ height: '350px', width: '100%' }}
-        className="react_for_echarts"
+        className={styles.echart}
       />
     );
   }
