@@ -21,6 +21,7 @@ import { QuaternaryTemperatureDisplay } from './Charts/QuaternaryTemperatureDisp
 import { RPMChart } from './Charts/RPMChart/RPMChart';
 import { SingleBarDisplay } from './Charts/SingleBarDisplay';
 import { UnitDisplay } from './Charts/UnitDisplay/UnitDisplay';
+import { TimeDisplay } from './Charts/TimeDisplay';
 const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
@@ -317,6 +318,10 @@ export default class App extends PureComponent<{}, State> {
                 maxValue={100}
               />
             </div>
+            <div className={styles.timeDisplays}>
+              <TimeDisplay />
+            </div>
+
             {/*
             Car Setup
             <div>Front wing</div>
@@ -335,14 +340,6 @@ export default class App extends PureComponent<{}, State> {
               pressure Rear tyre pressure Ballast Fuel load
             </div>
              */}
-            Lap Timing
-            <div>Last Lap Time</div>
-            <div>Current Lap Time</div>
-            <div>Best Lap Time</div>
-            <div>Sector 1 Time</div>
-            <div>Sector 2 Time</div>
-            <div>Current Lap Num</div>
-            <div>Penalties</div>
           </div>
           <div className={styles.column4}>
             Track Data
