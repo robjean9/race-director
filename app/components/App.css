@@ -42,6 +42,14 @@
   flex-wrap: nowrap;
 }
 
+.engineDisplays {
+  display: flex;
+}
+
+.carSetupWrapper {
+  display: flex;
+}
+
 .column1 {
   flex: 0 0 10vw;
   height: 100%;

@@ -19,6 +19,8 @@ import { ParticipantPanel } from './ParticipantPanel';
 import { Participant } from './ParticipantPanel/types';
 import { QuaternaryTemperatureDisplay } from './Charts/QuaternaryTemperatureDisplay';
 import { RPMChart } from './Charts/RPMChart/RPMChart';
+import { SingleBarDisplay } from './Charts/SingleBarDisplay';
+import { UnitDisplay } from './Charts/UnitDisplay/UnitDisplay';
 const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
@@ -244,7 +246,6 @@ export default class App extends PureComponent<{}, State> {
         {this.renderNavbar()}
         <div className={styles.telemetryPanels}>
           <div className={styles.column1}>
-            Session Data
             <div>Session Type</div>
             <ParticipantPanel
               handleParticipantChange={this.handleParticipantChange}
@@ -252,47 +253,70 @@ export default class App extends PureComponent<{}, State> {
             />
           </div>
           <div className={styles.column2}>
-            Telemetry Charts
+            {/* Speed */}
             <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
+            {/* Engine */}
             <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
+            {/* Gear */}
             <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
+            {/* Throttle */}
             <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
+            {/* Brake */}
             <SpeedChart
               currentLapTimes={currentLapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
-            Throttle, Gear, Throttle, Break, Steer
+            {/* Steer */}
+            <SpeedChart
+              currentLapTimes={currentLapTimes}
+              currentPlayerSpeeds={currentPlayerSpeeds}
+              currentLapNumber={currentLapNumber}
+            />
           </div>
           <div className={styles.column3}>
-            Car Telemetry
             <div className={styles.temperatureDisplays}>
               <QuaternaryTemperatureDisplay title="Tire Temp" />
               <QuaternaryTemperatureDisplay title="Brake Temp" />
             </div>
-            <RPMChart />
-            <div>Tyre wear</div>
-            <div>Tyre Compound</div>
-            <div>Fuel in tank / Fuel capacity</div>
-            <div>Fuel mix</div>
-            <div>ERS Deploy Mode</div>
-            <div>ERS Stored Energy</div>
+            <div className={styles.temperatureDisplays}>
+              <QuaternaryTemperatureDisplay title="Tyre wear" />
+              <QuaternaryTemperatureDisplay title="Tyre damage" />
+            </div>
+            <div className={styles.carSetupWrapper}>
+              <UnitDisplay title={`Tire Compound`} value={1} />
+              <UnitDisplay title={`Fuel Mix`} value={1} />
+              <UnitDisplay title={`ERS Deploy Mode`} value={1} />
+            </div>
+            <div className={styles.engineDisplays}>
+              <RPMChart />
+              <SingleBarDisplay
+                title={'Fuel' /* in tank / Fuel capacity */}
+                value={20}
+                maxValue={200}
+              />
+              <SingleBarDisplay
+                title={'ERS' /* Stored Energy / total energy */}
+                value={50}
+                maxValue={100}
+              />
+            </div>
             {/*
             Car Setup
             <div>Front wing</div>

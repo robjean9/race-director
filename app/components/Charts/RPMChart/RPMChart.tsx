@@ -46,13 +46,15 @@ export class RPMChart extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <div className={styles.chartWrapper}>
         <span className={styles.title}>Engine RPM</span>
-        <ReactEcharts
-          style={{ width: '20vw' }}
-          option={this.getRPMChart()}
-          className={styles.echart}
-        />
+        <div className={styles.gaugeWrapper}>
+          <ReactEcharts
+            style={{ height: '30vh' }}
+            option={this.getRPMChart()}
+            className={styles.echart}
+          />
+        </div>
       </div>
     );
   }

@@ -1,0 +1,11 @@
+.gaugeWrapper {
+  background-color: transparent;
+}
+
+.chartWrapper {
+  width: 66%;
+}
+
+.echart {
+  padding: 0;
+}
