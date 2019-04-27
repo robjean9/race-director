@@ -1,11 +1,11 @@
 import * as React from 'react';
 import * as openSocket from 'socket.io-client';
 import { ipcRenderer } from 'electron';
+
 const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
 
-import { TrackMap } from './TrackMap';
 import {
   getCurrentParticipants,
   getCurrentWorldPosition
@@ -17,16 +17,14 @@ import {
   State,
   PacketParticipantsData
 } from './types';
+
 import { Participant } from './ParticipantPanel/types';
-import { ParticipantPanel } from './ParticipantPanel';
 import {
-  SpeedChart,
-  QuaternaryIndicator,
-  UnaryIndicator,
-  RPMGaugeChart,
-  SingleBarChart,
-  TimeIndicator
-} from './VisualData';
+  GraphsColumn,
+  InstrumentsColumn,
+  ParticipantsColumn,
+  SessionColumn
+} from './DataColumns';
 
 const START_F1_CLIENT = 'startF1Client';
 const STOP_F1_CLIENT = 'stopF1Client';
@@ -87,7 +85,7 @@ export default class App extends React.PureComponent<{}, State> {
       sessionStarted && this.carTelemetryPackageCount % PACKAGE_LOSS === 0;
 
     if (shouldUpdateState) {
-      this.updateCurrentTelemetry(e);
+      this.updateCarTelemetry(e);
     }
 
     this.carTelemetryPackageCount++;
@@ -158,7 +156,7 @@ export default class App extends React.PureComponent<{}, State> {
   };
 
   // stores current player speed to state
-  updateCurrentTelemetry = (carTelemetryPackage: PacketCarTelemetryData) => {
+  updateCarTelemetry = (carTelemetryPackage: PacketCarTelemetryData) => {
     const { participantIndex } = this.state;
     const currentPlayerSpeed =
       carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
@@ -258,110 +256,25 @@ export default class App extends React.PureComponent<{}, State> {
         {this.renderNavbar()}
         <div className={styles.telemetryPanels}>
           <div className={styles.column1}>
-            <div>Session Type</div>
-            <ParticipantPanel
-              handleParticipantChange={this.handleParticipantChange}
+            <ParticipantsColumn
+              onParticipantChange={this.handleParticipantChange}
               currentParticipants={currentParticipants}
             />
           </div>
           <div className={styles.column2}>
-            {/* Speed */}
-            <SpeedChart
-              currentLapTimes={lapTimes}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />
-
-            {/* Engine 
-            <EngineChart
-              currentLapTimes={lapTimes}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />*/}
-            {/* Gear */}
-            <SpeedChart
-              currentLapTimes={lapTimes}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />
-            {/* Throttle */}
-            <SpeedChart
-              currentLapTimes={lapTimes}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />
-            {/* Brake */}
-            <SpeedChart
-              currentLapTimes={lapTimes}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />
-            {/* Steer */}
-            <SpeedChart
-              currentLapTimes={lapTimes}
+            <GraphsColumn
+              lapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
           </div>
           <div className={styles.column3}>
-            <div className={styles.temperatureDisplays}>
-              <QuaternaryIndicator title="Tire Temp" />
-              <QuaternaryIndicator title="Brake Temp" />
-            </div>
-            <div className={styles.temperatureDisplays}>
-              <QuaternaryIndicator title="Tyre wear" />
-              <QuaternaryIndicator title="Tyre damage" />
-            </div>
-            <div className={styles.carSetupWrapper}>
-              <UnaryIndicator title={`Tire Compound`} value={1} />
-              <UnaryIndicator title={`Fuel Mix`} value={1} />
-              <UnaryIndicator title={`ERS Deploy Mode`} value={1} />
-            </div>
-            <div className={styles.engineDisplays}>
-              <RPMGaugeChart />
-              <SingleBarChart
-                title={'Fuel' /* in tank / Fuel capacity */}
-                value={20}
-                maxValue={200}
-              />
-              <SingleBarChart
-                title={'ERS' /* Stored Energy / total energy */}
-                value={50}
-                maxValue={100}
-              />
-            </div>
-            <div className={styles.timeDisplays}>
-              <TimeIndicator title={'Lap Timing'} />
-            </div>
-
-            {/*
-            Car Setup
-            <div>Front wing</div>
-            <div>Rear wing</div>
-            <div>Differential adjustment on throttle</div>
-            <div>Differential adjustment off throttle</div>
-            <div>Front camber angle</div>
-            <div>Rear camber angle</div>
-            <div>Front toe angle</div>
-            <div>Rear toe angle</div>
-            <div>Front suspension</div>
-            <div>Rear suspension</div>
-            <div>
-              Front anti-roll bar Front anti-roll bar Front ride height Rear
-              ride height Brake pressure (percentage) Brake bias Front tyre
-              pressure Rear tyre pressure Ballast Fuel load
-            </div>
-             */}
+            <InstrumentsColumn />
           </div>
           <div className={styles.column4}>
-            Track Data
-            <div>Weather</div>
-            <div>Safety Car Deployed</div>
-            <div>Track Temperature</div>
-            <div>Air Temperature</div>
-            <TrackMap
-              trackId={currentTrackId}
-              worldPosition={currentWorldPosition}
+            <SessionColumn
+              currentTrackId={currentTrackId}
+              currentWorldPosition={currentWorldPosition}
             />
           </div>
         </div>
