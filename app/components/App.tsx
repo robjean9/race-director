@@ -4,28 +4,27 @@ import { ipcRenderer } from 'electron';
 
 const fs = require('fs');
 const styles = require('./App.css');
-const remote = require('electron').remote;
 
 import {
   getCurrentParticipants,
   getCurrentWorldPosition
 } from '../packages/transformations';
-import {
-  PacketCarTelemetryData,
-  PacketLapData,
-  PacketMotionData,
-  State,
-  PacketParticipantsData
-} from './types';
+import { State, Participant } from './types';
 
-import { Participant } from './ParticipantPanel/types';
 import {
-  GraphsColumn,
-  InstrumentsColumn,
-  ParticipantsColumn,
-  SessionColumn
-} from './DataColumns';
+  GraphsPanel,
+  InstrumentsPanel,
+  ParticipantsPanel,
+  SessionPanel
+} from './DataPanels';
 import { Toolbar } from './Toolbar';
+import {
+  PacketLapData,
+  PacketCarTelemetryData,
+  PacketMotionData,
+  PacketParticipantsData
+} from 'f1-telemetry-client/build/src/parsers/packets/types';
+import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 
 const START_F1_CLIENT = 'startF1Client';
 const STOP_F1_CLIENT = 'stopF1Client';
@@ -41,8 +40,6 @@ const initialState: State = {
   sessionStarted: false,
   currentTrackId: -1
 };
-
-const { PACKETS } = remote.getGlobal('telemetryClientConstants');
 
 // bigger package loss means more package being skipped
 // (improves performance, lowers accuracy)
@@ -240,23 +237,23 @@ export default class App extends React.PureComponent<{}, State> {
         />
         <div className={styles.telemetryPanels}>
           <div className={styles.column1}>
-            <ParticipantsColumn
+            <ParticipantsPanel
               onParticipantChange={this.handleParticipantChange}
               currentParticipants={currentParticipants}
             />
           </div>
           <div className={styles.column2}>
-            <GraphsColumn
+            <GraphsPanel
               lapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
           </div>
           <div className={styles.column3}>
-            <InstrumentsColumn />
+            <InstrumentsPanel />
           </div>
           <div className={styles.column4}>
-            <SessionColumn
+            <SessionPanel
               currentTrackId={currentTrackId}
               currentWorldPosition={currentWorldPosition}
             />

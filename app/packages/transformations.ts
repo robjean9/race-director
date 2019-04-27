@@ -1,5 +1,9 @@
-import { Participant } from '../components/ParticipantPanel/types';
-import { ParticipantData, PacketMotionData } from '../components/types';
+import {
+  ParticipantData,
+  PacketMotionData
+} from 'f1-telemetry-client/build/src/parsers/packets/types';
+import { Participant } from '../components/types';
+
 const remote = require('electron').remote;
 const { DRIVERS, TEAMS } = remote.getGlobal('telemetryClientConstants');
 
