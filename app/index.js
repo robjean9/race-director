@@ -12,7 +12,6 @@ render(
 
 if (module.hot) {
   module.hot.accept('./components/App', () => {
-    // eslint-disable-next-line global-require
     const NextRoot = require('./components/App').default;
     render(
       <AppContainer>

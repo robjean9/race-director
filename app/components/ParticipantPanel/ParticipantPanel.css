@@ -1,6 +1,7 @@
 .racerPanelWrapper {
-  font-family: Formula1;
+  font-family: Formula1Regular;
   user-select: none;
+  width: 10vw;
 }
 
 .participantWrapper {
@@ -9,6 +10,7 @@
   border-bottom: 2px solid #0c0c14;
   cursor: pointer;
   align-content: center;
+  flex-basis: auto;
 }
 
 .teamTag {

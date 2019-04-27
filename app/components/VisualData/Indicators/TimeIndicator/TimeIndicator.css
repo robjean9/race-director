@@ -1,0 +1,16 @@
+.timeIndicatorWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: red;
+}
+
+.timeRow {
+  display: flex;
+  flex-direction: row;
+  align-content: space-around;
+  justify-content: space-between;
+}
+
+.title {
+}

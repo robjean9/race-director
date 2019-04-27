@@ -1,20 +1,20 @@
-import { IParticipant } from '../components/ParticipantPanel/types';
-import { IParticipantData, IPacketMotionData } from '../components/types';
+import { Participant } from '../components/ParticipantPanel/types';
+import { ParticipantData, PacketMotionData } from '../components/types';
 const remote = require('electron').remote;
 const { DRIVERS, TEAMS } = remote.getGlobal('telemetryClientConstants');
 
-// Returns IParticipant[] or void
+// Returns Participant[] or void
 export const getCurrentParticipants = (
-  participantList: IParticipantData[]
-): IParticipant[] | void => {
+  participantList: ParticipantData[]
+): Participant[] | void => {
   if (participantList.length === 0) {
     return;
   }
 
-  const currentParticipants: IParticipant[] = participantList.map(
+  const currentParticipants: Participant[] = participantList.map(
     (participant, index) => {
       // move this to Participant class constructor
-      const driver: IParticipant = DRIVERS[participant.m_driverId] || {
+      const driver: Participant = DRIVERS[participant.m_driverId] || {
         abbreviation: participant.m_name.substr(0, 3),
         firstName: participant.m_name
       };
@@ -29,7 +29,7 @@ export const getCurrentParticipants = (
 
 // Transforms received position to be usable by the map
 export const getCurrentWorldPosition = (
-  motionPackage: IPacketMotionData,
+  motionPackage: PacketMotionData,
   participantIndex: number
 ) => {
   const x =

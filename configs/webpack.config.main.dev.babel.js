@@ -40,7 +40,6 @@ export default merge.smart(baseConfig, {
 
   plugins: [
     new CleanWebpackPlugin({
-      verbose: true,
       cleanOnceBeforeBuildPatterns: ['app/main.dev.js', 'app/main.dev.js.map']
     }),
     new BundleAnalyzerPlugin({

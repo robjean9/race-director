@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
-import { IProps, IParticipant } from './types';
+import * as React from 'react';
+import { Props, Participant } from './types';
 
 const styles = require('./ParticipantPanel.css');
 
-export default class ParticipantPanel extends PureComponent<IProps, any> {
-  selectParticipant = (participant: IParticipant) =>
+export class ParticipantPanel extends React.PureComponent<Props> {
+  selectParticipant = (participant: Participant) =>
     this.props.handleParticipantChange(participant);
 
   renderNames = () => {

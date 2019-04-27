@@ -1,36 +1,45 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
+import * as openSocket from 'socket.io-client';
 import { ipcRenderer } from 'electron';
-import openSocket from 'socket.io-client';
-import Track from './Track';
-import { START_F1_CLIENT, STOP_F1_CLIENT } from '../constants/f1client';
+
+const fs = require('fs');
+const styles = require('./App.css');
+const remote = require('electron').remote;
+
 import {
   getCurrentParticipants,
   getCurrentWorldPosition
 } from '../packages/transformations';
 import {
-  IPacketCarTelemetryData,
-  IPacketLapData,
-  IPacketMotionData,
-  IState,
-  IPacketParticipantsData
+  PacketCarTelemetryData,
+  PacketLapData,
+  PacketMotionData,
+  State,
+  PacketParticipantsData
 } from './types';
-import SpeedChart from './SpeedChart';
-import ParticipantPanel from './ParticipantPanel';
-import { IParticipant } from './ParticipantPanel/types';
-const styles = require('./App.css');
-const remote = require('electron').remote;
 
-const initialState: IState = {
-  currentLapTimes: [[]],
+import { Participant } from './ParticipantPanel/types';
+import {
+  GraphsColumn,
+  InstrumentsColumn,
+  ParticipantsColumn,
+  SessionColumn
+} from './DataColumns';
+import { Toolbar } from './Toolbar';
+
+const START_F1_CLIENT = 'startF1Client';
+const STOP_F1_CLIENT = 'stopF1Client';
+
+const initialState: State = {
+  lapTimes: [[]],
   currentLapTime: 0,
   currentPlayerSpeeds: [],
   currentWorldPosition: { x: 0, y: 0 },
   currentParticipants: [],
   currentLapNumber: 0,
   participantIndex: 0,
-  currentTrackId: undefined,
-  sessionStarted: false
+  sessionStarted: false,
+  currentTrackId: -1
 };
 
 const { PACKETS } = remote.getGlobal('telemetryClientConstants');
@@ -39,67 +48,83 @@ const { PACKETS } = remote.getGlobal('telemetryClientConstants');
 // (improves performance, lowers accuracy)
 const PACKAGE_LOSS = 3;
 
-export default class App extends PureComponent<any, IState> {
+// tslint:disable-next-line:no-default-export
+export default class App extends React.PureComponent<{}, State> {
   lapDataPackageCount = 0;
   carTelemetryPackageCount = 0;
   motionPackageCount = 0;
 
-  constructor(props) {
+  // tslint:disable-next-line:no-any
+  constructor(props: any) {
     super(props);
     this.state = initialState;
   }
 
   componentDidMount() {
-    this.openSocket();
+    const socket = openSocket('http://localhost:24500');
+    socket.on(PACKETS.lapData, this.handleLapDataPacket);
+    socket.on(PACKETS.carTelemetry, this.handleCarTelemetryPacket);
+    socket.on(PACKETS.session, this.handleSessionPacket);
+    socket.on(PACKETS.motion, this.handleMotionPacket);
+    socket.on(PACKETS.participants, this.handleParticipantsPacket);
   }
 
-  openSocket = () => {
-    const socket = openSocket('http://localhost:24500');
+  handleLapDataPacket = (e: PacketLapData) => {
+    const { sessionStarted } = this.state;
 
-    socket.on(PACKETS.lapData, e => {
-      const { sessionStarted } = this.state;
-      if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
-        this.updateCurrentLapTime(e);
-      }
-      this.lapDataPackageCount++;
-    });
-    socket.on(PACKETS.carTelemetry, e => {
-      const { sessionStarted } = this.state;
-      if (
-        sessionStarted &&
-        this.carTelemetryPackageCount % PACKAGE_LOSS === 0
-      ) {
-        this.updateCurrentPlayerSpeed(e);
-      }
-      this.carTelemetryPackageCount++;
-    });
-    socket.on(PACKETS.session, e => {
-      if (e.m_sessionTimeLeft < e.m_sessionDuration) {
-        this.setState({ sessionStarted: true });
-      }
-      this.setState({ currentTrackId: e.m_trackId });
-    });
-    socket.on(PACKETS.motion, e => {
-      if (this.motionPackageCount % PACKAGE_LOSS === 0) {
-        this.updateTrack(e);
-      }
-      this.motionPackageCount++;
-    });
-    socket.on(PACKETS.participants, e => {
-      this.updateParticipants(e);
-    });
+    if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
+      this.updateCurrentLapTime(e);
+    }
+
+    this.lapDataPackageCount++;
+  };
+
+  handleCarTelemetryPacket = (e: PacketCarTelemetryData) => {
+    const { sessionStarted } = this.state;
+
+    const shouldUpdateState =
+      sessionStarted && this.carTelemetryPackageCount % PACKAGE_LOSS === 0;
+
+    if (shouldUpdateState) {
+      this.updateCarTelemetry(e);
+    }
+
+    this.carTelemetryPackageCount++;
+  };
+
+  handleSessionPacket = (e: {
+    m_sessionTimeLeft: number;
+    m_sessionDuration: number;
+    m_trackId: number;
+  }) => {
+    if (e.m_sessionTimeLeft < e.m_sessionDuration) {
+      this.setState({ sessionStarted: true });
+    }
+    this.setState({ currentTrackId: e.m_trackId });
+  };
+
+  handleMotionPacket = (e: PacketMotionData) => {
+    if (this.motionPackageCount % PACKAGE_LOSS === 0) {
+      this.updateTrack(e);
+    }
+    this.motionPackageCount++;
+  };
+
+  handleParticipantsPacket = (e: PacketParticipantsData) => {
+    this.updateParticipants(e);
   };
 
   // Stores current participants data to state
-  updateParticipants = (participantsPackage: IPacketParticipantsData) => {
+  updateParticipants = (participantsPackage: PacketParticipantsData) => {
     const currentParticipants = getCurrentParticipants(
       participantsPackage.m_participants
     );
+    // tslint:disable-next-line:no-unused-expression
     currentParticipants && this.setState({ currentParticipants });
   };
 
   // Update track position
-  updateTrack = (motionPackage: IPacketMotionData) => {
+  updateTrack = (motionPackage: PacketMotionData) => {
     const { participantIndex } = this.state;
     const currentWorldPosition = getCurrentWorldPosition(
       motionPackage,
@@ -109,7 +134,7 @@ export default class App extends PureComponent<any, IState> {
   };
 
   // stores current lap time to state
-  updateCurrentLapTime = (lapTimePackage: IPacketLapData) => {
+  updateCurrentLapTime = (lapTimePackage: PacketLapData) => {
     const { participantIndex } = this.state;
     const currentLapNumber =
       lapTimePackage.m_lapData[participantIndex].m_currentLapNum - 1;
@@ -120,31 +145,40 @@ export default class App extends PureComponent<any, IState> {
     this.setState(prevState => {
       // TODO: avoid slicing currentLapTimes if lap already exist,
       //       but return currentLapNumber either way
-      const currentLapTimes = prevState.currentLapTimes.slice();
+      const currentLapTimes = prevState.lapTimes.slice();
       currentLapTimes[currentLapTime] = [];
-      return { currentLapTimes, currentLapTime, currentLapNumber };
+      return {
+        ...prevState,
+        currentLapTimes,
+        currentLapTime,
+        currentLapNumber
+      };
     });
   };
 
   // stores current player speed to state
-  updateCurrentPlayerSpeed = (carTelemetryPackage: IPacketCarTelemetryData) => {
+  updateCarTelemetry = (carTelemetryPackage: PacketCarTelemetryData) => {
     const { participantIndex } = this.state;
     const currentPlayerSpeed =
       carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
+    const currentEngineRPM =
+      carTelemetryPackage.m_carTelemetryData[participantIndex].m_engineRPM;
 
-    this.setState(prevState => {
-      const { currentLapNumber, currentLapTime, currentLapTimes } = prevState;
-      if (!currentLapTimes || currentLapTimes.length === 0) {
-        return;
+    this.setState(
+      (prevState): State | undefined => {
+        const { currentLapNumber, currentLapTime, lapTimes } = prevState;
+        if (!lapTimes || lapTimes.length === 0) {
+          return;
+        }
+        lapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
+        return { ...prevState, lapTimes };
       }
-      currentLapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
-      return { currentLapTimes };
-    });
+    );
   };
 
-  handleParticipantChange = (participant: IParticipant) => {
+  handleParticipantChange = (participant: Participant) => {
     this.setState({
-      currentLapTimes: [],
+      lapTimes: [],
       currentPlayerSpeeds: [],
       currentWorldPosition: { x: 0, y: 0 },
       participantIndex: participant.index,
@@ -159,11 +193,37 @@ export default class App extends PureComponent<any, IState> {
 
   handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
 
+  handleSaveState = () => {
+    // tslint:disable-next-line:no-any
+    fs.writeFile('state.json', JSON.stringify(this.state), (err: any) => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log('The state was saved!');
+    });
+  };
+
+  handleLoadState = () => {
+    const rawState = fs.readFileSync('state.json');
+    const state = JSON.parse(rawState);
+    this.setState({
+      //currentLapTimes: state.currentLapTimes,
+      currentLapTime: state.currentLapTime,
+      currentParticipants: state.currentParticipants,
+      currentWorldPosition: state.currentWorldPosition,
+      currentLapNumber: state.currentLapNumber,
+      participantIndex: state.participantIndex,
+      sessionStarted: state.sessionStarted,
+      currentTrackId: state.currentTrackId
+    });
+  };
+
   render() {
     const {
       currentTrackId,
       currentWorldPosition,
-      currentLapTimes,
+      //currentLapTime,
+      lapTimes,
       currentLapNumber,
       currentPlayerSpeeds,
       currentParticipants
@@ -171,31 +231,36 @@ export default class App extends PureComponent<any, IState> {
 
     return (
       <div className={styles.homeWrapper}>
-        <button type="button" onClick={this.handleStartRecording}>
-          Start Recording
-        </button>
-        <button type="button" onClick={this.handleStopRecording}>
-          Stop Recording
-        </button>
-        <button type="button" onClick={this.handleSessionRestart}>
-          Restart Session
-        </button>
+        <Toolbar
+          onHandleLoadState={this.handleLoadState}
+          onHandleSaveState={this.handleSaveState}
+          onHandleSessionRestart={this.handleSessionRestart}
+          onHandleStartRecording={this.handleStartRecording}
+          onHandleStopRecording={this.handleStopRecording}
+        />
         <div className={styles.telemetryPanels}>
-          <ParticipantPanel
-            handleParticipantChange={this.handleParticipantChange}
-            currentParticipants={currentParticipants}
-          />
-          <div className={styles.chartsWrapper}>
-            <SpeedChart
-              currentLapTimes={currentLapTimes}
+          <div className={styles.column1}>
+            <ParticipantsColumn
+              onParticipantChange={this.handleParticipantChange}
+              currentParticipants={currentParticipants}
+            />
+          </div>
+          <div className={styles.column2}>
+            <GraphsColumn
+              lapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
           </div>
-          <Track
-            trackId={currentTrackId}
-            worldPosition={currentWorldPosition}
-          />
+          <div className={styles.column3}>
+            <InstrumentsColumn />
+          </div>
+          <div className={styles.column4}>
+            <SessionColumn
+              currentTrackId={currentTrackId}
+              currentWorldPosition={currentWorldPosition}
+            />
+          </div>
         </div>
       </div>
     );

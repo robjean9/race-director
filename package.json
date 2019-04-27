@@ -1,6 +1,6 @@
 {
-  "name": "skim-electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "name": "race-director",
+  "productName": "RaceDirector",
   "version": "0.1.0",
   "description": "",
   "scripts": {
@@ -11,9 +11,8 @@
     "build-main-dev": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.main.dev.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
     "dev": "yarn build-main-dev && cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
-    "lint": "cross-env NODE_ENV=development eslint --cache --format=pretty .",
     "lint-fix": "yarn --silent lint --fix; exit 0",
-    "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
+    "lint-styles": "stylelint --ignore-path '**/*.*(css|scss)' --syntax scss",
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
     "package": "yarn build && electron-builder build --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
@@ -21,9 +20,8 @@
     "package-linux": "yarn build && electron-builder build --linux",
     "package-win": "yarn build && electron-builder build --win --x64",
     "postinstall": "electron-builder install-app-deps package.json && yarn build-dll",
-    "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
-    "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
-    "precommit": "lint-staged",
+    "postlint-fix": "prettier --ignore-path --single-quote --write '**/*.{*{js,jsx,json},babelrc,prettierrc,stylelintrc}'",
+    "postlint-styles-fix": "prettier --ignore-path --single-quote --write '**/*.{css,scss}'",
     "prestart": "yarn build",
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r @babel/register ./app/main.dev.js",
@@ -34,30 +32,10 @@
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
     "test-watch": "yarn test --watch"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "cross-env NODE_ENV=development eslint --cache --format=pretty",
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ],
-    "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
-      "prettier --ignore-path .eslintignore --parser json --write",
-      "git add"
-    ],
-    "*.{css,scss}": [
-      "stylelint --ignore-path .eslintignore --syntax scss --fix",
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ],
-    "*.{yml,md}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ]
-  },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.jonybur.ElectronReact",
+    "productName": "RaceDirector",
+    "appId": "org.jonybur.RaceDirector",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -100,21 +78,21 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "skim-electron-react-boilerplate",
-      "repo": "skim-electron-react-boilerplate",
+      "owner": "race-director",
+      "repo": "race-director",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jonybur/skim-electron-react-boilerplate.git"
+    "url": "git+https://github.com/jonybur/race-director.git"
   },
   "author": {
     "name": "Jonathan Bursztyn",
     "email": "jonathan@bursztyn.io"
   },
   "bugs": {
-    "url": "https://github.com/jonybur/skim-electron-react-boilerplate/issues"
+    "url": "https://github.com/jonybur/race-director/issues"
   },
   "keywords": [
     "f1 2018",
@@ -136,7 +114,7 @@
     "e sports",
     "e-sports"
   ],
-  "homepage": "https://github.com/jonybur/skim-electron-react-boilerplate#readme",
+  "homepage": "https://github.com/jonybur/race-director#readme",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {
@@ -181,7 +159,6 @@
     "@babel/register": "^7.0.0",
     "@types/react": "^16.8.1",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-dev-expression": "^0.2.1",
@@ -202,20 +179,9 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "enzyme-to-json": "^3.3.4",
-    "eslint": "^5.9.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^3.3.0",
-    "eslint-formatter-pretty": "^2.0.0",
-    "eslint-import-resolver-webpack": "^0.10.1",
-    "eslint-plugin-compat": "^2.6.3",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^22.0.0",
-    "eslint-plugin-jsx-a11y": "6.1.2",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-testcafe": "^0.2.1",
-    "f1-telemetry-client": "0.1.4",
+    "f1-telemetry-client": "0.1.6",
     "file-loader": "^2.0.0",
+    "gts": "^0.9.0",
     "husky": "^1.1.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^23.6.0",
@@ -252,18 +218,18 @@
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
     "webpack-merge": "^4.1.4",
-    "yarn": "^1.12.3",
-    "gts": "^0.9.0"
+    "yarn": "^1.12.3"
   },
   "dependencies": {
+    "@types/socket.io-client": "^1.4.32",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
     "electron-updater": "^3.2.3",
-    "konva": "^2.6.0",
+    "konva": "3.2.5",
+    "react-konva": "16.8.7-0",
     "react": "16.8.0",
     "react-dom": "16.8.0",
     "react-hot-loader": "^4.3.12",
-    "react-konva": "^16.8.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "socket.io": "^2.2.0",

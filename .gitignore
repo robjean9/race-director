@@ -21,7 +21,6 @@ coverage
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-.eslintcache
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
@@ -30,9 +29,6 @@ out
 
 # OSX
 .DS_Store
-
-# Optional eslint cache
-.eslintcache
 
 # Race Director data
 *.rd
@@ -51,6 +47,7 @@ dist
 dll
 main.js
 main.js.map
+state.json
 
 .idea
 npm-debug.log.*
