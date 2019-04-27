@@ -7,10 +7,9 @@ export interface Driver {
 }
 
 export interface State {
-  // lap x time
-  currentLapTimes: number[][];
+  // time x lap
+  lapTimes: number[][];
   currentLapTime: number;
-  // lap x speed
   // tslint:disable-next-line:no-any
   currentPlayerSpeeds: any;
   // world positions

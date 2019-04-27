@@ -1,10 +1,10 @@
-.quaternaryTemperatureDisplay {
+.quaternaryUnitDisplay {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.quaternaryTemperatureDisplayRow {
+.quaternaryUnitDisplayRow {
   display: flex;
   flex-direction: row;
 }

@@ -14,14 +14,15 @@ import {
   State,
   PacketParticipantsData
 } from './types';
-import { SpeedChart } from './Charts/SpeedChart';
+import { SpeedChart } from './VisualData/SpeedChart';
 import { ParticipantPanel } from './ParticipantPanel';
 import { Participant } from './ParticipantPanel/types';
-import { QuaternaryTemperatureDisplay } from './Charts/QuaternaryTemperatureDisplay';
-import { RPMChart } from './Charts/RPMChart/RPMChart';
-import { SingleBarDisplay } from './Charts/SingleBarDisplay';
-import { UnitDisplay } from './Charts/UnitDisplay/UnitDisplay';
-import { TimeDisplay } from './Charts/TimeDisplay';
+import { quaternaryUnitDisplay } from './VisualData/quaternaryUnitDisplay';
+import { RPMChart } from './VisualData/RPMChart/RPMChart';
+import { SingleBarDisplay } from './VisualData/SingleBarDisplay';
+import { UnitDisplay } from './VisualData/UnitDisplay/UnitDisplay';
+import { TimeDisplay } from './VisualData/TimeDisplay';
+import { EngineChart } from './VisualData/EngineChart';
 const fs = require('fs');
 const styles = require('./App.css');
 const remote = require('electron').remote;
@@ -29,7 +30,7 @@ const START_F1_CLIENT = 'startF1Client';
 const STOP_F1_CLIENT = 'stopF1Client';
 
 const initialState: State = {
-  currentLapTimes: [[]],
+  lapTimes: [[]],
   currentLapTime: 0,
   currentPlayerSpeeds: [],
   currentWorldPosition: { x: 0, y: 0 },
@@ -74,12 +75,14 @@ export default class App extends PureComponent<{}, State> {
     });
     socket.on(PACKETS.carTelemetry, (e: PacketCarTelemetryData) => {
       const { sessionStarted } = this.state;
-      if (
-        sessionStarted &&
-        this.carTelemetryPackageCount % PACKAGE_LOSS === 0
-      ) {
-        this.updateCurrentPlayerSpeed(e);
+
+      const shouldUpdateState =
+        sessionStarted && this.carTelemetryPackageCount % PACKAGE_LOSS === 0;
+
+      if (shouldUpdateState) {
+        this.updateCurrentTelemetry(e);
       }
+
       this.carTelemetryPackageCount++;
     });
     socket.on(
@@ -137,7 +140,7 @@ export default class App extends PureComponent<{}, State> {
     this.setState(prevState => {
       // TODO: avoid slicing currentLapTimes if lap already exist,
       //       but return currentLapNumber either way
-      const currentLapTimes = prevState.currentLapTimes.slice();
+      const currentLapTimes = prevState.lapTimes.slice();
       currentLapTimes[currentLapTime] = [];
       return {
         ...prevState,
@@ -149,26 +152,28 @@ export default class App extends PureComponent<{}, State> {
   };
 
   // stores current player speed to state
-  updateCurrentPlayerSpeed = (carTelemetryPackage: PacketCarTelemetryData) => {
+  updateCurrentTelemetry = (carTelemetryPackage: PacketCarTelemetryData) => {
     const { participantIndex } = this.state;
     const currentPlayerSpeed =
       carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
+    const currentEngineRPM =
+      carTelemetryPackage.m_carTelemetryData[participantIndex].m_engineRPM;
 
     this.setState(
       (prevState): State | undefined => {
-        const { currentLapNumber, currentLapTime, currentLapTimes } = prevState;
-        if (!currentLapTimes || currentLapTimes.length === 0) {
+        const { currentLapNumber, currentLapTime, lapTimes } = prevState;
+        if (!lapTimes || lapTimes.length === 0) {
           return;
         }
-        currentLapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
-        return { ...prevState, currentLapTimes };
+        lapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
+        return { ...prevState, lapTimes };
       }
     );
   };
 
   handleParticipantChange = (participant: Participant) => {
     this.setState({
-      currentLapTimes: [],
+      lapTimes: [],
       currentPlayerSpeeds: [],
       currentWorldPosition: { x: 0, y: 0 },
       participantIndex: participant.index,
@@ -236,7 +241,7 @@ export default class App extends PureComponent<{}, State> {
       currentTrackId,
       currentWorldPosition,
       //currentLapTime,
-      currentLapTimes,
+      lapTimes,
       currentLapNumber,
       currentPlayerSpeeds,
       currentParticipants
@@ -256,49 +261,50 @@ export default class App extends PureComponent<{}, State> {
           <div className={styles.column2}>
             {/* Speed */}
             <SpeedChart
-              currentLapTimes={currentLapTimes}
+              currentLapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
-            {/* Engine */}
-            <SpeedChart
-              currentLapTimes={currentLapTimes}
+
+            {/* Engine 
+            <EngineChart
+              currentLapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
-            />
+            />*/}
             {/* Gear */}
             <SpeedChart
-              currentLapTimes={currentLapTimes}
+              currentLapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
             {/* Throttle */}
             <SpeedChart
-              currentLapTimes={currentLapTimes}
+              currentLapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
             {/* Brake */}
             <SpeedChart
-              currentLapTimes={currentLapTimes}
+              currentLapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
             {/* Steer */}
             <SpeedChart
-              currentLapTimes={currentLapTimes}
+              currentLapTimes={lapTimes}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />
           </div>
           <div className={styles.column3}>
             <div className={styles.temperatureDisplays}>
-              <QuaternaryTemperatureDisplay title="Tire Temp" />
-              <QuaternaryTemperatureDisplay title="Brake Temp" />
+              <quaternaryUnitDisplay title="Tire Temp" />
+              <quaternaryUnitDisplay title="Brake Temp" />
             </div>
             <div className={styles.temperatureDisplays}>
-              <QuaternaryTemperatureDisplay title="Tyre wear" />
-              <QuaternaryTemperatureDisplay title="Tyre damage" />
+              <quaternaryUnitDisplay title="Tyre wear" />
+              <quaternaryUnitDisplay title="Tyre damage" />
             </div>
             <div className={styles.carSetupWrapper}>
               <UnitDisplay title={`Tire Compound`} value={1} />
@@ -319,7 +325,7 @@ export default class App extends PureComponent<{}, State> {
               />
             </div>
             <div className={styles.timeDisplays}>
-              <TimeDisplay />
+              <TimeDisplay title={'Lap Timing'} />
             </div>
 
             {/*
