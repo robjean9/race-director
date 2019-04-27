@@ -25,6 +25,7 @@ import {
   ParticipantsColumn,
   SessionColumn
 } from './DataColumns';
+import { Toolbar } from './Toolbar';
 
 const START_F1_CLIENT = 'startF1Client';
 const STOP_F1_CLIENT = 'stopF1Client';
@@ -217,29 +218,6 @@ export default class App extends React.PureComponent<{}, State> {
     });
   };
 
-  renderNavbar = () => {
-    return (
-      <div className={styles.navbar}>
-        Tracking Hamilton
-        <button type="button" onClick={this.handleStartRecording}>
-          Start Recording
-        </button>
-        <button type="button" onClick={this.handleStopRecording}>
-          Stop Recording
-        </button>
-        <button type="button" onClick={this.handleSessionRestart}>
-          Restart Session
-        </button>
-        <button type="button" onClick={this.handleSaveState}>
-          Save State
-        </button>
-        <button type="button" onClick={this.handleLoadState}>
-          Load State
-        </button>
-      </div>
-    );
-  };
-
   render() {
     const {
       currentTrackId,
@@ -253,7 +231,13 @@ export default class App extends React.PureComponent<{}, State> {
 
     return (
       <div className={styles.homeWrapper}>
-        {this.renderNavbar()}
+        <Toolbar
+          onHandleLoadState={this.handleLoadState}
+          onHandleSaveState={this.handleSaveState}
+          onHandleSessionRestart={this.handleSessionRestart}
+          onHandleStartRecording={this.handleStartRecording}
+          onHandleStopRecording={this.handleStopRecording}
+        />
         <div className={styles.telemetryPanels}>
           <div className={styles.column1}>
             <ParticipantsColumn
