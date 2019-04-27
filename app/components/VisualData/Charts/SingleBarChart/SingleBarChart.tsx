@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Props } from './types';
 import ReactEcharts from 'echarts-for-react';
 
-const styles = require('./SingleBarDisplay.css');
+const styles = require('./SingleBarChart.css');
 
-export class SingleBarDisplay extends React.PureComponent<Props> {
+export class SingleBarChart extends React.PureComponent<Props> {
   getSingleBarChart = () => {
     const { value, maxValue } = this.props;
     return {
@@ -43,7 +43,6 @@ export class SingleBarDisplay extends React.PureComponent<Props> {
         <ReactEcharts
           style={{ width: '5vw', height: '25vh' }}
           option={this.getSingleBarChart()}
-          className={styles.echart}
         />
       </div>
     );

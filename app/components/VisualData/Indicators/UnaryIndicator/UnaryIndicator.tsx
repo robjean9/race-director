@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Props } from './types';
 
-const styles = require('./UnitDisplay.css');
+const styles = require('./UnaryIndicator.css');
 
-export class UnitDisplay extends React.PureComponent<Props> {
+export class UnaryIndicator extends React.PureComponent<Props> {
   render() {
     const { title, value } = this.props;
     return (
-      <div className={styles.unitDisplay}>
+      <div className={styles.unaryIndicator}>
         <span className={styles.title}>{title}</span>
         <span className={styles.value}>{value}</span>
       </div>

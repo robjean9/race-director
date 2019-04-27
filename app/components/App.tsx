@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { PureComponent } from 'react';
-import { ipcRenderer } from 'electron';
 import * as openSocket from 'socket.io-client';
+import { ipcRenderer } from 'electron';
+const fs = require('fs');
+const styles = require('./App.css');
+const remote = require('electron').remote;
+
 import { TrackMap } from './TrackMap';
 import {
   getCurrentParticipants,
@@ -14,18 +17,17 @@ import {
   State,
   PacketParticipantsData
 } from './types';
-import { SpeedChart } from './VisualData/SpeedChart';
-import { ParticipantPanel } from './ParticipantPanel';
 import { Participant } from './ParticipantPanel/types';
-import { quaternaryUnitDisplay } from './VisualData/quaternaryUnitDisplay';
-import { RPMChart } from './VisualData/RPMChart/RPMChart';
-import { SingleBarDisplay } from './VisualData/SingleBarDisplay';
-import { UnitDisplay } from './VisualData/UnitDisplay/UnitDisplay';
-import { TimeDisplay } from './VisualData/TimeDisplay';
-import { EngineChart } from './VisualData/EngineChart';
-const fs = require('fs');
-const styles = require('./App.css');
-const remote = require('electron').remote;
+import { ParticipantPanel } from './ParticipantPanel';
+import {
+  SpeedChart,
+  QuaternaryIndicator,
+  UnaryIndicator,
+  RPMGaugeChart,
+  SingleBarChart,
+  TimeIndicator
+} from './VisualData';
+
 const START_F1_CLIENT = 'startF1Client';
 const STOP_F1_CLIENT = 'stopF1Client';
 
@@ -48,7 +50,7 @@ const { PACKETS } = remote.getGlobal('telemetryClientConstants');
 const PACKAGE_LOSS = 3;
 
 // tslint:disable-next-line:no-default-export
-export default class App extends PureComponent<{}, State> {
+export default class App extends React.PureComponent<{}, State> {
   lapDataPackageCount = 0;
   carTelemetryPackageCount = 0;
   motionPackageCount = 0;
@@ -60,53 +62,57 @@ export default class App extends PureComponent<{}, State> {
   }
 
   componentDidMount() {
-    this.openSocket();
+    const socket = openSocket('http://localhost:24500');
+    socket.on(PACKETS.lapData, this.handleLapDataPacket);
+    socket.on(PACKETS.carTelemetry, this.handleCarTelemetryPacket);
+    socket.on(PACKETS.session, this.handleSessionPacket);
+    socket.on(PACKETS.motion, this.handleMotionPacket);
+    socket.on(PACKETS.participants, this.handleParticipantsPacket);
   }
 
-  openSocket = () => {
-    const socket = openSocket('http://localhost:24500');
+  handleLapDataPacket = (e: PacketLapData) => {
+    const { sessionStarted } = this.state;
 
-    socket.on(PACKETS.lapData, (e: PacketLapData) => {
-      const { sessionStarted } = this.state;
-      if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
-        this.updateCurrentLapTime(e);
-      }
-      this.lapDataPackageCount++;
-    });
-    socket.on(PACKETS.carTelemetry, (e: PacketCarTelemetryData) => {
-      const { sessionStarted } = this.state;
+    if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
+      this.updateCurrentLapTime(e);
+    }
 
-      const shouldUpdateState =
-        sessionStarted && this.carTelemetryPackageCount % PACKAGE_LOSS === 0;
+    this.lapDataPackageCount++;
+  };
 
-      if (shouldUpdateState) {
-        this.updateCurrentTelemetry(e);
-      }
+  handleCarTelemetryPacket = (e: PacketCarTelemetryData) => {
+    const { sessionStarted } = this.state;
 
-      this.carTelemetryPackageCount++;
-    });
-    socket.on(
-      PACKETS.session,
-      (e: {
-        m_sessionTimeLeft: number;
-        m_sessionDuration: number;
-        m_trackId: number;
-      }) => {
-        if (e.m_sessionTimeLeft < e.m_sessionDuration) {
-          this.setState({ sessionStarted: true });
-        }
-        this.setState({ currentTrackId: e.m_trackId });
-      }
-    );
-    socket.on(PACKETS.motion, (e: PacketMotionData) => {
-      if (this.motionPackageCount % PACKAGE_LOSS === 0) {
-        this.updateTrack(e);
-      }
-      this.motionPackageCount++;
-    });
-    socket.on(PACKETS.participants, (e: PacketParticipantsData) => {
-      this.updateParticipants(e);
-    });
+    const shouldUpdateState =
+      sessionStarted && this.carTelemetryPackageCount % PACKAGE_LOSS === 0;
+
+    if (shouldUpdateState) {
+      this.updateCurrentTelemetry(e);
+    }
+
+    this.carTelemetryPackageCount++;
+  };
+
+  handleSessionPacket = (e: {
+    m_sessionTimeLeft: number;
+    m_sessionDuration: number;
+    m_trackId: number;
+  }) => {
+    if (e.m_sessionTimeLeft < e.m_sessionDuration) {
+      this.setState({ sessionStarted: true });
+    }
+    this.setState({ currentTrackId: e.m_trackId });
+  };
+
+  handleMotionPacket = (e: PacketMotionData) => {
+    if (this.motionPackageCount % PACKAGE_LOSS === 0) {
+      this.updateTrack(e);
+    }
+    this.motionPackageCount++;
+  };
+
+  handleParticipantsPacket = (e: PacketParticipantsData) => {
+    this.updateParticipants(e);
   };
 
   // Stores current participants data to state
@@ -299,33 +305,33 @@ export default class App extends PureComponent<{}, State> {
           </div>
           <div className={styles.column3}>
             <div className={styles.temperatureDisplays}>
-              <quaternaryUnitDisplay title="Tire Temp" />
-              <quaternaryUnitDisplay title="Brake Temp" />
+              <QuaternaryIndicator title="Tire Temp" />
+              <QuaternaryIndicator title="Brake Temp" />
             </div>
             <div className={styles.temperatureDisplays}>
-              <quaternaryUnitDisplay title="Tyre wear" />
-              <quaternaryUnitDisplay title="Tyre damage" />
+              <QuaternaryIndicator title="Tyre wear" />
+              <QuaternaryIndicator title="Tyre damage" />
             </div>
             <div className={styles.carSetupWrapper}>
-              <UnitDisplay title={`Tire Compound`} value={1} />
-              <UnitDisplay title={`Fuel Mix`} value={1} />
-              <UnitDisplay title={`ERS Deploy Mode`} value={1} />
+              <UnaryIndicator title={`Tire Compound`} value={1} />
+              <UnaryIndicator title={`Fuel Mix`} value={1} />
+              <UnaryIndicator title={`ERS Deploy Mode`} value={1} />
             </div>
             <div className={styles.engineDisplays}>
-              <RPMChart />
-              <SingleBarDisplay
+              <RPMGaugeChart />
+              <SingleBarChart
                 title={'Fuel' /* in tank / Fuel capacity */}
                 value={20}
                 maxValue={200}
               />
-              <SingleBarDisplay
+              <SingleBarChart
                 title={'ERS' /* Stored Energy / total energy */}
                 value={50}
                 maxValue={100}
               />
             </div>
             <div className={styles.timeDisplays}>
-              <TimeDisplay title={'Lap Timing'} />
+              <TimeIndicator title={'Lap Timing'} />
             </div>
 
             {/*

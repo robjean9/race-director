@@ -92,7 +92,7 @@ export interface PacketCarTelemetryData {
   m_carTelemetryData: CarTelemetryData[];
 }
 
-interface PacketHeader {
+export interface PacketHeader {
   m_packetFormat: number;
   m_packetVersion: number;
   m_packetId: number;

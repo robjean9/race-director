@@ -1,9 +1,9 @@
 import * as React from 'react';
-import ReactEcharts from 'echarts-for-react';
+import { EChart } from '../EChart';
 
-const styles = require('./RPMChart.css');
+const styles = require('./RPMGaugeChart.css');
 
-export class RPMChart extends React.PureComponent {
+export class RPMGaugeChart extends React.PureComponent {
   getRPMChart = () => {
     return {
       grid: {
@@ -49,11 +49,7 @@ export class RPMChart extends React.PureComponent {
       <div className={styles.chartWrapper}>
         <span className={styles.title}>Engine RPM</span>
         <div className={styles.gaugeWrapper}>
-          <ReactEcharts
-            style={{ height: '30vh' }}
-            option={this.getRPMChart()}
-            className={styles.echart}
-          />
+          <EChart option={this.getRPMChart()} height={'30vh'} />
         </div>
       </div>
     );

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Props } from './types';
 
-const styles = require('./TimeDisplay.css');
+const styles = require('./TimeIndicator.css');
 
-export class TimeDisplay extends React.PureComponent<Props> {
+export class TimeIndicator extends React.PureComponent<Props> {
   render() {
     const { title } = this.props;
 
     return (
-      <div className={styles.timeDisplayWrapper}>
+      <div className={styles.timeIndicatorWrapper}>
         <span className={styles.title}>{title}</span>
         <div className={styles.timings}>
           <div className={styles.timeRow}>

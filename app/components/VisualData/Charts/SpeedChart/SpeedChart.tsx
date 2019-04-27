@@ -1,8 +1,6 @@
 import * as React from 'react';
-import ReactEcharts from 'echarts-for-react';
 import { Props } from './types';
-
-const styles = require('./SpeedChart.css');
+import { EChart } from '../EChart/EChart';
 
 export class SpeedChart extends React.PureComponent<Props> {
   getSpeedChart = () => {
@@ -121,12 +119,6 @@ export class SpeedChart extends React.PureComponent<Props> {
   };
 
   render() {
-    return (
-      <ReactEcharts
-        style={{ height: '20vh' }}
-        option={this.getSpeedChart()}
-        className={styles.echart}
-      />
-    );
+    return <EChart option={this.getSpeedChart()} />;
   }
 }
