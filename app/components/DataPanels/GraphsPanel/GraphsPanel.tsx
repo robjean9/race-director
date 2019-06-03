@@ -4,42 +4,42 @@ import { Props } from './types';
 
 export class GraphsPanel extends React.PureComponent<Props> {
   render() {
-    const { lapTimes, currentPlayerSpeeds, currentLapNumber } = this.props;
+    const { speedMatrix, currentPlayerSpeeds, currentLapNumber } = this.props;
     return (
       <React.Fragment>
         {/* Speed */}
         <SpeedChart
-          currentLapTimes={lapTimes}
+          speedMatrix={speedMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
         />
         {/* Engine */}
         <EngineChart
-          currentLapTimes={lapTimes}
+          speedMatrix={speedMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
         />
         {/* Gear */}
         <SpeedChart
-          currentLapTimes={lapTimes}
+          speedMatrix={speedMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
         />
         {/* Throttle */}
         <SpeedChart
-          currentLapTimes={lapTimes}
+          speedMatrix={speedMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
         />
         {/* Brake */}
         <SpeedChart
-          currentLapTimes={lapTimes}
+          speedMatrix={speedMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
         />
         {/* Steer */}
         <SpeedChart
-          currentLapTimes={lapTimes}
+          speedMatrix={speedMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
         />

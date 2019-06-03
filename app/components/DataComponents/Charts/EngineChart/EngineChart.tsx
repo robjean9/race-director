@@ -4,11 +4,11 @@ import { EChart } from '../EChart';
 
 export class EngineChart extends React.PureComponent<Props> {
   getSpeedChart = () => {
-    const { currentLapTimes, currentLapNumber } = this.props;
+    const { speedMatrix, currentLapNumber } = this.props;
 
-    // currentLapTimes[milliseconds][lap]
+    // speedMatrix[milliseconds][lap]
     // every lap cover a different set of milliseconds
-    const xAxisData = currentLapTimes
+    const xAxisData = speedMatrix
       // gets times (each index represents a time)
       // tslint:disable-next-line:no-any
       .map((_: any, index: number) => index)
@@ -28,7 +28,7 @@ export class EngineChart extends React.PureComponent<Props> {
         type: 'line',
         large: true,
         data: xAxisData.map(
-          (time: number) => currentLapTimes[time][currentLapNumber]
+          (time: number) => speedMatrix[time][currentLapNumber]
         )
       },
       {
@@ -38,7 +38,7 @@ export class EngineChart extends React.PureComponent<Props> {
         type: 'line',
         large: true,
         data: xAxisData.map(
-          (time: number) => currentLapTimes[time][currentLapNumber - 1]
+          (time: number) => speedMatrix[time][currentLapNumber - 1]
         )
       }
     ];

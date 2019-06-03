@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Props } from './types';
 import { EChart } from '../EChart/EChart';
+import { dateFormatter } from '../transformations';
 
 export class SpeedChart extends React.PureComponent<Props> {
   getSpeedChart = () => {
-    const { currentLapTimes, currentLapNumber } = this.props;
+    const { speedMatrix, currentLapNumber } = this.props;
 
-    // currentLapTimes[milliseconds][lap]
+    // speedMatrix[milliseconds][lap]
     // every lap cover a different set of milliseconds
-    const xAxisData = currentLapTimes
+    const xAxisData = speedMatrix
       // gets times (each index represents a time)
       // tslint:disable-next-line:no-any
       .map((_: any, index: number) => index)
@@ -28,7 +29,7 @@ export class SpeedChart extends React.PureComponent<Props> {
         type: 'line',
         large: true,
         data: xAxisData.map(
-          (time: number) => currentLapTimes[time][currentLapNumber]
+          (time: number) => speedMatrix[time][currentLapNumber]
         )
       },
       {
@@ -38,7 +39,7 @@ export class SpeedChart extends React.PureComponent<Props> {
         type: 'line',
         large: true,
         data: xAxisData.map(
-          (time: number) => currentLapTimes[time][currentLapNumber - 1]
+          (time: number) => speedMatrix[time][currentLapNumber - 1]
         )
       }
     ];
@@ -76,33 +77,7 @@ export class SpeedChart extends React.PureComponent<Props> {
           silent: true,
           data: xAxisData,
           axisLabel: {
-            // tslint:disable-next-line:no-any
-            formatter(value: any) {
-              // Formatted to be month/day; display year only in the first label]
-              // Get hours from milliseconds
-              const hours = value / (1000 * 60 * 60);
-              const absoluteHours = Math.floor(hours);
-
-              // Get remainder from hours and convert to minutes
-              const minutes = (hours - absoluteHours) * 60;
-              const absoluteMinutes = Math.floor(minutes);
-              const m = absoluteMinutes;
-
-              // Get remainder from minutes and convert to seconds
-              const seconds = (minutes - absoluteMinutes) * 60;
-              const absoluteSeconds = Math.floor(seconds);
-              const s =
-                absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
-
-              const milliseconds = (seconds - absoluteSeconds) * 60;
-              const absoluteMilliseconds = Math.floor(milliseconds);
-              const ms =
-                absoluteMilliseconds > 9
-                  ? absoluteMilliseconds
-                  : '0' + absoluteMilliseconds;
-
-              return `${m}:${s}:${ms}`;
-            }
+            dateFormatter
           }
         }
       ],

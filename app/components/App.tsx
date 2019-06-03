@@ -26,7 +26,7 @@ import {
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 
 const initialState: State = {
-  lapTimes: [[]],
+  speedMatrix: [[]],
   currentLapTime: 0,
   currentPlayerSpeeds: [],
   currentWorldPosition: { x: 0, y: 0 },
@@ -109,12 +109,11 @@ export default class App extends React.PureComponent<{}, State> {
     this.updateParticipants(e);
   };
 
-  // Stores current participants data to state
+  // Updates current participants data to state
   updateParticipants = (participantsPackage: PacketParticipantsData) => {
     const currentParticipants = getCurrentParticipants(
       participantsPackage.m_participants
     );
-    // tslint:disable-next-line:no-unused-expression
     currentParticipants && this.setState({ currentParticipants });
   };
 
@@ -133,14 +132,15 @@ export default class App extends React.PureComponent<{}, State> {
     const { participantIndex } = this.state;
     const currentLapNumber =
       lapTimePackage.m_lapData[participantIndex].m_currentLapNum - 1;
+
+    // this gives us an integer representing the current lap time, in ms
     const currentLapTime = Math.round(
       lapTimePackage.m_lapData[participantIndex].m_currentLapTime * 1e3
     );
 
     this.setState(prevState => {
-      // TODO: avoid slicing currentLapTimes if lap already exist,
-      //       but return currentLapNumber either way
-      const currentLapTimes = prevState.lapTimes.slice();
+      // TODO: avoid slicing currentLapTimes if lap already exist
+      const currentLapTimes = prevState.speedMatrix.slice();
       currentLapTimes[currentLapTime] = [];
       return {
         ...prevState,
@@ -161,19 +161,26 @@ export default class App extends React.PureComponent<{}, State> {
 
     this.setState(
       (prevState): State | undefined => {
-        const { currentLapNumber, currentLapTime, lapTimes } = prevState;
-        if (!lapTimes || lapTimes.length === 0) {
+        const { currentLapNumber, currentLapTime, speedMatrix } = prevState;
+
+        if (!speedMatrix || speedMatrix.length === 0) {
           return;
         }
-        lapTimes[currentLapTime][currentLapNumber] = currentPlayerSpeed;
-        return { ...prevState, lapTimes };
+
+        if (!speedMatrix[currentLapTime]) {
+          speedMatrix[currentLapTime] = [];
+        }
+
+        speedMatrix[currentLapTime][currentLapNumber] = currentPlayerSpeed;
+
+        return { ...prevState, speedMatrix };
       }
     );
   };
 
   handleParticipantChange = (participant: Participant) => {
     this.setState({
-      lapTimes: [],
+      speedMatrix: [],
       currentPlayerSpeeds: [],
       currentWorldPosition: { x: 0, y: 0 },
       participantIndex: participant.index,
@@ -214,7 +221,7 @@ export default class App extends React.PureComponent<{}, State> {
       currentTrackId,
       currentWorldPosition,
       //currentLapTime,
-      lapTimes,
+      speedMatrix,
       currentLapNumber,
       currentPlayerSpeeds,
       currentParticipants
@@ -236,7 +243,7 @@ export default class App extends React.PureComponent<{}, State> {
           </div>
           <div className={styles.column2}>
             <GraphsPanel
-              lapTimes={lapTimes}
+              speedMatrix={speedMatrix}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />

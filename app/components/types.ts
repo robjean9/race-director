@@ -2,7 +2,7 @@ import { Team } from 'f1-telemetry-client/build/src/constants/types';
 
 export interface State {
   // time x lap
-  lapTimes: number[][];
+  speedMatrix: number[][];
   currentLapTime: number;
   // tslint:disable-next-line:no-any
   currentPlayerSpeeds: any;

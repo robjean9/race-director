@@ -1,5 +1,5 @@
 export interface Props {
-  currentLapTimes: number[][];
+  speedMatrix: number[][];
   // tslint:disable-next-line:no-any
   currentLapNumber: any;
   // tslint:disable-next-line:no-any

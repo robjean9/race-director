@@ -1,5 +1,5 @@
 export interface Props {
-  lapTimes: number[][];
+  speedMatrix: number[][];
   // tslint:disable-next-line:no-any
   currentPlayerSpeeds: any;
   // tslint:disable-next-line:no-any
