@@ -82,7 +82,7 @@ export const getChartOptions = (
       left: 5,
       top: 25,
       right: 15,
-      bottom: 10
+      bottom: 20
     },
     tooltip: {
       trigger: 'axis',

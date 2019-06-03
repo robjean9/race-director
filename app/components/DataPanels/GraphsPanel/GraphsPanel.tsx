@@ -1,14 +1,8 @@
 import * as React from 'react';
-import {
-  SpeedChart,
-  EngineChart,
-  GearChart,
-  ThrottleChart,
-  BrakeChart,
-  SteerChart
-} from '../../DataComponents';
+import { TelemetryChart } from '../../DataComponents';
 import { Props } from './types';
 import { getXAxisData } from '../../DataComponents/Charts/transformations';
+import { TelemetryType } from '../../types';
 
 export class GraphsPanel extends React.PureComponent<Props> {
   render() {
@@ -23,46 +17,58 @@ export class GraphsPanel extends React.PureComponent<Props> {
     return (
       <React.Fragment>
         {/* Speed */}
-        <SpeedChart
+        <TelemetryChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
           xAxisData={xAxisData}
+          telemetryType={TelemetryType.Speed}
+          title={'Speed'}
         />
-        {/* Engine */}
-        <EngineChart
+        {/* EngineRPM */}
+        <TelemetryChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
           xAxisData={xAxisData}
+          telemetryType={TelemetryType.EngineRPM}
+          title={'RPM'}
         />
         {/* Gear */}
-        <GearChart
+        <TelemetryChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
           xAxisData={xAxisData}
+          telemetryType={TelemetryType.Gear}
+          title={'Gear'}
         />
         {/* Throttle */}
-        <ThrottleChart
+        <TelemetryChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
           xAxisData={xAxisData}
+          telemetryType={TelemetryType.Throttle}
+          title={'Throttle'}
         />
         {/* Brake */}
-        <BrakeChart
+        <TelemetryChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
           xAxisData={xAxisData}
+          telemetryType={TelemetryType.Brake}
+          title={'Brake'}
         />
         {/* Steer */}
-        <SteerChart
+        <TelemetryChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
           xAxisData={xAxisData}
+          telemetryType={TelemetryType.Steer}
+          title={'Steer'}
         />
       </React.Fragment>
     );
