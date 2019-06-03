@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as openSocket from 'socket.io-client';
-import { ipcRenderer } from 'electron';
 
 const fs = require('fs');
 const styles = require('./App.css');
@@ -8,7 +7,7 @@ const styles = require('./App.css');
 import {
   getCurrentParticipants,
   getCurrentWorldPosition
-} from '../packages/transformations';
+} from './transformations';
 import { State, Participant } from './types';
 
 import {
@@ -26,9 +25,6 @@ import {
 } from 'f1-telemetry-client/build/src/parsers/packets/types';
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 
-const START_F1_CLIENT = 'startF1Client';
-const STOP_F1_CLIENT = 'stopF1Client';
-
 const initialState: State = {
   lapTimes: [[]],
   currentLapTime: 0,
@@ -41,15 +37,17 @@ const initialState: State = {
   currentTrackId: -1
 };
 
-// bigger package loss means more package being skipped
+// bigger package loss means more packages being skipped
 // (improves performance, lowers accuracy)
 const PACKAGE_LOSS = 3;
 
 // tslint:disable-next-line:no-default-export
 export default class App extends React.PureComponent<{}, State> {
-  lapDataPackageCount = 0;
-  carTelemetryPackageCount = 0;
-  motionPackageCount = 0;
+  packageCounts = {
+    lapData: 0,
+    carTelemetry: 0,
+    motion: 0
+  };
 
   // tslint:disable-next-line:no-any
   constructor(props: any) {
@@ -69,24 +67,24 @@ export default class App extends React.PureComponent<{}, State> {
   handleLapDataPacket = (e: PacketLapData) => {
     const { sessionStarted } = this.state;
 
-    if (sessionStarted && this.lapDataPackageCount % PACKAGE_LOSS === 0) {
+    if (sessionStarted && this.packageCounts.lapData % PACKAGE_LOSS === 0) {
       this.updateCurrentLapTime(e);
     }
 
-    this.lapDataPackageCount++;
+    this.packageCounts.lapData++;
   };
 
   handleCarTelemetryPacket = (e: PacketCarTelemetryData) => {
     const { sessionStarted } = this.state;
 
     const shouldUpdateState =
-      sessionStarted && this.carTelemetryPackageCount % PACKAGE_LOSS === 0;
+      sessionStarted && this.packageCounts.carTelemetry % PACKAGE_LOSS === 0;
 
     if (shouldUpdateState) {
       this.updateCarTelemetry(e);
     }
 
-    this.carTelemetryPackageCount++;
+    this.packageCounts.carTelemetry++;
   };
 
   handleSessionPacket = (e: {
@@ -101,10 +99,10 @@ export default class App extends React.PureComponent<{}, State> {
   };
 
   handleMotionPacket = (e: PacketMotionData) => {
-    if (this.motionPackageCount % PACKAGE_LOSS === 0) {
+    if (this.packageCounts.motion % PACKAGE_LOSS === 0) {
       this.updateTrack(e);
     }
-    this.motionPackageCount++;
+    this.packageCounts.motion++;
   };
 
   handleParticipantsPacket = (e: PacketParticipantsData) => {
@@ -186,10 +184,6 @@ export default class App extends React.PureComponent<{}, State> {
   // resets state
   handleSessionRestart = () => this.setState(initialState);
 
-  handleStartRecording = () => ipcRenderer.send(START_F1_CLIENT);
-
-  handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
-
   handleSaveState = () => {
     // tslint:disable-next-line:no-any
     fs.writeFile('state.json', JSON.stringify(this.state), (err: any) => {
@@ -232,8 +226,6 @@ export default class App extends React.PureComponent<{}, State> {
           onHandleLoadState={this.handleLoadState}
           onHandleSaveState={this.handleSaveState}
           onHandleSessionRestart={this.handleSessionRestart}
-          onHandleStartRecording={this.handleStartRecording}
-          onHandleStopRecording={this.handleStopRecording}
         />
         <div className={styles.telemetryPanels}>
           <div className={styles.column1}>

@@ -1,12 +1,18 @@
 import * as React from 'react';
+import { ipcRenderer } from 'electron';
 import { Props } from './types';
 const styles = require('./Toolbar.css');
 
+const START_F1_CLIENT = 'startF1Client';
+const STOP_F1_CLIENT = 'stopF1Client';
+
 export class Toolbar extends React.PureComponent<Props> {
+  handleStartRecording = () => ipcRenderer.send(START_F1_CLIENT);
+
+  handleStopRecording = () => ipcRenderer.send(STOP_F1_CLIENT);
+
   render() {
     const {
-      onHandleStartRecording,
-      onHandleStopRecording,
       onHandleSessionRestart,
       onHandleSaveState,
       onHandleLoadState
@@ -15,10 +21,10 @@ export class Toolbar extends React.PureComponent<Props> {
     return (
       <div className={styles.navbar}>
         Tracking Hamilton
-        <button type="button" onClick={onHandleStartRecording}>
+        <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>
-        <button type="button" onClick={onHandleStopRecording}>
+        <button type="button" onClick={this.handleStopRecording}>
           Stop Recording
         </button>
         <button type="button" onClick={onHandleSessionRestart}>
