@@ -1,47 +1,68 @@
 import * as React from 'react';
-import { SpeedChart, EngineChart } from '../../DataComponents';
+import {
+  SpeedChart,
+  EngineChart,
+  GearChart,
+  ThrottleChart,
+  BrakeChart,
+  SteerChart
+} from '../../DataComponents';
 import { Props } from './types';
+import { getXAxisData } from '../../DataComponents/Charts/transformations';
 
 export class GraphsPanel extends React.PureComponent<Props> {
   render() {
-    const { speedMatrix, currentPlayerSpeeds, currentLapNumber } = this.props;
+    const {
+      telemetryMatrix,
+      currentPlayerSpeeds,
+      currentLapNumber
+    } = this.props;
+
+    const xAxisData = getXAxisData(telemetryMatrix);
+
     return (
       <React.Fragment>
         {/* Speed */}
         <SpeedChart
-          speedMatrix={speedMatrix}
+          telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
+          xAxisData={xAxisData}
         />
         {/* Engine */}
         <EngineChart
-          speedMatrix={speedMatrix}
+          telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
+          xAxisData={xAxisData}
         />
         {/* Gear */}
-        <SpeedChart
-          speedMatrix={speedMatrix}
+        <GearChart
+          telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
+          xAxisData={xAxisData}
         />
         {/* Throttle */}
-        <SpeedChart
-          speedMatrix={speedMatrix}
+        <ThrottleChart
+          telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
+          xAxisData={xAxisData}
         />
         {/* Brake */}
-        <SpeedChart
-          speedMatrix={speedMatrix}
+        <BrakeChart
+          telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
+          xAxisData={xAxisData}
         />
         {/* Steer */}
-        <SpeedChart
-          speedMatrix={speedMatrix}
+        <SteerChart
+          telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
+          xAxisData={xAxisData}
         />
       </React.Fragment>
     );

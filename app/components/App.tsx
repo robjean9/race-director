@@ -26,7 +26,7 @@ import {
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 
 const initialState: State = {
-  speedMatrix: [[]],
+  telemetryMatrix: [[]],
   currentLapTime: 0,
   currentPlayerSpeeds: [],
   currentWorldPosition: { x: 0, y: 0 },
@@ -140,7 +140,7 @@ export default class App extends React.PureComponent<{}, State> {
 
     this.setState(prevState => {
       // TODO: avoid slicing currentLapTimes if lap already exist
-      const currentLapTimes = prevState.speedMatrix.slice();
+      const currentLapTimes = prevState.telemetryMatrix.slice();
       currentLapTimes[currentLapTime] = [];
       return {
         ...prevState,
@@ -154,33 +154,45 @@ export default class App extends React.PureComponent<{}, State> {
   // stores current player speed to state
   updateCarTelemetry = (carTelemetryPackage: PacketCarTelemetryData) => {
     const { participantIndex } = this.state;
-    const currentPlayerSpeed =
-      carTelemetryPackage.m_carTelemetryData[participantIndex].m_speed;
-    const currentEngineRPM =
-      carTelemetryPackage.m_carTelemetryData[participantIndex].m_engineRPM;
+
+    const playerTelemetry =
+      carTelemetryPackage.m_carTelemetryData[participantIndex];
 
     this.setState(
       (prevState): State | undefined => {
-        const { currentLapNumber, currentLapTime, speedMatrix } = prevState;
+        const { currentLapNumber, currentLapTime, telemetryMatrix } = prevState;
 
-        if (!speedMatrix || speedMatrix.length === 0) {
+        if (!telemetryMatrix) {
           return;
         }
 
-        if (!speedMatrix[currentLapTime]) {
-          speedMatrix[currentLapTime] = [];
+        if (!telemetryMatrix[currentLapTime]) {
+          telemetryMatrix[currentLapTime] = [];
         }
 
-        speedMatrix[currentLapTime][currentLapNumber] = currentPlayerSpeed;
+        if (!telemetryMatrix[currentLapTime][currentLapNumber]) {
+          telemetryMatrix[currentLapTime][currentLapNumber] = {};
+        }
 
-        return { ...prevState, speedMatrix };
+        const updatedTelemetryMatrix = telemetryMatrix.slice();
+
+        updatedTelemetryMatrix[currentLapTime][currentLapNumber] = {
+          speed: playerTelemetry.m_speed,
+          engineRPM: playerTelemetry.m_engineRPM,
+          gear: playerTelemetry.m_gear,
+          throttle: playerTelemetry.m_throttle,
+          brake: playerTelemetry.m_brake,
+          steer: playerTelemetry.m_steer
+        };
+
+        return { ...prevState, telemetryMatrix: updatedTelemetryMatrix };
       }
     );
   };
 
   handleParticipantChange = (participant: Participant) => {
     this.setState({
-      speedMatrix: [],
+      telemetryMatrix: [],
       currentPlayerSpeeds: [],
       currentWorldPosition: { x: 0, y: 0 },
       participantIndex: participant.index,
@@ -218,10 +230,10 @@ export default class App extends React.PureComponent<{}, State> {
 
   render() {
     const {
+      telemetryMatrix,
       currentTrackId,
       currentWorldPosition,
       //currentLapTime,
-      speedMatrix,
       currentLapNumber,
       currentPlayerSpeeds,
       currentParticipants
@@ -243,7 +255,7 @@ export default class App extends React.PureComponent<{}, State> {
           </div>
           <div className={styles.column2}>
             <GraphsPanel
-              speedMatrix={speedMatrix}
+              telemetryMatrix={telemetryMatrix}
               currentPlayerSpeeds={currentPlayerSpeeds}
               currentLapNumber={currentLapNumber}
             />

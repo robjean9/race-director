@@ -1,8 +1,8 @@
 import { Team } from 'f1-telemetry-client/build/src/constants/types';
 
 export interface State {
-  // time x lap
-  speedMatrix: number[][];
+  // time x telemetry
+  telemetryMatrix: Telemetry[][];
   currentLapTime: number;
   // tslint:disable-next-line:no-any
   currentPlayerSpeeds: any;
@@ -27,4 +27,22 @@ export interface Participant {
 export interface Coordinate {
   x: number;
   y: number;
+}
+
+export interface Telemetry {
+  speed?: number;
+  engineRPM?: number;
+  gear?: number;
+  throttle?: number;
+  brake?: number;
+  steer?: number;
+}
+
+export enum TelemetryType {
+  Speed = 'speed',
+  EngineRPM = 'engineRPM',
+  Gear = 'gear',
+  Throttle = 'throttle',
+  Brake = 'brake',
+  Steer = 'steer'
 }

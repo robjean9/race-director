@@ -4,21 +4,21 @@ import { EChart } from '../EChart';
 import { TelemetryType } from '../../../types';
 import { getChartOptions, getSeriesForLap } from '../transformations';
 
-export class EngineChart extends React.PureComponent<Props> {
-  getEngineRPMChart = () => {
+export class GearChart extends React.PureComponent<Props> {
+  getGearChart = () => {
     const { telemetryMatrix, currentLapNumber, xAxisData } = this.props;
 
     const series = getSeriesForLap(
       telemetryMatrix,
       xAxisData,
       currentLapNumber,
-      TelemetryType.EngineRPM
+      TelemetryType.Gear
     );
 
-    return getChartOptions('RPM', 'RPM', xAxisData, series);
+    return getChartOptions('Gear', 'Gear', xAxisData, series);
   };
 
   render() {
-    return <EChart option={this.getEngineRPMChart()} />;
+    return <EChart option={this.getGearChart()} />;
   }
 }
