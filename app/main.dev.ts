@@ -208,7 +208,7 @@ const registerClient = (
 };
 
 const startRecording = () => {
-  client.start();
+  //client.start();
   //isRecording = true;
 };
 
