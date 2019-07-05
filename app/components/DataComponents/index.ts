@@ -1,4 +1,4 @@
-import { RPMGaugeChart, SingleBarChart, TelemetryChart } from './Charts';
+import { RPMGaugeChart, SingleBarChart, LineChart } from './Charts';
 import { LapTimingGrid, ParticipantsGrid } from './Grids';
 import { QuaternaryIndicator, UnaryIndicator } from './Indicators';
 import { TrackMap } from './TrackMap';
@@ -6,7 +6,7 @@ import { TrackMap } from './TrackMap';
 export {
   RPMGaugeChart,
   SingleBarChart,
-  TelemetryChart,
+  LineChart,
   QuaternaryIndicator,
   UnaryIndicator,
   LapTimingGrid,

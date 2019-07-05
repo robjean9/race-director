@@ -9,13 +9,6 @@ import {
   getCurrentWorldPosition
 } from './transformations';
 import { State, Participant } from './types';
-
-import {
-  GraphsPanel,
-  InstrumentsPanel,
-  ParticipantsPanel,
-  SessionPanel
-} from './DataPanels';
 import { Toolbar } from './Toolbar';
 import {
   PacketLapData,
@@ -24,6 +17,7 @@ import {
   PacketParticipantsData
 } from 'f1-telemetry-client/build/src/parsers/packets/types';
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
+import { Canvas } from './Canvas';
 
 const initialState: State = {
   telemetryMatrix: [[]],
@@ -36,6 +30,8 @@ const initialState: State = {
   sessionStarted: false,
   currentTrackId: -1
 };
+
+export const RaceDirectorContext = React.createContext({});
 
 // bigger package loss means more packages being skipped
 // (improves performance, lowers accuracy)
@@ -158,36 +154,34 @@ export default class App extends React.PureComponent<{}, State> {
     const playerTelemetry =
       carTelemetryPackage.m_carTelemetryData[participantIndex];
 
-    this.setState(
-      (prevState): State | undefined => {
-        const { currentLapNumber, currentLapTime, telemetryMatrix } = prevState;
+    this.setState((prevState): State | undefined => {
+      const { currentLapNumber, currentLapTime, telemetryMatrix } = prevState;
 
-        if (!telemetryMatrix) {
-          return;
-        }
-
-        if (!telemetryMatrix[currentLapTime]) {
-          telemetryMatrix[currentLapTime] = [];
-        }
-
-        if (!telemetryMatrix[currentLapTime][currentLapNumber]) {
-          telemetryMatrix[currentLapTime][currentLapNumber] = {};
-        }
-
-        const updatedTelemetryMatrix = telemetryMatrix.slice();
-
-        updatedTelemetryMatrix[currentLapTime][currentLapNumber] = {
-          speed: playerTelemetry.m_speed,
-          engineRPM: playerTelemetry.m_engineRPM,
-          gear: playerTelemetry.m_gear,
-          throttle: playerTelemetry.m_throttle,
-          brake: playerTelemetry.m_brake,
-          steer: playerTelemetry.m_steer
-        };
-
-        return { ...prevState, telemetryMatrix: updatedTelemetryMatrix };
+      if (!telemetryMatrix) {
+        return;
       }
-    );
+
+      if (!telemetryMatrix[currentLapTime]) {
+        telemetryMatrix[currentLapTime] = [];
+      }
+
+      if (!telemetryMatrix[currentLapTime][currentLapNumber]) {
+        telemetryMatrix[currentLapTime][currentLapNumber] = {};
+      }
+
+      const updatedTelemetryMatrix = telemetryMatrix.slice();
+
+      updatedTelemetryMatrix[currentLapTime][currentLapNumber] = {
+        speed: playerTelemetry.m_speed,
+        engineRPM: playerTelemetry.m_engineRPM,
+        gear: playerTelemetry.m_gear,
+        throttle: playerTelemetry.m_throttle,
+        brake: playerTelemetry.m_brake,
+        steer: playerTelemetry.m_steer
+      };
+
+      return { ...prevState, telemetryMatrix: updatedTelemetryMatrix };
+    });
   };
 
   handleParticipantChange = (participant: Participant) => {
@@ -233,7 +227,6 @@ export default class App extends React.PureComponent<{}, State> {
       telemetryMatrix,
       currentTrackId,
       currentWorldPosition,
-      //currentLapTime,
       currentLapNumber,
       currentPlayerSpeeds,
       currentParticipants
@@ -246,30 +239,17 @@ export default class App extends React.PureComponent<{}, State> {
           onHandleSaveState={this.handleSaveState}
           onHandleSessionRestart={this.handleSessionRestart}
         />
-        <div className={styles.telemetryPanels}>
-          <div className={styles.column1}>
-            <ParticipantsPanel
-              onParticipantChange={this.handleParticipantChange}
-              currentParticipants={currentParticipants}
-            />
-          </div>
-          <div className={styles.column2}>
-            <GraphsPanel
-              telemetryMatrix={telemetryMatrix}
-              currentPlayerSpeeds={currentPlayerSpeeds}
-              currentLapNumber={currentLapNumber}
-            />
-          </div>
-          <div className={styles.column3}>
-            <InstrumentsPanel />
-          </div>
-          <div className={styles.column4}>
-            <SessionPanel
-              currentTrackId={currentTrackId}
-              currentWorldPosition={currentWorldPosition}
-            />
-          </div>
-        </div>
+        <RaceDirectorContext.Provider value={this.state}>
+          <Canvas
+            telemetryMatrix={telemetryMatrix}
+            currentTrackId={currentTrackId}
+            currentWorldPosition={currentWorldPosition}
+            currentLapNumber={currentLapNumber}
+            currentPlayerSpeeds={currentPlayerSpeeds}
+            currentParticipants={currentParticipants}
+            onParticipantChange={this.handleParticipantChange}
+          />
+        </RaceDirectorContext.Provider>
       </div>
     );
   }

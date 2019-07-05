@@ -40,6 +40,7 @@ export const getXAxisData = (telemetryMatrix: Telemetry[][]) => {
   );
 };
 
+// TODO: this crashes when new lap happens
 export const getSeriesForLap = (
   telemetryMatrix: Telemetry[][],
   xAxisData: number[],

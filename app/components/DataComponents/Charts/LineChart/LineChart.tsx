@@ -3,8 +3,8 @@ import { Props } from './types';
 import { EChart } from '../EChart';
 import { getChartOptions, getSeriesForLap } from '../transformations';
 
-export class TelemetryChart extends React.PureComponent<Props> {
-  getTelemetryChart = () => {
+export class LineChart extends React.PureComponent<Props> {
+  getLineChart = () => {
     const {
       telemetryMatrix,
       currentLapNumber,
@@ -24,6 +24,6 @@ export class TelemetryChart extends React.PureComponent<Props> {
   };
 
   render() {
-    return <EChart option={this.getTelemetryChart()} />;
+    return <EChart option={this.getLineChart()} />;
   }
 }

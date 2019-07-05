@@ -1,5 +1,5 @@
 import { RPMGaugeChart } from './RPMGaugeChart';
 import { SingleBarChart } from './SingleBarChart';
-import { TelemetryChart } from './TelemetryChart';
+import { LineChart } from './LineChart';
 
-export { RPMGaugeChart, SingleBarChart, TelemetryChart };
+export { RPMGaugeChart, SingleBarChart, LineChart };

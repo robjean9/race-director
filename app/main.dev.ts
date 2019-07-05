@@ -29,7 +29,7 @@ const {
   STOP_F1_CLIENT
 } = require('./constants/f1client');
 
-const client = new F1TelemetryClient({ port: 20715 });
+const client = new F1TelemetryClient({ port: 20777 });
 
 export class AppUpdater {
   constructor() {
@@ -92,11 +92,11 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     titleBarStyle: 'default',
     show: false,
-    width: 1281,
+    width: 1280,
     height: 800,
     minWidth: 1281,
     minHeight: 800,
-    backgroundColor: '#17171f'
+    backgroundColor: '#141a30'
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -208,7 +208,7 @@ const registerClient = (
 };
 
 const startRecording = () => {
-  //client.start();
+  client.start();
   //isRecording = true;
 };
 

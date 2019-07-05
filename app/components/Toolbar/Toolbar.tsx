@@ -20,7 +20,6 @@ export class Toolbar extends React.PureComponent<Props> {
 
     return (
       <div className={styles.navbar}>
-        Tracking Hamilton
         <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>

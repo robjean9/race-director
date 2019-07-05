@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TelemetryChart } from '../../DataComponents';
+import { LineChart } from '../../DataComponents';
 import { Props } from './types';
 import { getXAxisData } from '../../DataComponents/Charts/transformations';
 import { TelemetryType } from '../../types';
@@ -17,7 +17,7 @@ export class GraphsPanel extends React.PureComponent<Props> {
     return (
       <React.Fragment>
         {/* Speed */}
-        <TelemetryChart
+        <LineChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
@@ -26,7 +26,7 @@ export class GraphsPanel extends React.PureComponent<Props> {
           title={'Speed'}
         />
         {/* EngineRPM */}
-        <TelemetryChart
+        <LineChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
@@ -35,7 +35,7 @@ export class GraphsPanel extends React.PureComponent<Props> {
           title={'RPM'}
         />
         {/* Gear */}
-        <TelemetryChart
+        <LineChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
@@ -44,7 +44,7 @@ export class GraphsPanel extends React.PureComponent<Props> {
           title={'Gear'}
         />
         {/* Throttle */}
-        <TelemetryChart
+        <LineChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
@@ -53,7 +53,7 @@ export class GraphsPanel extends React.PureComponent<Props> {
           title={'Throttle'}
         />
         {/* Brake */}
-        <TelemetryChart
+        <LineChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
@@ -62,7 +62,7 @@ export class GraphsPanel extends React.PureComponent<Props> {
           title={'Brake'}
         />
         {/* Steer */}
-        <TelemetryChart
+        <LineChart
           telemetryMatrix={telemetryMatrix}
           currentPlayerSpeeds={currentPlayerSpeeds}
           currentLapNumber={currentLapNumber}
