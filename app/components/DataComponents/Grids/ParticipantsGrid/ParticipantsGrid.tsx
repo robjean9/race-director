@@ -1,20 +1,22 @@
 import * as React from 'react';
 import { Props } from './types';
 import { Participant } from '../../../types';
+import { RaceDirectorContext } from '../../../App';
 
 const styles = require('./ParticipantsGrid.css');
 
-export class ParticipantsGrid extends React.PureComponent<Props> {
-  selectParticipant = (participant: Participant) =>
-    this.props.handleParticipantChange(participant);
+export function ParticipantsGrid(props: Props) {
+  const selectParticipant = (participant: Participant) => {
+    props.handleParticipantChange(participant);
+  };
 
-  renderNames = () => {
-    const { currentParticipants } = this.props;
+  const renderNames = () => {
+    const { currentParticipants } = React.useContext(RaceDirectorContext);
     return currentParticipants.map((participant, index) => (
       <div
         key={index}
         className={styles.participantWrapper}
-        onClick={() => this.selectParticipant(participant)}
+        onClick={() => selectParticipant(participant)}
       >
         <div
           className={styles.teamTag}
@@ -27,7 +29,5 @@ export class ParticipantsGrid extends React.PureComponent<Props> {
     ));
   };
 
-  render() {
-    return <div className={styles.racerPanelWrapper}>{this.renderNames()}</div>;
-  }
+  return <div className={styles.racerPanelWrapper}>{renderNames()}</div>;
 }

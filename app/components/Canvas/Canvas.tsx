@@ -15,8 +15,6 @@ import { SessionPanel } from './SessionPanel';
 const styles = require('./Canvas.css');
 
 export function Canvas(props: Props) {
-  const [isOnline, setIsOnline] = React.useState(null);
-
   const {
     telemetryMatrix,
     currentTrackId,
@@ -28,7 +26,6 @@ export function Canvas(props: Props) {
     onParticipantChange
   } = props;
 
-  const state = React.useContext(RaceDirectorContext);
   //console.log('state ?', state);
 
   const column1Classname = classNames(styles.column1, styles.column);
@@ -37,10 +34,7 @@ export function Canvas(props: Props) {
   const column4Classname = classNames(styles.column4, styles.column);
 
   const participantsGrid = (
-    <ParticipantsGrid
-      handleParticipantChange={onParticipantChange}
-      currentParticipants={currentParticipants}
-    />
+    <ParticipantsGrid handleParticipantChange={onParticipantChange} />
   );
 
   return (
@@ -104,10 +98,7 @@ export class CanvasII extends React.PureComponent<Props> {
     const column4Classname = classNames(styles.column4, styles.column);
 
     const participantsGrid = (
-      <ParticipantsGrid
-        handleParticipantChange={onParticipantChange}
-        currentParticipants={currentParticipants}
-      />
+      <ParticipantsGrid handleParticipantChange={onParticipantChange} />
     );
 
     return (

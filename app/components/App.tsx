@@ -31,7 +31,7 @@ const initialState: State = {
   currentTrackId: -1
 };
 
-export const RaceDirectorContext = React.createContext({});
+export const RaceDirectorContext = React.createContext(initialState);
 
 // bigger package loss means more packages being skipped
 // (improves performance, lowers accuracy)
