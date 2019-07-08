@@ -1,14 +1,9 @@
 import * as React from 'react';
 import * as openSocket from 'socket.io-client';
 
-const fs = require('fs');
 const styles = require('./App.css');
 
-import {
-  getCurrentParticipants,
-  getCurrentWorldPosition
-} from './transformations';
-import { State, Participant } from './types';
+import { State } from './types';
 import { Toolbar } from './Toolbar';
 import {
   PacketLapData,
@@ -18,6 +13,7 @@ import {
 } from 'f1-telemetry-client/build/src/parsers/packets/types';
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 import { Canvas } from './Canvas';
+import { reducer } from './reducer';
 
 const initialState: State = {
   telemetryMatrix: [[]],
@@ -27,7 +23,8 @@ const initialState: State = {
   currentParticipants: [],
   currentLapNumber: 0,
   participantIndex: 0,
-  sessionStarted: false,
+  // should be false, set up by getting of session packet
+  sessionStarted: true,
   currentTrackId: -1
 };
 
@@ -40,153 +37,76 @@ export const RaceDirectorContext = React.createContext({
 // (improves performance, lowers accuracy)
 const PACKAGE_LOSS = 3;
 
+const packageCounts = {
+  lapData: 0,
+  carTelemetry: 0,
+  motion: 0
+};
 // tslint:disable-next-line:no-default-export
-export default class App extends React.PureComponent<{}, State> {
-  packageCounts = {
-    lapData: 0,
-    carTelemetry: 0,
-    motion: 0
+export default function App(props: any) {
+  // stores current lap time to state
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+
+  const handleMotionPacket = (motionPacket: PacketMotionData) => {
+    if (packageCounts.motion % PACKAGE_LOSS === 0) {
+      dispatch({ type: 'UPDATE_TRACK', motionPacket });
+    }
+    packageCounts.motion++;
   };
 
-  // tslint:disable-next-line:no-any
-  constructor(props: any) {
-    super(props);
-    this.state = initialState;
-  }
+  const handleParticipantsPacket = (
+    participantsPackage: PacketParticipantsData
+  ) => {
+    dispatch({ type: 'UPDATE_PARTICIPANTS', participantsPackage });
+  };
 
-  componentDidMount() {
-    const socket = openSocket('http://localhost:24500');
-    socket.on(PACKETS.lapData, this.handleLapDataPacket);
-    socket.on(PACKETS.carTelemetry, this.handleCarTelemetryPacket);
-    socket.on(PACKETS.session, this.handleSessionPacket);
-    socket.on(PACKETS.motion, this.handleMotionPacket);
-    socket.on(PACKETS.participants, this.handleParticipantsPacket);
-  }
+  const handleLapDataPacket = (lapTimePackage: PacketLapData) => {
+    const { sessionStarted } = state;
 
-  handleLapDataPacket = (e: PacketLapData) => {
-    const { sessionStarted } = this.state;
-
-    if (sessionStarted && this.packageCounts.lapData % PACKAGE_LOSS === 0) {
-      this.updateCurrentLapTime(e);
+    if (sessionStarted && packageCounts.lapData % PACKAGE_LOSS === 0) {
+      dispatch({ type: 'UPDATE_CURRENT_LAP_TIME', lapTimePackage });
     }
 
-    this.packageCounts.lapData++;
+    packageCounts.lapData++;
   };
 
-  handleCarTelemetryPacket = (e: PacketCarTelemetryData) => {
-    const { sessionStarted } = this.state;
+  const handleCarTelemetryPacket = (
+    carTelemetryPackage: PacketCarTelemetryData
+  ) => {
+    const { sessionStarted } = state;
 
     const shouldUpdateState =
-      sessionStarted && this.packageCounts.carTelemetry % PACKAGE_LOSS === 0;
+      sessionStarted && packageCounts.carTelemetry % PACKAGE_LOSS === 0;
 
     if (shouldUpdateState) {
-      this.updateCarTelemetry(e);
+      dispatch({ type: 'UPDATE_CAR_TELEMETRY', carTelemetryPackage });
     }
 
-    this.packageCounts.carTelemetry++;
+    packageCounts.carTelemetry++;
   };
 
-  handleSessionPacket = (e: {
+  const handleSessionPacket = (e: {
     m_sessionTimeLeft: number;
     m_sessionDuration: number;
     m_trackId: number;
   }) => {
     if (e.m_sessionTimeLeft < e.m_sessionDuration) {
-      this.setState({ sessionStarted: true });
+      dispatch({ type: 'SESSION_STARTED' });
     }
-    this.setState({ currentTrackId: e.m_trackId });
+    dispatch({ type: 'UPDATE_TRACK_ID', trackId: e.m_trackId });
   };
 
-  handleMotionPacket = (e: PacketMotionData) => {
-    if (this.packageCounts.motion % PACKAGE_LOSS === 0) {
-      this.updateTrack(e);
-    }
-    this.packageCounts.motion++;
-  };
-
-  handleParticipantsPacket = (e: PacketParticipantsData) => {
-    this.updateParticipants(e);
-  };
+  React.useEffect(() => {
+    const socket = openSocket('http://localhost:24500');
+    socket.on(PACKETS.lapData, handleLapDataPacket);
+    socket.on(PACKETS.carTelemetry, handleCarTelemetryPacket);
+    socket.on(PACKETS.session, handleSessionPacket);
+    socket.on(PACKETS.participants, handleParticipantsPacket);
+    socket.on(PACKETS.motion, handleMotionPacket);
+  }, []);
 
   // Updates current participants data to state
-  updateParticipants = (participantsPackage: PacketParticipantsData) => {
-    const currentParticipants = getCurrentParticipants(
-      participantsPackage.m_participants
-    );
-    currentParticipants && this.setState({ currentParticipants });
-  };
-
-  // Update track position
-  updateTrack = (motionPackage: PacketMotionData) => {
-    const { participantIndex } = this.state;
-    const currentWorldPosition = getCurrentWorldPosition(
-      motionPackage,
-      participantIndex
-    );
-    this.setState({ currentWorldPosition });
-  };
-
-  // stores current lap time to state
-  updateCurrentLapTime = (lapTimePackage: PacketLapData) => {
-    const { participantIndex } = this.state;
-    const currentLapNumber =
-      lapTimePackage.m_lapData[participantIndex].m_currentLapNum - 1;
-
-    // this gives us an integer representing the current lap time, in ms
-    const currentLapTime = Math.round(
-      lapTimePackage.m_lapData[participantIndex].m_currentLapTime * 1e3
-    );
-
-    this.setState(prevState => {
-      // TODO: avoid slicing currentLapTimes if lap already exist
-      const currentLapTimes = prevState.telemetryMatrix.slice();
-      currentLapTimes[currentLapTime] = [];
-      return {
-        ...prevState,
-        currentLapTimes,
-        currentLapTime,
-        currentLapNumber
-      };
-    });
-  };
-
-  // stores current player speed to state
-  updateCarTelemetry = (carTelemetryPackage: PacketCarTelemetryData) => {
-    const { participantIndex } = this.state;
-
-    const playerTelemetry =
-      carTelemetryPackage.m_carTelemetryData[participantIndex];
-
-    this.setState((prevState): State | undefined => {
-      const { currentLapNumber, currentLapTime, telemetryMatrix } = prevState;
-
-      if (!telemetryMatrix) {
-        return;
-      }
-
-      if (!telemetryMatrix[currentLapTime]) {
-        telemetryMatrix[currentLapTime] = [];
-      }
-
-      if (!telemetryMatrix[currentLapTime][currentLapNumber]) {
-        telemetryMatrix[currentLapTime][currentLapNumber] = {};
-      }
-
-      const updatedTelemetryMatrix = telemetryMatrix.slice();
-
-      updatedTelemetryMatrix[currentLapTime][currentLapNumber] = {
-        speed: playerTelemetry.m_speed,
-        engineRPM: playerTelemetry.m_engineRPM,
-        gear: playerTelemetry.m_gear,
-        throttle: playerTelemetry.m_throttle,
-        brake: playerTelemetry.m_brake,
-        steer: playerTelemetry.m_steer
-      };
-
-      return { ...prevState, telemetryMatrix: updatedTelemetryMatrix };
-    });
-  };
-
+  /*
   handleParticipantChange = (participant: Participant) => {
     this.setState({
       telemetryMatrix: [],
@@ -224,58 +144,38 @@ export default class App extends React.PureComponent<{}, State> {
       currentTrackId: state.currentTrackId
     });
   };
+  */
 
-  reducer = (state: State, action: any) => {
-    switch (action.type) {
-      case 'PARTICIPANT_CHANGE':
-        console.log(action);
-        return {
-          ...state,
-          telemetryMatrix: [],
-          currentPlayerSpeeds: [],
-          currentWorldPosition: { x: 0, y: 0 },
-          participantIndex: 0, //participant.index,
-          currentLapNumber: 0
-        };
-      default:
-        throw new Error();
-    }
-  };
+  const {
+    telemetryMatrix,
+    currentTrackId,
+    currentWorldPosition,
+    currentLapNumber,
+    currentPlayerSpeeds,
+    currentParticipants
+  } = state;
 
-  render() {
-    const {
-      telemetryMatrix,
-      currentTrackId,
-      currentWorldPosition,
-      currentLapNumber,
-      currentPlayerSpeeds,
-      currentParticipants
-    } = this.state;
+  // TODO: convert functions to reducer, pass dispatch through provider
+  //      maybe do <Provider value={useReducer()}> so the children get the state and the dispatch
 
-    // TODO: convert functions to reducer, pass dispatch through provider
-    //      maybe do <Provider value={useReducer()}> so the children get the state and the dispatch
-
-    const [state, dispatch] = React.useReducer(this.reducer, initialState);
-
-    return (
-      <div className={styles.homeWrapper}>
-        <Toolbar
-          onHandleLoadState={this.handleLoadState}
-          onHandleSaveState={this.handleSaveState}
-          onHandleSessionRestart={this.handleSessionRestart}
+  return (
+    <div className={styles.homeWrapper}>
+      <Toolbar
+        onHandleLoadState={() => {}}
+        onHandleSaveState={() => {}}
+        onHandleSessionRestart={() => {}}
+      />
+      <RaceDirectorContext.Provider value={{ state, dispatch }}>
+        <Canvas
+          telemetryMatrix={telemetryMatrix}
+          currentTrackId={currentTrackId}
+          currentWorldPosition={currentWorldPosition}
+          currentLapNumber={currentLapNumber}
+          currentPlayerSpeeds={currentPlayerSpeeds}
+          currentParticipants={currentParticipants}
+          onParticipantChange={() => {}}
         />
-        <RaceDirectorContext.Provider value={{ state, dispatch }}>
-          <Canvas
-            telemetryMatrix={telemetryMatrix}
-            currentTrackId={currentTrackId}
-            currentWorldPosition={currentWorldPosition}
-            currentLapNumber={currentLapNumber}
-            currentPlayerSpeeds={currentPlayerSpeeds}
-            currentParticipants={currentParticipants}
-            onParticipantChange={this.handleParticipantChange}
-          />
-        </RaceDirectorContext.Provider>
-      </div>
-    );
-  }
+      </RaceDirectorContext.Provider>
+    </div>
+  );
 }

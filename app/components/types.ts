@@ -13,7 +13,7 @@ export interface State {
   sessionStarted: boolean;
   currentTrackId: number;
   // tslint:disable-next-line:no-any
-  currentParticipants: any[];
+  currentParticipants: any;
   participantIndex: number;
 }
 
