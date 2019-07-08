@@ -31,7 +31,10 @@ const initialState: State = {
   currentTrackId: -1
 };
 
-export const RaceDirectorContext = React.createContext(initialState);
+export const RaceDirectorContext = React.createContext({
+  state: initialState,
+  dispatch: {}
+});
 
 // bigger package loss means more packages being skipped
 // (improves performance, lowers accuracy)
@@ -222,6 +225,23 @@ export default class App extends React.PureComponent<{}, State> {
     });
   };
 
+  reducer = (state: State, action: any) => {
+    switch (action.type) {
+      case 'PARTICIPANT_CHANGE':
+        console.log(action);
+        return {
+          ...state,
+          telemetryMatrix: [],
+          currentPlayerSpeeds: [],
+          currentWorldPosition: { x: 0, y: 0 },
+          participantIndex: 0, //participant.index,
+          currentLapNumber: 0
+        };
+      default:
+        throw new Error();
+    }
+  };
+
   render() {
     const {
       telemetryMatrix,
@@ -232,6 +252,11 @@ export default class App extends React.PureComponent<{}, State> {
       currentParticipants
     } = this.state;
 
+    // TODO: convert functions to reducer, pass dispatch through provider
+    //      maybe do <Provider value={useReducer()}> so the children get the state and the dispatch
+
+    const [state, dispatch] = React.useReducer(this.reducer, initialState);
+
     return (
       <div className={styles.homeWrapper}>
         <Toolbar
@@ -239,7 +264,7 @@ export default class App extends React.PureComponent<{}, State> {
           onHandleSaveState={this.handleSaveState}
           onHandleSessionRestart={this.handleSessionRestart}
         />
-        <RaceDirectorContext.Provider value={this.state}>
+        <RaceDirectorContext.Provider value={{ state, dispatch }}>
           <Canvas
             telemetryMatrix={telemetryMatrix}
             currentTrackId={currentTrackId}

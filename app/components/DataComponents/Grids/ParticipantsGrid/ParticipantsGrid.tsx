@@ -11,22 +11,24 @@ export function ParticipantsGrid(props: Props) {
   };
 
   const renderNames = () => {
-    const { currentParticipants } = React.useContext(RaceDirectorContext);
-    return currentParticipants.map((participant, index) => (
-      <div
-        key={index}
-        className={styles.participantWrapper}
-        onClick={() => selectParticipant(participant)}
-      >
+    const { state } = React.useContext(RaceDirectorContext);
+    return state.currentParticipants.map(
+      (participant: Participant, index: number) => (
         <div
-          className={styles.teamTag}
-          style={{
-            backgroundColor: participant.team.color
-          }}
-        />
-        <span className={styles.nameLabel}>{participant.abbreviation}</span>
-      </div>
-    ));
+          key={index}
+          className={styles.participantWrapper}
+          onClick={() => selectParticipant(participant)}
+        >
+          <div
+            className={styles.teamTag}
+            style={{
+              backgroundColor: participant.team.color
+            }}
+          />
+          <span className={styles.nameLabel}>{participant.abbreviation}</span>
+        </div>
+      )
+    );
   };
 
   return <div className={styles.racerPanelWrapper}>{renderNames()}</div>;
