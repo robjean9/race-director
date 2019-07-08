@@ -6,16 +6,19 @@ import {
 
 export const reducer = (state: State, action: any) => {
   switch (action.type) {
+    case 'SESSION_RESTART':
+      return { ...state, ...action.initialState };
+
     case 'UPDATE_TRACK':
       const currentWorldPosition = getCurrentWorldPosition(
-        action.motionPackage,
+        action.motionPacket,
         state.participantIndex
       );
       return { ...state, currentWorldPosition };
 
     case 'UPDATE_PARTICIPANTS':
       const currentParticipants = getCurrentParticipants(
-        action.participantsPackage.m_participants
+        action.participantsPacket.m_participants
       );
       return { ...state, currentParticipants };
 
@@ -27,7 +30,7 @@ export const reducer = (state: State, action: any) => {
 
     case 'UPDATE_CAR_TELEMETRY':
       const playerTelemetry =
-        action.carTelemetryPackage.m_carTelemetryData[state.participantIndex];
+        action.carTelemetryPacket.m_carTelemetryData[state.participantIndex];
 
       if (!state.telemetryMatrix) {
         return state;
@@ -60,12 +63,12 @@ export const reducer = (state: State, action: any) => {
 
     case 'UPDATE_CURRENT_LAP_TIME':
       const currentLapNumber =
-        action.lapTimePackage.m_lapData[state.participantIndex]
-          .m_currentLapNum - 1;
+        action.lapTimePacket.m_lapData[state.participantIndex].m_currentLapNum -
+        1;
 
       // this gives us an integer representing the current lap time, in ms
       const currentLapTime = Math.round(
-        action.lapTimePackage.m_lapData[state.participantIndex]
+        action.lapTimePacket.m_lapData[state.participantIndex]
           .m_currentLapTime * 1e3
       );
 

@@ -15,16 +15,7 @@ import { SessionPanel } from './SessionPanel';
 const styles = require('./Canvas.css');
 
 export function Canvas(props: Props) {
-  const {
-    telemetryMatrix,
-    currentTrackId,
-    currentWorldPosition,
-    //currentLapTime,
-    currentLapNumber,
-    currentPlayerSpeeds,
-    currentParticipants,
-    onParticipantChange
-  } = props;
+  const { onParticipantChange } = props;
 
   //console.log('state ?', state);
 
