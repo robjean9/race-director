@@ -13,7 +13,7 @@ import {
 } from 'f1-telemetry-client/build/src/parsers/packets/types';
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 import { Canvas } from './Canvas';
-import { reducer } from './reducer';
+import { reducer, actions } from './reducer';
 
 const initialState: State = {
   telemetryMatrix: [[]],
@@ -47,7 +47,7 @@ export default function App() {
 
   const handleMotionPacket = (motionPacket: PacketMotionData) => {
     if (packetCounts.motion % PACKAGE_LOSS === 0) {
-      dispatch({ type: 'UPDATE_TRACK', motionPacket });
+      dispatch({ type: actions.UPDATE_TRACK, motionPacket });
     }
     packetCounts.motion++;
   };
@@ -55,14 +55,14 @@ export default function App() {
   const handleParticipantsPacket = (
     participantsPacket: PacketParticipantsData
   ) => {
-    dispatch({ type: 'UPDATE_PARTICIPANTS', participantsPacket });
+    dispatch({ type: actions.UPDATE_PARTICIPANTS, participantsPacket });
   };
 
   const handleLapDataPacket = (lapTimePacket: PacketLapData) => {
     const { sessionStarted } = state;
 
     if (sessionStarted && packetCounts.lapData % PACKAGE_LOSS === 0) {
-      dispatch({ type: 'UPDATE_CURRENT_LAP_TIME', lapTimePacket });
+      dispatch({ type: actions.UPDATE_CURRENT_LAP_TIME, lapTimePacket });
     }
 
     packetCounts.lapData++;
@@ -73,11 +73,8 @@ export default function App() {
   ) => {
     const { sessionStarted } = state;
 
-    const shouldUpdateState =
-      sessionStarted && packetCounts.carTelemetry % PACKAGE_LOSS === 0;
-
-    if (shouldUpdateState) {
-      dispatch({ type: 'UPDATE_CAR_TELEMETRY', carTelemetryPacket });
+    if (sessionStarted && packetCounts.carTelemetry % PACKAGE_LOSS === 0) {
+      dispatch({ type: actions.UPDATE_CAR_TELEMETRY, carTelemetryPacket });
     }
 
     packetCounts.carTelemetry++;
@@ -89,17 +86,17 @@ export default function App() {
     m_trackId: number;
   }) => {
     if (e.m_sessionTimeLeft < e.m_sessionDuration) {
-      dispatch({ type: 'SESSION_STARTED' });
+      dispatch({ type: actions.SESSION_STARTED });
     }
-    dispatch({ type: 'UPDATE_TRACK_ID', trackId: e.m_trackId });
+    dispatch({ type: actions.UPDATE_TRACK_ID, trackId: e.m_trackId });
   };
 
   const handleParticipantChange = (participant: Participant) => {
-    dispatch({ type: 'UPDATE_PARTICIPANT', participant });
+    dispatch({ type: actions.UPDATE_PARTICIPANT, participant });
   };
 
   const handleSessionRestart = () =>
-    dispatch({ type: 'RESTART_SESSION', initialState });
+    dispatch({ type: actions.SESSION_RESTART, initialState });
 
   // runs when component mounts
   React.useEffect(() => {

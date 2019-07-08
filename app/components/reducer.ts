@@ -4,31 +4,42 @@ import {
   getCurrentWorldPosition
 } from './transformations';
 
+export const actions = {
+  SESSION_RESTART: 'Session Restart',
+  SESSION_STARTED: 'Session Started',
+  UPDATE_TRACK: 'Update Track',
+  UPDATE_PARTICIPANTS: 'Update Participants',
+  UPDATE_TRACK_ID: 'Update Track Id',
+  UPDATE_CAR_TELEMETRY: 'Update Car Telemetry',
+  UPDATE_CURRENT_LAP_TIME: 'Update Current Lap Time',
+  UPDATE_PARTICIPANT: 'Update Participant'
+};
+
 export const reducer = (state: State, action: any) => {
   switch (action.type) {
-    case 'SESSION_RESTART':
+    case actions.SESSION_RESTART:
       return { ...state, ...action.initialState };
 
-    case 'UPDATE_TRACK':
+    case actions.UPDATE_TRACK:
       const currentWorldPosition = getCurrentWorldPosition(
         action.motionPacket,
         state.participantIndex
       );
       return { ...state, currentWorldPosition };
 
-    case 'UPDATE_PARTICIPANTS':
+    case actions.UPDATE_PARTICIPANTS:
       const currentParticipants = getCurrentParticipants(
         action.participantsPacket.m_participants
       );
       return { ...state, currentParticipants };
 
-    case 'UPDATE_TRACK_ID':
+    case actions.UPDATE_TRACK_ID:
       return { ...state, currentTrackId: action.trackId };
 
-    case 'SESSION_STARTED':
+    case actions.SESSION_STARTED:
       return { ...state, sessionStarted: true };
 
-    case 'UPDATE_CAR_TELEMETRY':
+    case actions.UPDATE_CAR_TELEMETRY:
       const playerTelemetry =
         action.carTelemetryPacket.m_carTelemetryData[state.participantIndex];
 
@@ -61,7 +72,7 @@ export const reducer = (state: State, action: any) => {
 
       return { ...state, telemetryMatrix: updatedTelemetryMatrix };
 
-    case 'UPDATE_CURRENT_LAP_TIME':
+    case actions.UPDATE_CURRENT_LAP_TIME:
       const currentLapNumber =
         action.lapTimePacket.m_lapData[state.participantIndex].m_currentLapNum -
         1;
@@ -77,7 +88,7 @@ export const reducer = (state: State, action: any) => {
 
       return { ...state, currentLapTimes, currentLapTime, currentLapNumber };
 
-    case 'UPDATE_PARTICIPANT':
+    case actions.UPDATE_PARTICIPANT:
       return {
         ...state,
         telemetryMatrix: [],
