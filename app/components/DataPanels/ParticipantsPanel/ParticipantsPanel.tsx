@@ -8,7 +8,7 @@ export class ParticipantsPanel extends React.PureComponent<Props> {
     return (
       <React.Fragment>
         <div>Session Type</div>
-        <ParticipantsGrid handleParticipantChange={onParticipantChange} />
+        <ParticipantsGrid />
       </React.Fragment>
     );
   }

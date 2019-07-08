@@ -3,7 +3,7 @@ import * as openSocket from 'socket.io-client';
 
 const styles = require('./App.css');
 
-import { State, Participant } from './types';
+import { State, Participant, ContextProps } from './types';
 import { Toolbar } from './Toolbar';
 import {
   PacketLapData,
@@ -27,10 +27,7 @@ const initialState: State = {
   currentTrackId: -1
 };
 
-export const RaceDirectorContext = React.createContext({
-  state: initialState,
-  dispatch: {}
-});
+export const RaceDirectorContext = React.createContext({} as ContextProps);
 
 // bigger packet loss means more packets being skipped
 // (improves performance, lowers accuracy)
@@ -116,7 +113,7 @@ export default function App() {
         onHandleSessionRestart={handleSessionRestart}
       />
       <RaceDirectorContext.Provider value={{ state, dispatch }}>
-        <Canvas onParticipantChange={handleParticipantChange} />
+        <Canvas />
       </RaceDirectorContext.Provider>
     </div>
   );

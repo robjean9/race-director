@@ -1,4 +1,5 @@
 import { Team } from 'f1-telemetry-client/build/src/constants/types';
+import { Dispatch } from 'react';
 
 export interface State {
   // time x telemetry
@@ -15,6 +16,11 @@ export interface State {
   // tslint:disable-next-line:no-any
   currentParticipants: any;
   participantIndex: number;
+}
+
+export interface ContextProps {
+  state: State;
+  dispatch: Dispatch<any>;
 }
 
 export interface Participant {

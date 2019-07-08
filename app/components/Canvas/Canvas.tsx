@@ -15,18 +15,12 @@ import { SessionPanel } from './SessionPanel';
 const styles = require('./Canvas.css');
 
 export function Canvas(props: Props) {
-  const { onParticipantChange } = props;
-
-  //console.log('state ?', state);
-
   const column1Classname = classNames(styles.column1, styles.column);
   const column2Classname = classNames(styles.column2, styles.column);
   const column3Classname = classNames(styles.column3, styles.column);
   const column4Classname = classNames(styles.column4, styles.column);
 
-  const participantsGrid = (
-    <ParticipantsGrid handleParticipantChange={onParticipantChange} />
-  );
+  const participantsGrid = <ParticipantsGrid />;
 
   return (
     <div className={styles.telemetryPanels}>

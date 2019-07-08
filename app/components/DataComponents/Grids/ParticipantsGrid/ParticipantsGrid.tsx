@@ -2,12 +2,15 @@ import * as React from 'react';
 import { Props } from './types';
 import { Participant } from '../../../types';
 import { RaceDirectorContext } from '../../../App';
+import { actions } from '../../../reducer';
 
 const styles = require('./ParticipantsGrid.css');
 
 export function ParticipantsGrid(props: Props) {
   const selectParticipant = (participant: Participant) => {
-    props.handleParticipantChange(participant);
+    const { dispatch } = React.useContext(RaceDirectorContext);
+    dispatch({ type: actions.UPDATE_PARTICIPANT, participant });
+    //props.handleParticipantChange(participant);
   };
 
   const renderNames = () => {
