@@ -14,14 +14,6 @@ export class InstrumentsPanel extends React.PureComponent<Props> {
   render() {
     return (
       <React.Fragment>
-        <div className={styles.temperatureDisplays}>
-          <QuaternaryIndicator title="Tire Temp" />
-          <QuaternaryIndicator title="Brake Temp" />
-        </div>
-        <div className={styles.temperatureDisplays}>
-          <QuaternaryIndicator title="Tyre wear" />
-          <QuaternaryIndicator title="Tyre damage" />
-        </div>
         <div className={styles.carSetupWrapper}>
           <UnaryIndicator title={`Tire Compound`} value={1} />
           <UnaryIndicator title={`Fuel Mix`} value={1} />

@@ -1,15 +1,38 @@
 import * as React from 'react';
-import { ParticipantsGrid } from '../../DataComponents';
 import { Props } from './types';
+import { RaceDirectorContext } from '../../App';
+import { Participant } from '../../types';
+import { actions } from '../../reducer';
 
-export class ParticipantsPanel extends React.PureComponent<Props> {
-  render() {
-    const { onParticipantChange, currentParticipants } = this.props;
-    return (
-      <React.Fragment>
-        <div>Session Type</div>
-        <ParticipantsGrid />
-      </React.Fragment>
+const styles = require('./ParticipantsPanel.css');
+
+export function ParticipantsPanel(props: Props) {
+  const { dispatch } = React.useContext(RaceDirectorContext);
+
+  const selectParticipant = (participant: Participant) => {
+    dispatch({ type: actions.UPDATE_PARTICIPANT, participant });
+  };
+
+  const renderNames = () => {
+    const { state } = React.useContext(RaceDirectorContext);
+    return state.currentParticipants.map(
+      (participant: Participant, index: number) => (
+        <div
+          key={index}
+          className={styles.participantWrapper}
+          onClick={() => selectParticipant(participant)}
+        >
+          <div
+            className={styles.teamTag}
+            style={{
+              backgroundColor: participant.team.color
+            }}
+          />
+          <span className={styles.nameLabel}>{participant.abbreviation}</span>
+        </div>
+      )
     );
-  }
+  };
+
+  return <div className={styles.racerPanelWrapper}>{renderNames()}</div>;
 }

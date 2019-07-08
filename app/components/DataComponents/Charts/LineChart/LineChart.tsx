@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { Props } from './types';
 import { EChart } from '../EChart';
-import { getChartOptions, getSeriesForLap } from '../transformations';
+import {
+  getChartOptions,
+  getSeriesForLap,
+  getXAxisData
+} from '../transformations';
+import { RaceDirectorContext } from '../../../App';
 
-export class LineChart extends React.PureComponent<Props> {
-  getLineChart = () => {
-    const {
-      telemetryMatrix,
-      currentLapNumber,
-      xAxisData,
-      telemetryType,
-      title
-    } = this.props;
+export function LineChart(props: Props) {
+  const { state } = React.useContext(RaceDirectorContext);
+
+  const getLineChart = () => {
+    const { telemetryType, title } = props;
+    const { telemetryMatrix, currentLapNumber } = state;
+
+    const xAxisData = getXAxisData(telemetryMatrix);
 
     const series = getSeriesForLap(
       telemetryMatrix,
@@ -23,7 +27,5 @@ export class LineChart extends React.PureComponent<Props> {
     return getChartOptions(title, title, xAxisData, series);
   };
 
-  render() {
-    return <EChart option={this.getLineChart()} />;
-  }
+  return <EChart option={getLineChart()} />;
 }

@@ -1,18 +1,36 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Props } from './types';
-import { DataPanel } from '../DataPanels/DataPanel';
-import { ParticipantsGrid } from '../DataComponents';
-import { RaceDirectorContext } from '../App';
+import { DataPanelBox } from '../DataPanels/DataPanelBox';
+import { LineChart } from '../DataComponents';
+import { TelemetryType } from '../types';
+import { ParticipantsPanel } from '../DataPanels/ParticipantsPanel';
+import { TyreTemperaturePanel } from '../DataPanels/TyreTemperaturePanel';
+import { BrakeTemperaturePanel } from '../DataPanels/BrakeTemperaturePanel';
+import { TyreWearPanel } from '../DataPanels/TyreWearPanel';
+import { TrackMapPanel } from '../DataPanels/TrackMapPanel';
 
 /*
-import { ParticipantsPanel } from './ParticipantsPanel';
-import { GraphsPanel } from './GraphsPanel';
 import { InstrumentsPanel } from './InstrumentsPanel';
 import { SessionPanel } from './SessionPanel';
 */
 
 const styles = require('./Canvas.css');
+
+const canvasPanels = [
+  [<ParticipantsPanel />],
+  [
+    // make non-generic components (panels) for each LineChart
+    <LineChart telemetryType={TelemetryType.Speed} title={'Speed'} />,
+    <LineChart telemetryType={TelemetryType.EngineRPM} title={'RPM'} />,
+    <LineChart telemetryType={TelemetryType.Gear} title={'Gear'} />,
+    <LineChart telemetryType={TelemetryType.Throttle} title={'Throttle'} />,
+    <LineChart telemetryType={TelemetryType.Brake} title={'Brake'} />,
+    <LineChart telemetryType={TelemetryType.Steer} title={'Steer'} />
+  ],
+  [<TyreTemperaturePanel />, <BrakeTemperaturePanel />, <TyreWearPanel />],
+  [<TrackMapPanel />]
+];
 
 export function Canvas(props: Props) {
   const column1Classname = classNames(styles.column1, styles.column);
@@ -20,41 +38,27 @@ export function Canvas(props: Props) {
   const column3Classname = classNames(styles.column3, styles.column);
   const column4Classname = classNames(styles.column4, styles.column);
 
-  const participantsGrid = <ParticipantsGrid />;
-
   return (
     <div className={styles.telemetryPanels}>
       <div className={column1Classname}>
-        <DataPanel>{participantsGrid}</DataPanel>
-        {/*
-          <ParticipantsPanel
-            onParticipantChange={onParticipantChange}
-            currentParticipants={currentParticipants}
-          />
-        */}
+        {canvasPanels[0].map((component, index) => (
+          <DataPanelBox key={index}>{component}</DataPanelBox>
+        ))}
       </div>
       <div className={column2Classname}>
-        <DataPanel>{participantsGrid}</DataPanel>
-        {/*
-          <GraphsPanel
-            telemetryMatrix={telemetryMatrix}
-            currentPlayerSpeeds={currentPlayerSpeeds}
-            currentLapNumber={currentLapNumber}
-          />
-        */}
+        {canvasPanels[1].map((component, index) => (
+          <DataPanelBox key={index}>{component}</DataPanelBox>
+        ))}
       </div>
       <div className={column3Classname}>
-        <DataPanel>{participantsGrid}</DataPanel>
-        {/* <InstrumentsPanel /> */}
+        {canvasPanels[2].map((component, index) => (
+          <DataPanelBox key={index}>{component}</DataPanelBox>
+        ))}
       </div>
       <div className={column4Classname}>
-        <DataPanel>{participantsGrid}</DataPanel>
-        {/*
-          <SessionPanel
-            currentTrackId={currentTrackId}
-            currentWorldPosition={currentWorldPosition}
-          />
-        */}
+        {canvasPanels[3].map((component, index) => (
+          <DataPanelBox key={index}>{component}</DataPanelBox>
+        ))}
       </div>
     </div>
   );

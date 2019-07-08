@@ -31,7 +31,7 @@ export const RaceDirectorContext = React.createContext({} as ContextProps);
 
 // bigger packet loss means more packets being skipped
 // (improves performance, lowers accuracy)
-const PACKAGE_LOSS = 3;
+const PACKAGE_LOSS = 10;
 
 const packetCounts = {
   lapData: 0,
@@ -56,9 +56,7 @@ export default function App() {
   };
 
   const handleLapDataPacket = (lapTimePacket: PacketLapData) => {
-    const { sessionStarted } = state;
-
-    if (sessionStarted && packetCounts.lapData % PACKAGE_LOSS === 0) {
+    if (packetCounts.lapData % PACKAGE_LOSS === 0) {
       dispatch({ type: actions.UPDATE_CURRENT_LAP_TIME, lapTimePacket });
     }
 
@@ -68,9 +66,7 @@ export default function App() {
   const handleCarTelemetryPacket = (
     carTelemetryPacket: PacketCarTelemetryData
   ) => {
-    const { sessionStarted } = state;
-
-    if (sessionStarted && packetCounts.carTelemetry % PACKAGE_LOSS === 0) {
+    if (packetCounts.carTelemetry % PACKAGE_LOSS === 0) {
       dispatch({ type: actions.UPDATE_CAR_TELEMETRY, carTelemetryPacket });
     }
 

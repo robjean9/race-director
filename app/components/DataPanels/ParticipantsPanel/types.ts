@@ -1,4 +1,1 @@
-export interface Props {
-  onParticipantChange: any;
-  currentParticipants: any;
-}
+export interface Props {}
