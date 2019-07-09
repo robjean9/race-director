@@ -1,21 +1,21 @@
 import * as React from 'react';
-import { Props } from './types';
-import { RaceDirectorContext } from '../../App';
+import { useMemo } from 'react';
+import { StateContext, DispatchContext } from '../../App';
 import { Participant } from '../../types';
 import { actions } from '../../reducer';
 
 const styles = require('./ParticipantsPanel.css');
 
-export function ParticipantsPanel(props: Props) {
-  const { dispatch } = React.useContext(RaceDirectorContext);
+export function ParticipantsPanel() {
+  const { currentParticipants } = React.useContext(StateContext);
+  const dispatch = React.useContext(DispatchContext);
 
   const selectParticipant = (participant: Participant) => {
     dispatch({ type: actions.UPDATE_PARTICIPANT, participant });
   };
 
   const renderNames = () => {
-    const { state } = React.useContext(RaceDirectorContext);
-    return state.currentParticipants.map(
+    return currentParticipants.map(
       (participant: Participant, index: number) => (
         <div
           key={index}
@@ -34,5 +34,8 @@ export function ParticipantsPanel(props: Props) {
     );
   };
 
-  return <div className={styles.racerPanelWrapper}>{renderNames()}</div>;
+  return useMemo(
+    () => <div className={styles.racerPanelWrapper}>{renderNames()}</div>,
+    [currentParticipants]
+  );
 }

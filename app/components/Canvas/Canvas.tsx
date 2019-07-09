@@ -32,7 +32,7 @@ const canvasPanels = [
   [<TrackMapPanel />]
 ];
 
-export function Canvas(props: Props) {
+export function Canvas() {
   const column1Classname = classNames(styles.column1, styles.column);
   const column2Classname = classNames(styles.column2, styles.column);
   const column3Classname = classNames(styles.column3, styles.column);

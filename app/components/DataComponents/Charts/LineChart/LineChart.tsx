@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useMemo, useContext } from 'react';
 import { Props } from './types';
 import { EChart } from '../EChart';
 import {
@@ -6,14 +7,13 @@ import {
   getSeriesForLap,
   getXAxisData
 } from '../transformations';
-import { RaceDirectorContext } from '../../../App';
+import { StateContext } from '../../../App';
 
 export function LineChart(props: Props) {
-  const { state } = React.useContext(RaceDirectorContext);
+  const { telemetryMatrix, currentLapNumber } = useContext(StateContext);
 
   const getLineChart = () => {
     const { telemetryType, title } = props;
-    const { telemetryMatrix, currentLapNumber } = state;
 
     const xAxisData = getXAxisData(telemetryMatrix);
 

@@ -18,11 +18,6 @@ export interface State {
   participantIndex: number;
 }
 
-export interface ContextProps {
-  state: State;
-  dispatch: Dispatch<any>;
-}
-
 export interface Participant {
   team: Team;
   abbreviation: string;

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import * as openSocket from 'socket.io-client';
+import { createContext, useReducer, useEffect, Dispatch } from 'react';
 
+import * as openSocket from 'socket.io-client';
 const styles = require('./App.css');
 
-import { State, Participant, ContextProps } from './types';
+import { State, Participant } from './types';
 import { Toolbar } from './Toolbar';
 import {
   PacketLapData,
@@ -27,7 +28,8 @@ const initialState: State = {
   currentTrackId: -1
 };
 
-export const RaceDirectorContext = React.createContext({} as ContextProps);
+export const StateContext = createContext({} as State);
+export const DispatchContext = createContext({} as Dispatch<any>);
 
 // bigger packet loss means more packets being skipped
 // (improves performance, lowers accuracy)
@@ -40,7 +42,7 @@ const packetCounts = {
 };
 
 export default function App() {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleMotionPacket = (motionPacket: PacketMotionData) => {
     if (packetCounts.motion % PACKAGE_LOSS === 0) {
@@ -92,7 +94,7 @@ export default function App() {
     dispatch({ type: actions.SESSION_RESTART, initialState });
 
   // runs when component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     const socket = openSocket('http://localhost:24500');
     socket.on(PACKETS.lapData, handleLapDataPacket);
     socket.on(PACKETS.carTelemetry, handleCarTelemetryPacket);
@@ -108,9 +110,11 @@ export default function App() {
         onHandleSaveState={() => {}}
         onHandleSessionRestart={handleSessionRestart}
       />
-      <RaceDirectorContext.Provider value={{ state, dispatch }}>
-        <Canvas />
-      </RaceDirectorContext.Provider>
+      <DispatchContext.Provider value={dispatch}>
+        <StateContext.Provider value={state}>
+          <Canvas />
+        </StateContext.Provider>
+      </DispatchContext.Provider>
     </div>
   );
 }

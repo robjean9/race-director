@@ -9,7 +9,6 @@ export class QuaternaryIndicator extends React.PureComponent<Props> {
     const { title } = this.props;
     return (
       <div className={styles.quaternaryIndicator}>
-        <span className={styles.quaternaryIndicatorTitle}>{title}</span>
         <div className={styles.quaternaryIndicatorRow}>
           <UnaryIndicator title={`${title} FL`} value={120} />
           <UnaryIndicator title={`${title} FR`} value={52} />

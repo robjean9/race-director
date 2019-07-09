@@ -28,6 +28,9 @@ export const reducer = (state: State, action: any) => {
       return { ...state, currentWorldPosition };
 
     case actions.UPDATE_PARTICIPANTS:
+      if (!state.currentParticipants || state.currentParticipants.length > 0) {
+        return state;
+      }
       const currentParticipants = getCurrentParticipants(
         action.participantsPacket.m_participants
       );
@@ -59,7 +62,7 @@ export const reducer = (state: State, action: any) => {
         ] = {};
       }
 
-      const updatedTelemetryMatrix = state.telemetryMatrix.slice();
+      const updatedTelemetryMatrix = state.telemetryMatrix;
 
       updatedTelemetryMatrix[state.currentLapTime][state.currentLapNumber] = {
         speed: playerTelemetry.m_speed,
@@ -83,10 +86,7 @@ export const reducer = (state: State, action: any) => {
           .m_currentLapTime * 1e3
       );
 
-      const currentLapTimes = state.telemetryMatrix.slice();
-      currentLapTimes[currentLapTime] = [];
-
-      return { ...state, currentLapTimes, currentLapTime, currentLapNumber };
+      return { ...state, currentLapTime, currentLapNumber };
 
     case actions.UPDATE_PARTICIPANT:
       return {

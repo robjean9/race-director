@@ -55,9 +55,16 @@ export const getSeriesForLap = (
       connectNulls: true,
       type: 'line',
       large: true,
+      showSymbol: false,
       data: xAxisData.map(
         (time: number) => telemetryMatrix[time][lapNumber][telemetryType]
-      )
+      ),
+      itemStyle: {
+        color: 'rgba(0, 215, 143, 1.0)'
+      },
+      areaStyle: {
+        color: 'rgba(0, 215, 143, 0.1)'
+      }
     }
   ];
 };
@@ -70,11 +77,12 @@ export const getChartOptions = (
 ) => {
   return {
     title: {
+      show: false,
       text: title,
       //left: '60px',
       //top: '30px',
       textStyle: {
-        color: '#00d2be',
+        color: '#8a96ae',
         fontWeight: 'lighter',
         fontSize: '12px'
       }
@@ -84,6 +92,7 @@ export const getChartOptions = (
       top: 25,
       right: 15,
       bottom: 20
+      //borderColor: '#0f1424'
     },
     tooltip: {
       trigger: 'axis',
@@ -102,6 +111,13 @@ export const getChartOptions = (
         data,
         axisLabel: {
           dateFormatter
+        },
+        axisLine: {
+          lineStyle: { color: '#0f1424' }
+        },
+        splitLine: {
+          show: false,
+          lineStyle: { color: '#0f1424' }
         }
       }
     ],
@@ -110,6 +126,12 @@ export const getChartOptions = (
         type: 'value',
         axisLabel: {
           formatter: '{value} ' + unit
+        },
+        axisLine: {
+          lineStyle: { color: '#0f1424' }
+        },
+        splitLine: {
+          lineStyle: { color: '#0f1424' }
         }
       }
     ],

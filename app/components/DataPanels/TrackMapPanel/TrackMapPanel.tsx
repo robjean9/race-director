@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Stage } from 'react-konva';
 import { RaceLine } from './RaceLine';
 import { Coordinate } from 'f1-telemetry-client/build/src/constants/types';
-import { RaceDirectorContext } from '../../App';
+import { StateContext } from '../../App';
 
 export function TrackMapPanel() {
   //const { worldPosition } = props;
 
-  const { state } = React.useContext(RaceDirectorContext);
+  const state = React.useContext(StateContext);
   const { currentWorldPosition } = state;
 
   // 30% of screen
