@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Telemetry, TelemetryType } from '../../types';
 
 export const dateFormatter = (value: any) => {
@@ -24,20 +25,6 @@ export const dateFormatter = (value: any) => {
       : '0' + absoluteMilliseconds;
 
   return `${m}:${s}:${ms}`;
-};
-
-export const getXAxisData = (telemetryMatrix: Telemetry[][]) => {
-  return (
-    telemetryMatrix
-      // gets times (each index represents a time)
-      // tslint:disable-next-line:no-any
-      .map((_: any, index: number) => index)
-      // takes out null values (times that were not recorded)
-      // eg. received a package about 1424 ms and then 1429 ms
-      // doing a !!time filter takes out empty
-      // array positions from 1425 to 1428
-      .filter((time: number) => !!time)
-  );
 };
 
 // TODO: this crashes when new lap happens
@@ -69,18 +56,10 @@ export const getSeriesForLap = (
   ];
 };
 
-export const getChartOptions = (
-  title: string,
-  unit: string,
-  data: any,
-  series: any
-) => {
+export const getChartOptions = (unit: string = '', data: any, series: any) => {
   return {
     title: {
       show: false,
-      text: title,
-      //left: '60px',
-      //top: '30px',
       textStyle: {
         color: '#8a96ae',
         fontWeight: 'lighter',
@@ -88,20 +67,27 @@ export const getChartOptions = (
       }
     },
     grid: {
-      left: 5,
+      left: 45,
       top: 25,
       right: 15,
       bottom: 20
-      //borderColor: '#0f1424'
     },
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        type: 'cross',
+        type: 'line',
         animation: false,
         label: {
           backgroundColor: '#505765'
         }
+      },
+      formatter: (value: any) => {
+        return value.map(
+          (v: any) =>
+            `${dateFormatter(v.axisValue)}: ${
+              v.value % 1 == 0 ? v.value : v.value.toFixed(3)
+            }${unit}`
+        );
       }
     },
     xAxis: [
@@ -110,7 +96,7 @@ export const getChartOptions = (
         silent: true,
         data,
         axisLabel: {
-          dateFormatter
+          formatter: dateFormatter
         },
         axisLine: {
           lineStyle: { color: '#0f1424' }
@@ -124,9 +110,6 @@ export const getChartOptions = (
     yAxis: [
       {
         type: 'value',
-        axisLabel: {
-          formatter: '{value} ' + unit
-        },
         axisLine: {
           lineStyle: { color: '#0f1424' }
         },

@@ -2,7 +2,7 @@ import {
   ParticipantData,
   PacketMotionData
 } from 'f1-telemetry-client/build/src/parsers/packets/types';
-import { Participant } from '../components/types';
+import { Participant, Telemetry } from '../components/types';
 
 const remote = require('electron').remote;
 const { DRIVERS, TEAMS } = remote.getGlobal('telemetryClientConstants');
@@ -29,6 +29,21 @@ export const getCurrentParticipants = (
     }
   );
   return currentParticipants;
+};
+
+// Calculates XAxis (ms)
+export const getXAxisData = (telemetryMatrix: Telemetry[][]) => {
+  return (
+    telemetryMatrix
+      // gets times (each index represents a time)
+      // tslint:disable-next-line:no-any
+      .map((_: any, index: number) => index)
+      // takes out null values (times that were not recorded)
+      // eg. received a package about 1424 ms and then 1429 ms
+      // doing a !!time filter takes out empty
+      // array positions from 1425 to 1428
+      .filter((time: number) => !!time)
+  );
 };
 
 // Transforms received position to be usable by the map

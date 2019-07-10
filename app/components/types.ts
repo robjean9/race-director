@@ -16,6 +16,7 @@ export interface State {
   // tslint:disable-next-line:no-any
   currentParticipants: any;
   participantIndex: number;
+  xAxisData: any;
 }
 
 export interface Participant {

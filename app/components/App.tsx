@@ -25,15 +25,19 @@ const initialState: State = {
   currentLapNumber: 0,
   participantIndex: 0,
   sessionStarted: false,
-  currentTrackId: -1
+  currentTrackId: -1,
+  xAxisData: []
 };
 
 export const StateContext = createContext({} as State);
 export const DispatchContext = createContext({} as Dispatch<any>);
+export const ParticipantsContext = createContext(
+  initialState.currentParticipants
+);
 
 // bigger packet loss means more packets being skipped
 // (improves performance, lowers accuracy)
-const PACKAGE_LOSS = 10;
+const PACKAGE_LOSS = 3;
 
 const packetCounts = {
   lapData: 0,
@@ -112,7 +116,9 @@ export default function App() {
       />
       <DispatchContext.Provider value={dispatch}>
         <StateContext.Provider value={state}>
-          <Canvas />
+          <ParticipantsContext.Provider value={state.currentParticipants}>
+            <Canvas />
+          </ParticipantsContext.Provider>
         </StateContext.Provider>
       </DispatchContext.Provider>
     </div>

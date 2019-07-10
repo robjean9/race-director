@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useMemo } from 'react';
-import { StateContext, DispatchContext } from '../../App';
+import { DispatchContext, ParticipantsContext } from '../../App';
 import { Participant } from '../../types';
 import { actions } from '../../reducer';
 
 const styles = require('./ParticipantsPanel.css');
 
 export function ParticipantsPanel() {
-  const { currentParticipants } = React.useContext(StateContext);
+  const currentParticipants = React.useContext(ParticipantsContext);
   const dispatch = React.useContext(DispatchContext);
 
   const selectParticipant = (participant: Participant) => {
@@ -34,8 +34,5 @@ export function ParticipantsPanel() {
     );
   };
 
-  return useMemo(
-    () => <div className={styles.racerPanelWrapper}>{renderNames()}</div>,
-    [currentParticipants]
-  );
+  return <div className={styles.racerPanelWrapper}>{renderNames()}</div>;
 }

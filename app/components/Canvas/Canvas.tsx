@@ -21,14 +21,14 @@ const canvasPanels = [
   [<ParticipantsPanel />],
   [
     // make non-generic components (panels) for each LineChart
-    <LineChart telemetryType={TelemetryType.Speed} title={'Speed'} />,
-    <LineChart telemetryType={TelemetryType.EngineRPM} title={'RPM'} />,
-    <LineChart telemetryType={TelemetryType.Gear} title={'Gear'} />,
-    <LineChart telemetryType={TelemetryType.Throttle} title={'Throttle'} />,
-    <LineChart telemetryType={TelemetryType.Brake} title={'Brake'} />,
-    <LineChart telemetryType={TelemetryType.Steer} title={'Steer'} />
+    <LineChart telemetryType={TelemetryType.Speed} unit={' km/h'} />,
+    <LineChart telemetryType={TelemetryType.EngineRPM} unit={' rpm'} />,
+    <LineChart telemetryType={TelemetryType.Gear} />,
+    <LineChart telemetryType={TelemetryType.Throttle} unit={'%'} />,
+    <LineChart telemetryType={TelemetryType.Brake} unit={'%'} />,
+    <LineChart telemetryType={TelemetryType.Steer} unit={'%'} />
   ],
-  [<TyreTemperaturePanel />, <BrakeTemperaturePanel />, <TyreWearPanel />],
+  [<TyreTemperaturePanel />], //, <BrakeTemperaturePanel />, <TyreWearPanel />],
   [<TrackMapPanel />]
 ];
 

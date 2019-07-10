@@ -1,7 +1,8 @@
 import { State } from './types';
 import {
   getCurrentParticipants,
-  getCurrentWorldPosition
+  getCurrentWorldPosition,
+  getXAxisData
 } from './transformations';
 
 export const actions = {
@@ -64,16 +65,33 @@ export const reducer = (state: State, action: any) => {
 
       const updatedTelemetryMatrix = state.telemetryMatrix;
 
+      const {
+        m_speed,
+        m_engineRPM,
+        m_gear,
+        m_throttle,
+        m_brake,
+        m_steer,
+        m_brakesTemperature
+      } = playerTelemetry;
+
       updatedTelemetryMatrix[state.currentLapTime][state.currentLapNumber] = {
-        speed: playerTelemetry.m_speed,
-        engineRPM: playerTelemetry.m_engineRPM,
-        gear: playerTelemetry.m_gear,
-        throttle: playerTelemetry.m_throttle,
-        brake: playerTelemetry.m_brake,
-        steer: playerTelemetry.m_steer
+        speed: m_speed,
+        engineRPM: m_engineRPM,
+        gear: m_gear,
+        throttle: m_throttle,
+        brake: m_brake,
+        steer: m_steer
       };
 
-      return { ...state, telemetryMatrix: updatedTelemetryMatrix };
+      const xAxisData = getXAxisData(updatedTelemetryMatrix);
+
+      return {
+        ...state,
+        xAxisData,
+        telemetryMatrix: updatedTelemetryMatrix,
+        brakesTemperature: m_brakesTemperature
+      };
 
     case actions.UPDATE_CURRENT_LAP_TIME:
       const currentLapNumber =
