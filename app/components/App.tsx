@@ -26,7 +26,9 @@ const initialState: State = {
   participantIndex: 0,
   sessionStarted: false,
   currentTrackId: -1,
-  xAxisData: []
+  xAxisData: [],
+  brakesTemperature: [],
+  tyresSurfaceTemperature: []
 };
 
 export const StateContext = createContext({} as State);

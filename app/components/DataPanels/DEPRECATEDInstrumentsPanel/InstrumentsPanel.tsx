@@ -15,9 +15,24 @@ export class InstrumentsPanel extends React.PureComponent<Props> {
     return (
       <React.Fragment>
         <div className={styles.carSetupWrapper}>
-          <UnaryIndicator title={`Tire Compound`} value={1} />
-          <UnaryIndicator title={`Fuel Mix`} value={1} />
-          <UnaryIndicator title={`ERS Deploy Mode`} value={1} />
+          <UnaryIndicator
+            title={`Tire Compound`}
+            value={1}
+            minValue={70}
+            maxValue={120}
+          />
+          <UnaryIndicator
+            title={`Fuel Mix`}
+            value={1}
+            minValue={70}
+            maxValue={120}
+          />
+          <UnaryIndicator
+            title={`ERS Deploy Mode`}
+            value={1}
+            minValue={70}
+            maxValue={120}
+          />
         </div>
         <div className={styles.engineDisplays}>
           <RPMGaugeChart />

@@ -17,6 +17,8 @@ export interface State {
   currentParticipants: any;
   participantIndex: number;
   xAxisData: any;
+  brakesTemperature: any;
+  tyresSurfaceTemperature: any;
 }
 
 export interface Participant {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMemo } from 'react';
+import { useContext } from 'react';
 import { DispatchContext, ParticipantsContext } from '../../App';
 import { Participant } from '../../types';
 import { actions } from '../../reducer';
@@ -7,8 +7,8 @@ import { actions } from '../../reducer';
 const styles = require('./ParticipantsPanel.css');
 
 export function ParticipantsPanel() {
-  const currentParticipants = React.useContext(ParticipantsContext);
-  const dispatch = React.useContext(DispatchContext);
+  const currentParticipants = useContext(ParticipantsContext);
+  const dispatch = useContext(DispatchContext);
 
   const selectParticipant = (participant: Participant) => {
     dispatch({ type: actions.UPDATE_PARTICIPANT, participant });

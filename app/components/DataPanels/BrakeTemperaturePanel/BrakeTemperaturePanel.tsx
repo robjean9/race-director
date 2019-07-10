@@ -1,8 +1,16 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import { QuaternaryIndicator } from '../../DataComponents';
-
-const styles = require('./BrakeTemperaturePanel.css');
+import { StateContext } from '../../App';
 
 export function BrakeTemperaturePanel() {
-  return <QuaternaryIndicator title="Brake Temp" />;
+  const { brakesTemperature } = useContext(StateContext);
+  return (
+    <QuaternaryIndicator
+      title="Brake Temperature"
+      values={brakesTemperature}
+      minValue={400}
+      maxValue={1100}
+    />
+  );
 }

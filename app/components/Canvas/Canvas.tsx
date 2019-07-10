@@ -5,7 +5,7 @@ import { DataPanelBox } from '../DataPanels/DataPanelBox';
 import { LineChart } from '../DataComponents';
 import { TelemetryType } from '../types';
 import { ParticipantsPanel } from '../DataPanels/ParticipantsPanel';
-import { TyreTemperaturePanel } from '../DataPanels/TyreTemperaturePanel';
+import { TyresSurfaceTemperaturePanel } from '../DataPanels/TyresSurfaceTemperaturePanel';
 import { BrakeTemperaturePanel } from '../DataPanels/BrakeTemperaturePanel';
 import { TyreWearPanel } from '../DataPanels/TyreWearPanel';
 import { TrackMapPanel } from '../DataPanels/TrackMapPanel';
@@ -28,7 +28,11 @@ const canvasPanels = [
     <LineChart telemetryType={TelemetryType.Brake} unit={'%'} />,
     <LineChart telemetryType={TelemetryType.Steer} unit={'%'} />
   ],
-  [<TyreTemperaturePanel />], //, <BrakeTemperaturePanel />, <TyreWearPanel />],
+  [
+    <TyresSurfaceTemperaturePanel />,
+    <BrakeTemperaturePanel />,
+    <TyreWearPanel />
+  ],
   [<TrackMapPanel />]
 ];
 

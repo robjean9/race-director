@@ -72,25 +72,35 @@ export const reducer = (state: State, action: any) => {
         m_throttle,
         m_brake,
         m_steer,
-        m_brakesTemperature
+        m_brakesTemperature,
+        m_tyresSurfaceTemperature
       } = playerTelemetry;
 
       updatedTelemetryMatrix[state.currentLapTime][state.currentLapNumber] = {
         speed: m_speed,
         engineRPM: m_engineRPM,
         gear: m_gear,
-        throttle: m_throttle,
-        brake: m_brake,
+        throttle: m_throttle * 100,
+        brake: m_brake * 100,
         steer: m_steer
       };
 
       const xAxisData = getXAxisData(updatedTelemetryMatrix);
 
+      const brakesTemperature = m_brakesTemperature.map(
+        (temperature: any) => temperature.m_brakesTemperature
+      );
+
+      const tyresSurfaceTemperature = m_tyresSurfaceTemperature.map(
+        (temperature: any) => temperature.m_tyresSurfaceTemperature
+      );
+
       return {
         ...state,
         xAxisData,
         telemetryMatrix: updatedTelemetryMatrix,
-        brakesTemperature: m_brakesTemperature
+        brakesTemperature,
+        tyresSurfaceTemperature
       };
 
     case actions.UPDATE_CURRENT_LAP_TIME:
