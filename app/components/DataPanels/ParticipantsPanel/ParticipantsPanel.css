@@ -13,6 +13,10 @@
   flex-basis: auto;
 }
 
+.selectedParticipantWrapper {
+  background-color: red;
+}
+
 .teamTag {
   width: 5px;
   height: 17px;

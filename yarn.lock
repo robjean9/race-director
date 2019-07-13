@@ -5277,10 +5277,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-f1-telemetry-client@0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.8.tgz#6bfcabba66fe92ec9c97cdc57b1bfc3e50fb51f7"
-  integrity sha512-sQyo6qI2yQLGseWute0HwsueBwkJT51gfXzfokxM2H/IsUyBV6Y1J4AeJ4YTLSCPpv3+KuMLOeyXng6B9nA3iQ==
+f1-telemetry-client@0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.10.tgz#8c5d8ab7d53cfcba098258b037dc5e2b887d0b50"
+  integrity sha512-45vfryMyP68b7XQW22VsMXHZJdYieIU7hV+Eg8sehedQGSfXBoOV1Sh8R0UF63MXDrHaIsDM/VSKOblJtDNATA==
   dependencies:
     binary-parser "^1.3.2"
     struct "^0.0.12"
@@ -5372,12 +5372,12 @@ file-entry-cache@^4.0.0:
   dependencies:
     flat-cache "^2.0.1"
 
-file-loader@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-2.0.0.tgz#39749c82f020b9e85901dcff98e8004e6401cfde"
-  integrity sha512-YCsBfd1ZGCyonOKLxPiKPdu+8ld9HAaMEvJewzz+b2eTF7uL5Zm/HdBF6FjCrpCMRq25Mi0U1gl4pwn2TlH7hQ==
+file-loader@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-4.0.0.tgz#c3570783fefb6e1bc0978a856f4bf5825b966c2a"
+  integrity sha512-roAbL6IdSGczwfXxhMi6Zq+jD4IfUpL0jWHD7fvmjdOVb7xBfdRUHe4LpBgO23VtVK5AW1OlWZo0p34Jvx3iWg==
   dependencies:
-    loader-utils "^1.0.2"
+    loader-utils "^1.2.2"
     schema-utils "^1.0.0"
 
 filename-regex@^2.0.0:
@@ -7978,7 +7978,7 @@ loader-runner@^2.3.0:
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.4.0.tgz#ed47066bfe534d7e84c4c7b9998c2a75607d9357"
   integrity sha512-Jsmr89RcXGIwivFY21FcRrisYZfvLMTWx5kOLc+JTxtpBOG6xML0vzbc6SEQG2FO9/4Fc3wW4LVcB5DmGflaRw==
 
-loader-utils@1.2.3, loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3:
+loader-utils@1.2.3, loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.2, loader-utils@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.2.3.tgz#1ff5dc6911c9f0a062531a4c04b609406108c2c7"
   integrity sha512-fkpz8ejdnEMG3s37wGL07iSBDg99O9D5yflE9RGNH3hRdx9SOwYfnGYdZOUIZitN8E+E2vkq3MUMYMvPYl5ZZA==

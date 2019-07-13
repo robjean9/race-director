@@ -3,11 +3,14 @@ import { useContext } from 'react';
 import { DispatchContext, ParticipantsContext } from '../../App';
 import { Participant } from '../../types';
 import { actions } from '../../reducer';
+import classNames = require('classnames');
 
 const styles = require('./ParticipantsPanel.css');
 
 export function ParticipantsPanel() {
-  const currentParticipants = useContext(ParticipantsContext);
+  const { currentParticipants, participantIndex } = useContext(
+    ParticipantsContext
+  );
   const dispatch = useContext(DispatchContext);
 
   const selectParticipant = (participant: Participant) => {
@@ -16,21 +19,28 @@ export function ParticipantsPanel() {
 
   const renderNames = () => {
     return currentParticipants.map(
-      (participant: Participant, index: number) => (
-        <div
-          key={index}
-          className={styles.participantWrapper}
-          onClick={() => selectParticipant(participant)}
-        >
+      (participant: Participant, index: number) => {
+        const participantClassname = classNames(
+          styles.participantWrapper,
+          participantIndex === index && styles.selectedParticipantWrapper
+        );
+
+        return (
           <div
-            className={styles.teamTag}
-            style={{
-              backgroundColor: participant.team.color
-            }}
-          />
-          <span className={styles.nameLabel}>{participant.abbreviation}</span>
-        </div>
-      )
+            key={index}
+            className={participantClassname}
+            onClick={() => selectParticipant(participant)}
+          >
+            <div
+              className={styles.teamTag}
+              style={{
+                backgroundColor: participant.team.color
+              }}
+            />
+            <span className={styles.nameLabel}>{participant.abbreviation}</span>
+          </div>
+        );
+      }
     );
   };
 

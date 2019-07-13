@@ -35,6 +35,21 @@ export const getSeriesForLap = (
   telemetryType: TelemetryType
 ) => {
   // get series for last lap
+
+  const data = xAxisData.map((time: number) => {
+    if (
+      !telemetryMatrix ||
+      !telemetryMatrix[time] ||
+      !telemetryMatrix[time][lapNumber] ||
+      (!telemetryMatrix[time][lapNumber][telemetryType] &&
+        telemetryMatrix[time][lapNumber][telemetryType] !== 0)
+    ) {
+      return;
+    }
+
+    return telemetryMatrix[time][lapNumber][telemetryType];
+  });
+
   return [
     {
       name: `Lap ${lapNumber + 1}`,
@@ -43,9 +58,7 @@ export const getSeriesForLap = (
       type: 'line',
       large: true,
       showSymbol: false,
-      data: xAxisData.map(
-        (time: number) => telemetryMatrix[time][lapNumber][telemetryType]
-      ),
+      data,
       itemStyle: {
         color: 'rgba(0, 215, 143, 1.0)'
       },
@@ -82,12 +95,18 @@ export const getChartOptions = (unit: string = '', data: any, series: any) => {
         }
       },
       formatter: (value: any) => {
-        return value.map(
-          (v: any) =>
-            `${dateFormatter(v.axisValue)}: ${
-              v.value % 1 == 0 ? v.value : v.value.toFixed(3)
-            }${unit}`
-        );
+        return value.map((v: any) => {
+          const date = dateFormatter(v.axisValue);
+
+          let value = '-';
+          if (v.value % 1 == 0) {
+            value = v.value;
+          } else if (v.value) {
+            value = v.value.toFixed(3);
+          }
+
+          return `${date}: ${value}${unit}`;
+        });
       }
     },
     xAxis: [

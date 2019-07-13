@@ -33,9 +33,10 @@ const initialState: State = {
 
 export const StateContext = createContext({} as State);
 export const DispatchContext = createContext({} as Dispatch<any>);
-export const ParticipantsContext = createContext(
-  initialState.currentParticipants
-);
+export const ParticipantsContext = createContext({
+  currentParticipants: initialState.currentParticipants,
+  participantIndex: initialState.participantIndex
+});
 
 // bigger packet loss means more packets being skipped
 // (improves performance, lowers accuracy)
@@ -118,7 +119,12 @@ export default function App() {
       />
       <DispatchContext.Provider value={dispatch}>
         <StateContext.Provider value={state}>
-          <ParticipantsContext.Provider value={state.currentParticipants}>
+          <ParticipantsContext.Provider
+            value={{
+              currentParticipants: state.currentParticipants,
+              participantIndex: state.participantIndex
+            }}
+          >
             <Canvas />
           </ParticipantsContext.Provider>
         </StateContext.Provider>

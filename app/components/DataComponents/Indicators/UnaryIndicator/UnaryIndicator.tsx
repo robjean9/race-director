@@ -15,18 +15,6 @@ export class UnaryIndicator extends React.PureComponent<Props> {
       backgroundPosition = 100;
     }
 
-    /*
-value 84
-minValue 70
-maxValue 120
-valuePercentage 1341.6666666666672
-*/
-
-    console.log('value', value);
-    console.log('minValue', minValue);
-    console.log('maxValue', maxValue);
-    console.log('valuePercentage', valuePercentage);
-
     return (
       <div
         className={styles.unaryIndicator}

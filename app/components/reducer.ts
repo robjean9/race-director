@@ -85,6 +85,8 @@ export const reducer = (state: State, action: any) => {
         steer: m_steer
       };
 
+      console.log(m_brake * 100);
+
       const xAxisData = getXAxisData(updatedTelemetryMatrix);
 
       const brakesTemperature = m_brakesTemperature.map(
