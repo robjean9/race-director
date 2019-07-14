@@ -29,7 +29,7 @@ const {
   STOP_F1_CLIENT
 } = require('./constants/f1client');
 
-const client = new F1TelemetryClient({ port: 20799 });
+const client = new F1TelemetryClient({ port: 20812 });
 
 export class AppUpdater {
   constructor() {
@@ -228,3 +228,15 @@ const storeInCollection = (
   // tslint:disable-next-line:no-unused-expression
   isRecording && collection.insert(data);
 };
+
+// stops the client
+[
+  `exit`,
+  `SIGINT`,
+  `SIGUSR1`,
+  `SIGUSR2`,
+  //`uncaughtException`,
+  `SIGTERM`
+].forEach(eventType => {
+  (process as NodeJS.EventEmitter).on(eventType, () => client.stop());
+});

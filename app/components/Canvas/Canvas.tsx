@@ -45,7 +45,7 @@ const canvasPanels = [
     <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
     <TyreWearPanel unit="%" title="Tyre Wear" />
   ],
-  [] //<TrackMapPanel />]
+  [<TrackMapPanel />]
 ];
 
 export function Canvas() {

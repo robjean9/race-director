@@ -9,5 +9,6 @@
     "jsx": "react",
     "lib": ["es6", "dom"]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "files": ["custom.d.ts"]
 }

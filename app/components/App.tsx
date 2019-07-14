@@ -22,23 +22,19 @@ const initialState: State = {
   currentLapTime: 0,
   currentPlayerSpeeds: [],
   worldPositions: [],
-  currentParticipants: [],
   currentLapNumber: 0,
-  participantIndex: 0,
   sessionStarted: false,
   currentTrackId: -1,
   xAxisData: [],
   brakesTemperature: [],
   tyresSurfaceTemperature: [],
-  tyresWear: []
+  tyresWear: [],
+  participants: { selectedParticipant: 0, participantList: [] }
 };
 
 export const StateContext = createContext({} as State);
 export const DispatchContext = createContext({} as Dispatch<any>);
-export const ParticipantsContext = createContext({
-  currentParticipants: initialState.currentParticipants,
-  participantIndex: initialState.participantIndex
-});
+export const ParticipantsContext = createContext(initialState.participants);
 
 // bigger packet loss means more packets being skipped
 // (improves performance, lowers accuracy)
@@ -131,12 +127,7 @@ export default function App() {
       />
       <DispatchContext.Provider value={dispatch}>
         <StateContext.Provider value={state}>
-          <ParticipantsContext.Provider
-            value={{
-              currentParticipants: state.currentParticipants,
-              participantIndex: state.participantIndex
-            }}
-          >
+          <ParticipantsContext.Provider value={state.participants}>
             <Canvas />
           </ParticipantsContext.Provider>
         </StateContext.Provider>

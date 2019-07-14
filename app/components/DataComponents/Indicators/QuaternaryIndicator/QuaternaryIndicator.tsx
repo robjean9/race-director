@@ -13,14 +13,14 @@ export class QuaternaryIndicator extends React.PureComponent<Props> {
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`FL`}
+            title={`Front Left`}
             unit={unit}
             value={values[2]}
           />
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`FR`}
+            title={`Front Right`}
             unit={unit}
             value={values[3]}
           />
@@ -29,14 +29,14 @@ export class QuaternaryIndicator extends React.PureComponent<Props> {
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`RL`}
+            title={`Rear Left`}
             unit={unit}
             value={values[0]}
           />
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`RR`}
+            title={`Rear Right`}
             unit={unit}
             value={values[1]}
           />

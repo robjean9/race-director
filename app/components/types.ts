@@ -14,12 +14,16 @@ export interface State {
   currentTrackId: number;
   // tslint:disable-next-line:no-any
   worldPositions: Coordinate[];
-  currentParticipants: any;
-  participantIndex: number;
   xAxisData: any;
   brakesTemperature: any;
   tyresSurfaceTemperature: any;
   tyresWear: any;
+  participants: Participants;
+}
+
+export interface Participants {
+  selectedParticipant: number;
+  participantList: Participant[];
 }
 
 export interface Participant {

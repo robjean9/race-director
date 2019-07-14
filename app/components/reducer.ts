@@ -29,13 +29,23 @@ export const reducer = (state: State, action: any) => {
       return { ...state, worldPositions };
 
     case actions.UPDATE_PARTICIPANTS:
-      if (!state.currentParticipants || state.currentParticipants.length > 0) {
+      const participantList = state.participants.participantList;
+
+      if (!participantList || participantList.length > 0) {
         return state;
       }
+
       const currentParticipants = getCurrentParticipants(
         action.participantsPacket.m_participants
       );
-      return { ...state, currentParticipants };
+
+      return {
+        ...state,
+        participants: {
+          ...state.participants,
+          participantList: currentParticipants
+        }
+      };
 
     case actions.UPDATE_TRACK_ID:
       return { ...state, currentTrackId: action.trackId };
@@ -44,15 +54,20 @@ export const reducer = (state: State, action: any) => {
       return { ...state, sessionStarted: true };
 
     case actions.UPDATE_CAR_STATUS:
+      const currentParticipant = state.participants.selectedParticipant;
+
+      // grabs tyres wear of current participant
       const tyresWear = action.carStatusPacket.m_carStatusData[
-        state.participantIndex
+        currentParticipant
       ].m_tyresWear.map((tyreWear: any) => tyreWear.m_tyresWear);
 
       return { ...state, tyresWear };
 
     case actions.UPDATE_CAR_TELEMETRY:
       const playerTelemetry =
-        action.carTelemetryPacket.m_carTelemetryData[state.participantIndex];
+        action.carTelemetryPacket.m_carTelemetryData[
+          state.participants.selectedParticipant
+        ];
 
       if (!state.telemetryMatrix) {
         return state;
@@ -112,12 +127,12 @@ export const reducer = (state: State, action: any) => {
 
     case actions.UPDATE_CURRENT_LAP_TIME:
       const currentLapNumber =
-        action.lapTimePacket.m_lapData[state.participantIndex].m_currentLapNum -
-        1;
+        action.lapTimePacket.m_lapData[state.participants.selectedParticipant]
+          .m_currentLapNum - 1;
 
       // this gives us an integer representing the current lap time, in ms
       const currentLapTime = Math.round(
-        action.lapTimePacket.m_lapData[state.participantIndex]
+        action.lapTimePacket.m_lapData[state.participants.selectedParticipant]
           .m_currentLapTime * 1e3
       );
 
@@ -129,9 +144,12 @@ export const reducer = (state: State, action: any) => {
         telemetryMatrix: [],
         currentPlayerSpeeds: [],
         currentWorldPosition: { x: 0, y: 0 },
-        participantIndex: action.participant.index,
         currentLapNumber: 0,
-        tyresWear: []
+        tyresWear: [],
+        participants: {
+          ...state.participants,
+          selectedParticipant: action.participant.index
+        }
       };
 
     default:
