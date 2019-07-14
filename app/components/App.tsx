@@ -21,7 +21,7 @@ const initialState: State = {
   telemetryMatrix: [[]],
   currentLapTime: 0,
   currentPlayerSpeeds: [],
-  currentWorldPosition: { x: 0, y: 0 },
+  worldPositions: [],
   currentParticipants: [],
   currentLapNumber: 0,
   participantIndex: 0,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PureComponent } from 'react';
-import { Image, Circle, Layer } from 'react-konva';
+import { Image, Circle, FastLayer, Layer } from 'react-konva';
 import { Props, State } from './types';
 import { Coordinate } from '../../../types';
 
@@ -71,13 +71,17 @@ export class RaceLine extends PureComponent<Props, State> {
   };
 
   render() {
-    const { worldPosition, width, height } = this.props;
+    const { worldPositions, width, height } = this.props;
     const { canvas } = this.state;
 
-    this.drawToCoordinate(worldPosition);
+    /*
+    for (var i = 0; i < worldPositions.length; i++) {
+      this.drawToCoordinate(worldPositions[i]);
+    }
+    */
 
     return (
-      <Layer>
+      <Layer hitGraphEnabled={false}>
         <Image
           image={canvas}
           // tslint:disable-next-line:no-any
@@ -85,14 +89,17 @@ export class RaceLine extends PureComponent<Props, State> {
           width={width}
           height={height}
         />
-        <Circle
-          x={worldPosition.x}
-          y={worldPosition.y}
-          fill={'red'}
-          stroke={'black'}
-          strokeWidth={4}
-          radius={7}
-        />
+        {worldPositions.map((worldPosition, index) => (
+          <Circle
+            key={index}
+            x={worldPosition.x + width / 2}
+            y={worldPosition.y + width / 2}
+            fill={'red'}
+            stroke={'black'}
+            strokeWidth={4}
+            radius={4}
+          />
+        ))}
       </Layer>
     );
   }

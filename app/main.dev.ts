@@ -29,7 +29,7 @@ const {
   STOP_F1_CLIENT
 } = require('./constants/f1client');
 
-const client = new F1TelemetryClient({ port: 20788 });
+const client = new F1TelemetryClient({ port: 20799 });
 
 export class AppUpdater {
   constructor() {
@@ -155,7 +155,7 @@ ipcMain.on(GET_CONSTANTS, event => {
 
 // Communication with renderer
 // tslint:disable-next-line:no-any
-io.on('connection', (socket: any) => {
+io.once('connection', (socket: any) => {
   console.log('Socket connection opened');
   // Start listening to F1 client
   startRecording();

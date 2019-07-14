@@ -45,33 +45,28 @@ const canvasPanels = [
     <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
     <TyreWearPanel unit="%" title="Tyre Wear" />
   ],
-  [<TrackMapPanel />]
+  [] //<TrackMapPanel />]
 ];
 
 export function Canvas() {
-  const column1Classname = classNames(styles.column1, styles.column);
-  const column2Classname = classNames(styles.column2, styles.column);
-  const column3Classname = classNames(styles.column3, styles.column);
-  const column4Classname = classNames(styles.column4, styles.column);
-
   return (
     <div className={styles.telemetryPanels}>
-      <div className={column1Classname}>
+      <div className={styles.column} style={{ flex: '0 0 10vw' }}>
         {canvasPanels[0].map((component, index) => (
           <DataPanelBox key={index}>{component}</DataPanelBox>
         ))}
       </div>
-      <div className={column2Classname}>
+      <div className={styles.column} style={{ flex: '0 0 40vw' }}>
         {canvasPanels[1].map((component, index) => (
           <DataPanelBox key={index}>{component}</DataPanelBox>
         ))}
       </div>
-      <div className={column3Classname}>
+      <div className={styles.column} style={{ flex: '0 0 30vw' }}>
         {canvasPanels[2].map((component, index) => (
           <DataPanelBox key={index}>{component}</DataPanelBox>
         ))}
       </div>
-      <div className={column4Classname}>
+      <div className={styles.column} style={{ flex: '0 0 20vw' }}>
         {canvasPanels[3].map((component, index) => (
           <DataPanelBox key={index}>{component}</DataPanelBox>
         ))}

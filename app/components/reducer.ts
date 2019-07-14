@@ -1,9 +1,5 @@
 import { State } from './types';
-import {
-  getCurrentParticipants,
-  getCurrentWorldPosition,
-  getXAxisData
-} from './transformations';
+import { getCurrentParticipants, getXAxisData } from './transformations';
 
 export const actions = {
   SESSION_RESTART: 'Session Restart',
@@ -23,11 +19,14 @@ export const reducer = (state: State, action: any) => {
       return { ...state, ...action.initialState };
 
     case actions.UPDATE_TRACK:
-      const currentWorldPosition = getCurrentWorldPosition(
-        action.motionPacket,
-        state.participantIndex
+      const worldPositions = action.motionPacket.m_carMotionData.map(
+        (motionData: any) => ({
+          x: motionData.m_worldPositionX / 6,
+          y: motionData.m_worldPositionZ / 6
+        })
       );
-      return { ...state, currentWorldPosition };
+
+      return { ...state, worldPositions };
 
     case actions.UPDATE_PARTICIPANTS:
       if (!state.currentParticipants || state.currentParticipants.length > 0) {

@@ -10,5 +10,5 @@ export interface State {
 export interface Props {
   width: number;
   height: number;
-  worldPosition: Coordinate;
+  worldPositions: Coordinate[];
 }

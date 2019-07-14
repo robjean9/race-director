@@ -45,15 +45,3 @@ export const getXAxisData = (telemetryMatrix: Telemetry[][]) => {
       .filter((time: number) => !!time)
   );
 };
-
-// Transforms received position to be usable by the map
-export const getCurrentWorldPosition = (
-  motionPackage: PacketMotionData,
-  participantIndex: number
-) => {
-  const x =
-    motionPackage.m_carMotionData[participantIndex].m_worldPositionX / 4;
-  const y =
-    motionPackage.m_carMotionData[participantIndex].m_worldPositionZ / 4;
-  return { x, y };
-};

@@ -9,11 +9,11 @@ export interface State {
   // tslint:disable-next-line:no-any
   currentPlayerSpeeds: any;
   // world positions
-  currentWorldPosition: Coordinate;
   currentLapNumber: number;
   sessionStarted: boolean;
   currentTrackId: number;
   // tslint:disable-next-line:no-any
+  worldPositions: Coordinate[];
   currentParticipants: any;
   participantIndex: number;
   xAxisData: any;

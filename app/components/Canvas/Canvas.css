@@ -1,23 +1,7 @@
 .column {
   height: 100%;
-  margin: 10px;
-}
-
-.column1 {
-  flex: 0 0 10vw;
-}
-
-.column2 {
-  flex: 1 1 40vw;
+  /*margin: 10px;*/
   overflow: scroll;
-}
-
-.column3 {
-  flex: 1 1 30vw;
-}
-
-.column4 {
-  flex: 1 1 20vw;
 }
 
 .telemetryPanels {
