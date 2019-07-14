@@ -1,6 +1,18 @@
 .dataPanelBox {
   border-radius: 10px;
   background-color: #212c45;
-  padding: 10px;
   margin-bottom: 10px;
+}
+
+.title {
+  color: white;
+  padding: 12px 0px 10px 20px;
+  border-bottom: 1px solid #141b31;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 200;
+}
+
+.content {
+  padding: 5px;
 }

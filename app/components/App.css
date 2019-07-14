@@ -18,6 +18,10 @@
   src: url('../../resources/fonts/Formula1-Wide.ttf') format('truetype');
 }
 
+* {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
 .homeWrapper {
   background-color: #141a30;
   height: 100%;

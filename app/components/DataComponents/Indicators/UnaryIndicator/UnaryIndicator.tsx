@@ -5,7 +5,9 @@ const styles = require('./UnaryIndicator.css');
 
 export class UnaryIndicator extends React.PureComponent<Props> {
   render() {
-    const { title, value, minValue, maxValue } = this.props;
+    const { title, minValue, maxValue, unit } = this.props;
+    let { value } = this.props;
+
     const valuePercentage = ((value - minValue) / (maxValue - minValue)) * 100;
 
     let backgroundPosition = valuePercentage;
@@ -15,13 +17,19 @@ export class UnaryIndicator extends React.PureComponent<Props> {
       backgroundPosition = 100;
     }
 
+    if (!value) {
+      value = 0;
+    }
+
+    const formattedValue = unit ? `${value}${unit}` : value;
+
     return (
       <div
         className={styles.unaryIndicator}
         style={{ backgroundPosition: `${backgroundPosition}% 0%` }}
       >
         <span className={styles.title}>{title}</span>
-        <span className={styles.value}>{value}</span>
+        <span className={styles.value}>{formattedValue}</span>
       </div>
     );
   }

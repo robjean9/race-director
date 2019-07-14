@@ -3,4 +3,5 @@ export interface Props {
   minValue: number;
   maxValue: number;
   title: string;
+  unit?: string;
 }

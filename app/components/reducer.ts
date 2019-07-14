@@ -12,6 +12,7 @@ export const actions = {
   UPDATE_PARTICIPANTS: 'Update Participants',
   UPDATE_TRACK_ID: 'Update Track Id',
   UPDATE_CAR_TELEMETRY: 'Update Car Telemetry',
+  UPDATE_CAR_STATUS: 'Update Car Status',
   UPDATE_CURRENT_LAP_TIME: 'Update Current Lap Time',
   UPDATE_PARTICIPANT: 'Update Participant'
 };
@@ -42,6 +43,13 @@ export const reducer = (state: State, action: any) => {
 
     case actions.SESSION_STARTED:
       return { ...state, sessionStarted: true };
+
+    case actions.UPDATE_CAR_STATUS:
+      const tyresWear = action.carStatusPacket.m_carStatusData[
+        state.participantIndex
+      ].m_tyresWear.map((tyreWear: any) => tyreWear.m_tyresWear);
+
+      return { ...state, tyresWear };
 
     case actions.UPDATE_CAR_TELEMETRY:
       const playerTelemetry =
@@ -85,8 +93,6 @@ export const reducer = (state: State, action: any) => {
         steer: m_steer
       };
 
-      console.log(m_brake * 100);
-
       const xAxisData = getXAxisData(updatedTelemetryMatrix);
 
       const brakesTemperature = m_brakesTemperature.map(
@@ -125,7 +131,8 @@ export const reducer = (state: State, action: any) => {
         currentPlayerSpeeds: [],
         currentWorldPosition: { x: 0, y: 0 },
         participantIndex: action.participant.index,
-        currentLapNumber: 0
+        currentLapNumber: 0,
+        tyresWear: []
       };
 
     default:

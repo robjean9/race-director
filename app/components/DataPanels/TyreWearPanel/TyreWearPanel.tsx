@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { QuaternaryIndicator } from '../../DataComponents';
+import { Props } from './types';
+import { StateContext } from '../../App';
 
 const styles = require('./TyreWearPanel.css');
 
-export function TyreWearPanel() {
+export function TyreWearPanel(props: Props) {
+  const { tyresWear } = React.useContext(StateContext);
   return (
     <QuaternaryIndicator
-      title="Tyre Wear"
-      values={[]}
-      minValue={70}
-      maxValue={120}
+      unit={props.unit}
+      values={tyresWear}
+      minValue={0}
+      maxValue={100}
     />
   );
 }

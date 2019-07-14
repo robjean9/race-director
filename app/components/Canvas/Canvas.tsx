@@ -21,17 +21,29 @@ const canvasPanels = [
   [<ParticipantsPanel />],
   [
     // make non-generic components (panels) for each LineChart
-    <LineChart telemetryType={TelemetryType.Speed} unit={' km/h'} />,
-    <LineChart telemetryType={TelemetryType.EngineRPM} unit={' rpm'} />,
-    <LineChart telemetryType={TelemetryType.Gear} />,
-    <LineChart telemetryType={TelemetryType.Throttle} unit={'%'} />,
-    <LineChart telemetryType={TelemetryType.Brake} unit={'%'} />,
-    <LineChart telemetryType={TelemetryType.Steer} unit={'%'} />
+    <LineChart
+      title="Speed"
+      telemetryType={TelemetryType.Speed}
+      unit={' km/h'}
+    />,
+    <LineChart
+      title="RPM"
+      telemetryType={TelemetryType.EngineRPM}
+      unit=" rpm"
+    />,
+    <LineChart title="Gear" telemetryType={TelemetryType.Gear} />,
+    <LineChart
+      title="Throttle"
+      telemetryType={TelemetryType.Throttle}
+      unit="%"
+    />,
+    <LineChart title="Brake" telemetryType={TelemetryType.Brake} unit="%" />,
+    <LineChart title="Steer" telemetryType={TelemetryType.Steer} unit="%" />
   ],
   [
-    <TyresSurfaceTemperaturePanel />,
-    <BrakeTemperaturePanel />,
-    <TyreWearPanel />
+    <TyresSurfaceTemperaturePanel unit="℃" title="Tyre Surface Temperature" />,
+    <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
+    <TyreWearPanel unit="%" title="Tyre Wear" />
   ],
   [<TrackMapPanel />]
 ];

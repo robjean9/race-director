@@ -6,20 +6,22 @@ const styles = require('./QuaternaryIndicator.css');
 
 export class QuaternaryIndicator extends React.PureComponent<Props> {
   render() {
-    const { title, values, minValue, maxValue } = this.props;
+    const { values, minValue, maxValue, unit } = this.props;
     return (
       <div className={styles.quaternaryIndicator}>
         <div className={styles.quaternaryIndicatorRow}>
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`${title} FL`}
+            title={`FL`}
+            unit={unit}
             value={values[2]}
           />
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`${title} FR`}
+            title={`FR`}
+            unit={unit}
             value={values[3]}
           />
         </div>
@@ -27,13 +29,15 @@ export class QuaternaryIndicator extends React.PureComponent<Props> {
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`${title} RL`}
+            title={`RL`}
+            unit={unit}
             value={values[0]}
           />
           <UnaryIndicator
             minValue={minValue}
             maxValue={maxValue}
-            title={`${title} RR`}
+            title={`RR`}
+            unit={unit}
             value={values[1]}
           />
         </div>

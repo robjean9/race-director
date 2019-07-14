@@ -10,7 +10,8 @@ import {
   PacketLapData,
   PacketCarTelemetryData,
   PacketMotionData,
-  PacketParticipantsData
+  PacketParticipantsData,
+  PacketCarStatusData
 } from 'f1-telemetry-client/build/src/parsers/packets/types';
 import { PACKETS } from 'f1-telemetry-client/build/src/constants';
 import { Canvas } from './Canvas';
@@ -28,7 +29,8 @@ const initialState: State = {
   currentTrackId: -1,
   xAxisData: [],
   brakesTemperature: [],
-  tyresSurfaceTemperature: []
+  tyresSurfaceTemperature: [],
+  tyresWear: []
 };
 
 export const StateContext = createContext({} as State);
@@ -45,7 +47,8 @@ const PACKAGE_LOSS = 3;
 const packetCounts = {
   lapData: 0,
   carTelemetry: 0,
-  motion: 0
+  motion: 0,
+  carStatus: 0
 };
 
 export default function App() {
@@ -82,6 +85,14 @@ export default function App() {
     packetCounts.carTelemetry++;
   };
 
+  const handleCarStatusPacket = (carStatusPacket: PacketCarStatusData) => {
+    if (packetCounts.carStatus % PACKAGE_LOSS === 0) {
+      dispatch({ type: actions.UPDATE_CAR_STATUS, carStatusPacket });
+    }
+
+    packetCounts.carStatus++;
+  };
+
   const handleSessionPacket = (e: {
     m_sessionTimeLeft: number;
     m_sessionDuration: number;
@@ -105,6 +116,7 @@ export default function App() {
     const socket = openSocket('http://localhost:24500');
     socket.on(PACKETS.lapData, handleLapDataPacket);
     socket.on(PACKETS.carTelemetry, handleCarTelemetryPacket);
+    socket.on(PACKETS.carStatus, handleCarStatusPacket);
     socket.on(PACKETS.session, handleSessionPacket);
     socket.on(PACKETS.participants, handleParticipantsPacket);
     socket.on(PACKETS.motion, handleMotionPacket);
