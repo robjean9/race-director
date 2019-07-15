@@ -12,6 +12,8 @@ export function TrackMapPanel() {
   // 20% of screen
   const canvasWidth = window.innerWidth * 0.2;
 
+  console.log(JSON.stringify(worldPositions));
+
   const renderDrivers = () =>
     worldPositions.map((worldPosition: Coordinate, index: number) => {
       const translateX = worldPosition.x + canvasWidth / 2;

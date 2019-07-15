@@ -57,9 +57,8 @@ export const reducer = (state: State, action: any) => {
       const currentParticipant = state.participants.selectedParticipant;
 
       // grabs tyres wear of current participant
-      const tyresWear = action.carStatusPacket.m_carStatusData[
-        currentParticipant
-      ].m_tyresWear.map((tyreWear: any) => tyreWear.m_tyresWear);
+      const tyresWear =
+        action.carStatusPacket.m_carStatusData[currentParticipant].m_tyresWear;
 
       return { ...state, tyresWear };
 
@@ -109,13 +108,9 @@ export const reducer = (state: State, action: any) => {
 
       const xAxisData = getXAxisData(updatedTelemetryMatrix);
 
-      const brakesTemperature = m_brakesTemperature.map(
-        (temperature: any) => temperature.m_brakesTemperature
-      );
+      const brakesTemperature = m_brakesTemperature;
 
-      const tyresSurfaceTemperature = m_tyresSurfaceTemperature.map(
-        (temperature: any) => temperature.m_tyresSurfaceTemperature
-      );
+      const tyresSurfaceTemperature = m_tyresSurfaceTemperature;
 
       return {
         ...state,

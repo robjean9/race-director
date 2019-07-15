@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { Props } from './types';
+import { Column, Panel } from './types';
 import { DataPanelBox } from '../DataPanels/DataPanelBox';
 import { LineChart } from '../DataComponents';
 import { TelemetryType } from '../types';
@@ -17,60 +17,64 @@ import { SessionPanel } from './SessionPanel';
 
 const styles = require('./Canvas.css');
 
-const canvasPanels = [
-  [<ParticipantsPanel />],
-  [
-    // make non-generic components (panels) for each LineChart
-    <LineChart
-      title="Speed"
-      telemetryType={TelemetryType.Speed}
-      unit={' km/h'}
-    />,
-    <LineChart
-      title="RPM"
-      telemetryType={TelemetryType.EngineRPM}
-      unit=" rpm"
-    />,
-    <LineChart title="Gear" telemetryType={TelemetryType.Gear} />,
-    <LineChart
-      title="Throttle"
-      telemetryType={TelemetryType.Throttle}
-      unit="%"
-    />,
-    <LineChart title="Brake" telemetryType={TelemetryType.Brake} unit="%" />,
-    <LineChart title="Steer" telemetryType={TelemetryType.Steer} unit="%" />
-  ],
-  [
-    <TyresSurfaceTemperaturePanel unit="℃" title="Tyre Surface Temperature" />,
-    <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
-    <TyreWearPanel unit="%" title="Tyre Wear" />
-  ],
-  [<TrackMapPanel />]
+const canvasSetup: Column[] = [
+  { width: 10, panels: [<ParticipantsPanel />] },
+  {
+    width: 40,
+    panels: [
+      // make non-generic components (panels) for each LineChart
+      <LineChart
+        title="Speed"
+        telemetryType={TelemetryType.Speed}
+        unit={' km/h'}
+      />,
+      <LineChart
+        title="RPM"
+        telemetryType={TelemetryType.EngineRPM}
+        unit=" rpm"
+      />,
+      <LineChart title="Gear" telemetryType={TelemetryType.Gear} />,
+      <LineChart
+        title="Throttle"
+        telemetryType={TelemetryType.Throttle}
+        unit="%"
+      />,
+      <LineChart title="Brake" telemetryType={TelemetryType.Brake} unit="%" />,
+      <LineChart title="Steer" telemetryType={TelemetryType.Steer} unit="%" />
+    ]
+  },
+  {
+    width: 30,
+    panels: [
+      <TyresSurfaceTemperaturePanel
+        unit="℃"
+        title="Tyre Surface Temperature"
+      />,
+      <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
+      <TyreWearPanel unit="%" title="Tyre Wear" />
+    ]
+  },
+  { width: 20, panels: [<TrackMapPanel />] }
 ];
 
 export function Canvas() {
+  const renderColumn = (column: Column, index: number) => (
+    <div
+      key={index}
+      className={styles.column}
+      style={{ flex: `0 0 ${column.width}vw` }}
+    >
+      {column.panels.map(renderPanel)}
+    </div>
+  );
+
+  const renderPanel = (panel: Panel, index: number) => (
+    <DataPanelBox key={index}>{panel}</DataPanelBox>
+  );
+
   return (
     <div className={styles.telemetryPanels}>
-      <div className={styles.column} style={{ flex: '0 0 10vw' }}>
-        {canvasPanels[0].map((component, index) => (
-          <DataPanelBox key={index}>{component}</DataPanelBox>
-        ))}
-      </div>
-      <div className={styles.column} style={{ flex: '0 0 40vw' }}>
-        {canvasPanels[1].map((component, index) => (
-          <DataPanelBox key={index}>{component}</DataPanelBox>
-        ))}
-      </div>
-      <div className={styles.column} style={{ flex: '0 0 30vw' }}>
-        {canvasPanels[2].map((component, index) => (
-          <DataPanelBox key={index}>{component}</DataPanelBox>
-        ))}
-      </div>
-      <div className={styles.column} style={{ flex: '0 0 20vw' }}>
-        {canvasPanels[3].map((component, index) => (
-          <DataPanelBox key={index}>{component}</DataPanelBox>
-        ))}
-      </div>
+      {canvasSetup.map(renderColumn)}
     </div>
   );
 }
