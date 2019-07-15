@@ -18,9 +18,9 @@ import { SessionPanel } from './SessionPanel';
 const styles = require('./Canvas.css');
 
 const canvasSetup: Column[] = [
-  { width: 10, panels: [<ParticipantsPanel />] },
+  { width: 8, panels: [<ParticipantsPanel />] },
   {
-    width: 40,
+    width: 39,
     panels: [
       // make non-generic components (panels) for each LineChart
       <LineChart
@@ -44,7 +44,7 @@ const canvasSetup: Column[] = [
     ]
   },
   {
-    width: 30,
+    width: 29,
     panels: [
       <TyresSurfaceTemperaturePanel
         unit="℃"
@@ -54,7 +54,7 @@ const canvasSetup: Column[] = [
       <TyreWearPanel unit="%" title="Tyre Wear" />
     ]
   },
-  { width: 20, panels: [<TrackMapPanel />] }
+  { width: 19, panels: [<TrackMapPanel />] }
 ];
 
 export function Canvas() {
