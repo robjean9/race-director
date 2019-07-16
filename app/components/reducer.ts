@@ -60,7 +60,11 @@ export const reducer = (state: State, action: any) => {
       const tyresWear =
         action.carStatusPacket.m_carStatusData[currentParticipant].m_tyresWear;
 
-      return { ...state, tyresWear };
+      const tyreCompound =
+        action.carStatusPacket.m_carStatusData[currentParticipant]
+          .m_actualTyreCompound;
+
+      return { ...state, tyresWear, tyreCompound };
 
     case actions.UPDATE_CAR_TELEMETRY:
       const playerTelemetry =

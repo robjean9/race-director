@@ -1,0 +1,8 @@
+.modesPanelWrapper {
+  display: flex;
+}
+
+.modesPanelIndicator {
+  flex: 1 1 0;
+  width: 0;
+}

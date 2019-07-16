@@ -5277,10 +5277,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-f1-telemetry-client@0.1.12:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.12.tgz#12b730919067e00d4a5b752cbffe187e3768ac6e"
-  integrity sha512-NIXJzs+Crr/tk80a49quyJ1b9wH61rdTYUJF1mJQsfivlcv+9tPLJ1LmnDDOqqp5OQmopN6OGczcaQi1NwXgBg==
+f1-telemetry-client@0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.13.tgz#5f5835f8d930de429d99e1aae805165faf9e8ebd"
+  integrity sha512-XxMUEo00PpgqiY9tdcKsBAdlw8yYNCr5r4OJ7eDvdjGL5wVaxphYorCbWOpFcPqg0wlEXqCyNiTww7RP0G+ClA==
   dependencies:
     binary-parser "^1.3.2"
     struct "^0.0.12"

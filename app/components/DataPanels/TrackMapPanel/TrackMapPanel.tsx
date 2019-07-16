@@ -12,7 +12,7 @@ export function TrackMapPanel() {
   // 20% of screen
   const canvasWidth = window.innerWidth * 0.2;
 
-  console.log(JSON.stringify(worldPositions));
+  //console.log(JSON.stringify(worldPositions));
 
   const renderDrivers = () =>
     worldPositions.map((worldPosition: Coordinate, index: number) => {
@@ -37,13 +37,7 @@ export function TrackMapPanel() {
     });
 
   return (
-    <div
-      style={{
-        width: `${canvasWidth}px`,
-        height: `${canvasWidth}px`,
-        border: '1px #2e2e2e solid'
-      }}
-    >
+    <div className={styles.trackMapWrapper}>
       {/*<Singapore />*/}
       {renderDrivers()}
     </div>

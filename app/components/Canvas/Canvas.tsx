@@ -1,14 +1,17 @@
 import * as React from 'react';
-import classNames from 'classnames';
 import { Column, Panel } from './types';
-import { DataPanelBox } from '../DataPanels/DataPanelBox';
-import { LineChart } from '../DataComponents';
 import { TelemetryType } from '../types';
-import { ParticipantsPanel } from '../DataPanels/ParticipantsPanel';
-import { TyresSurfaceTemperaturePanel } from '../DataPanels/TyresSurfaceTemperaturePanel';
-import { BrakeTemperaturePanel } from '../DataPanels/BrakeTemperaturePanel';
-import { TyreWearPanel } from '../DataPanels/TyreWearPanel';
-import { TrackMapPanel } from '../DataPanels/TrackMapPanel';
+
+import { LineChart } from '../DataComponents';
+import {
+  BrakeTemperaturePanel,
+  TrackMapPanel,
+  DataPanelBox,
+  ParticipantsPanel,
+  TyreWearPanel,
+  TyresSurfaceTemperaturePanel,
+  ModesPanel
+} from '../DataPanels';
 
 /*
 import { InstrumentsPanel } from './InstrumentsPanel';
@@ -20,7 +23,7 @@ const styles = require('./Canvas.css');
 const canvasSetup: Column[] = [
   { width: 8, panels: [<ParticipantsPanel />] },
   {
-    width: 39,
+    width: 44,
     panels: [
       // make non-generic components (panels) for each LineChart
       <LineChart
@@ -44,17 +47,21 @@ const canvasSetup: Column[] = [
     ]
   },
   {
-    width: 29,
+    width: 24,
     panels: [
       <TyresSurfaceTemperaturePanel
         unit="℃"
         title="Tyre Surface Temperature"
       />,
       <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
-      <TyreWearPanel unit="%" title="Tyre Wear" />
+      <TyreWearPanel unit="%" title="Tyre Wear" />,
+      <ModesPanel title="Modes" />
     ]
   },
-  { width: 19, panels: [<TrackMapPanel />] }
+  {
+    width: 19,
+    panels: [<TrackMapPanel />]
+  }
 ];
 
 export function Canvas() {

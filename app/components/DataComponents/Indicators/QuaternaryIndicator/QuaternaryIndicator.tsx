@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { UnaryIndicator } from '../UnaryIndicator';
+import { RangedValueIndicator } from '../RangedValueIndicator';
 import { Props } from './types';
 
 const styles = require('./QuaternaryIndicator.css');
@@ -10,14 +10,14 @@ export class QuaternaryIndicator extends React.PureComponent<Props> {
     return (
       <div className={styles.quaternaryIndicator}>
         <div className={styles.quaternaryIndicatorRow}>
-          <UnaryIndicator
+          <RangedValueIndicator
             minValue={minValue}
             maxValue={maxValue}
             title={`Front Left`}
             unit={unit}
             value={values[2]}
           />
-          <UnaryIndicator
+          <RangedValueIndicator
             minValue={minValue}
             maxValue={maxValue}
             title={`Front Right`}
@@ -26,14 +26,14 @@ export class QuaternaryIndicator extends React.PureComponent<Props> {
           />
         </div>
         <div className={styles.quaternaryIndicatorRow}>
-          <UnaryIndicator
+          <RangedValueIndicator
             minValue={minValue}
             maxValue={maxValue}
             title={`Rear Left`}
             unit={unit}
             value={values[0]}
           />
-          <UnaryIndicator
+          <RangedValueIndicator
             minValue={minValue}
             maxValue={maxValue}
             title={`Rear Right`}

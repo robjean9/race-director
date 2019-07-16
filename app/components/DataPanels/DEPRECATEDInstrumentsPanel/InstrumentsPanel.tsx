@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { Props } from './types';
-import {
-  QuaternaryIndicator,
-  UnaryIndicator,
-  RPMGaugeChart,
-  SingleBarChart,
-  LapTimingGrid
-} from '../../DataComponents';
+import {} from '../../DataPanels/Charts';
 
 const styles = require('./InstrumentsPanel.css');
 
@@ -15,35 +9,17 @@ export class InstrumentsPanel extends React.PureComponent<Props> {
     return (
       <React.Fragment>
         <div className={styles.carSetupWrapper}>
-          <UnaryIndicator
-            title={`Tire Compound`}
-            value={1}
-            minValue={70}
-            maxValue={120}
-          />
-          <UnaryIndicator
-            title={`Fuel Mix`}
-            value={1}
-            minValue={70}
-            maxValue={120}
-          />
-          <UnaryIndicator
-            title={`ERS Deploy Mode`}
-            value={1}
-            minValue={70}
-            maxValue={120}
-          />
-        </div>
+          {/*
         <div className={styles.engineDisplays}>
           <RPMGaugeChart />
           <SingleBarChart
             title={'Fuel' /* in tank / Fuel capacity */}
-            value={20}
+          {/*value={20}
             maxValue={200}
           />
           <SingleBarChart
             title={'ERS' /* Stored Energy / total energy */}
-            value={50}
+          {/*value={50}
             maxValue={100}
           />
         </div>
@@ -69,6 +45,7 @@ export class InstrumentsPanel extends React.PureComponent<Props> {
             pressure Rear tyre pressure Ballast Fuel load
           </div>
            */}
+        </div>
       </React.Fragment>
     );
   }

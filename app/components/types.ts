@@ -19,6 +19,7 @@ export interface State {
   tyresSurfaceTemperature: any;
   tyresWear: any;
   participants: Participants;
+  tyreCompound: any;
 }
 
 export interface Participants {

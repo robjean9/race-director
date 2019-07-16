@@ -1,4 +1,5 @@
 import { QuaternaryIndicator } from './QuaternaryIndicator';
-import { UnaryIndicator } from './UnaryIndicator';
+import { RangedValueIndicator } from './RangedValueIndicator';
+import { ModeIndicator } from './ModeIndicator';
 
-export { QuaternaryIndicator, UnaryIndicator };
+export { QuaternaryIndicator, RangedValueIndicator, ModeIndicator };

@@ -5,3 +5,7 @@
   position: absolute;
   transition: transform 0.5s;
 }
+
+.trackMapWrapper {
+  height: 19vw;
+}

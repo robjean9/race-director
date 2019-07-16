@@ -29,6 +29,7 @@ const initialState: State = {
   brakesTemperature: [],
   tyresSurfaceTemperature: [],
   tyresWear: [],
+  tyreCompound: undefined,
   participants: { selectedParticipant: 0, participantList: [] }
 };
 

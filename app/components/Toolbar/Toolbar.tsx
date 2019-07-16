@@ -19,7 +19,7 @@ export class Toolbar extends React.PureComponent<Props> {
     } = this.props;
 
     return (
-      <div className={styles.navbar}>
+      <div className={styles.toolbar}>
         <button type="button" onClick={this.handleStartRecording}>
           Start Recording
         </button>

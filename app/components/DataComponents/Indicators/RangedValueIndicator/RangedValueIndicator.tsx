@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Props } from './types';
+import classNames from 'classnames';
 
-const styles = require('./UnaryIndicator.css');
+const styles = require('./RangedValueIndicator.css');
 
-export class UnaryIndicator extends React.PureComponent<Props> {
+export class RangedValueIndicator extends React.PureComponent<Props> {
   render() {
-    const { title, minValue, maxValue, unit } = this.props;
+    const { title, minValue, maxValue, unit, className } = this.props;
     let { value } = this.props;
 
     const valuePercentage = ((value - minValue) / (maxValue - minValue)) * 100;
@@ -23,9 +24,14 @@ export class UnaryIndicator extends React.PureComponent<Props> {
 
     const formattedValue = unit ? `${value}${unit}` : value;
 
+    const RangedValueIndicatorClassnames = classNames(
+      styles.RangedValueIndicator,
+      className
+    );
+
     return (
       <div
-        className={styles.unaryIndicator}
+        className={RangedValueIndicatorClassnames}
         style={{ backgroundPosition: `${backgroundPosition}% 0%` }}
       >
         <span className={styles.title}>{title}</span>

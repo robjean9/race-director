@@ -4,4 +4,5 @@ export interface Props {
   maxValue: number;
   title: string;
   unit?: string;
+  className?: any;
 }

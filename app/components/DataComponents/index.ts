@@ -1,12 +1,15 @@
-import { RPMGaugeChart, SingleBarChart, LineChart } from './Charts';
 import { LapTimingGrid } from './Grids';
-import { QuaternaryIndicator, UnaryIndicator } from './Indicators';
+import { LineChart } from './Charts';
+import {
+  QuaternaryIndicator,
+  RangedValueIndicator,
+  ModeIndicator
+} from './Indicators';
 
 export {
-  RPMGaugeChart,
-  SingleBarChart,
   LineChart,
   QuaternaryIndicator,
-  UnaryIndicator,
+  RangedValueIndicator,
+  ModeIndicator,
   LapTimingGrid
 };
