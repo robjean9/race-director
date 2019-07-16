@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Coordinate } from 'f1-telemetry-client/build/src/constants/types';
 import { StateContext } from '../../App';
 
-//import * as Singapore from './Tracks/Singapore.svg';
 const styles = require('./TrackMapPanel.css');
 
 export function TrackMapPanel() {

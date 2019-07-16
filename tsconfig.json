@@ -10,5 +10,5 @@
     "lib": ["es6", "dom"]
   },
   "exclude": ["node_modules"],
-  "files": ["custom.d.ts"]
+  "files": ["global.d.ts"]
 }

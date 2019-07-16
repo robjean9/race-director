@@ -3,17 +3,19 @@ import { useContext } from 'react';
 import { StateContext } from '../../App';
 import { Props } from './types';
 import { ModeIndicator } from '../../DataComponents';
+import { TYRES } from 'f1-telemetry-client/build/src/constants';
 
 const styles = require('./ModesPanel.css');
 
 export function ModesPanel(props: Props) {
   const { tyreCompound } = useContext(StateContext);
+
   return (
     <div className={styles.modesPanelWrapper}>
       <ModeIndicator
         className={styles.modesPanelIndicator}
         title="Tyre Compound"
-        value={'OK'}
+        value={tyreCompound && TYRES[tyreCompound] && TYRES[tyreCompound].name}
       />
       <ModeIndicator
         className={styles.modesPanelIndicator}

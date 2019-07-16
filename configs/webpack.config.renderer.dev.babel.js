@@ -122,11 +122,11 @@ export default merge.smart(baseConfig, {
       },
       // SVG Font
       {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        test: /\.svg$/,
         use: {
           loader: 'url-loader',
           options: {
-            limit: 10000,
+            name: '[path][name].[hash].[ext]',
             mimetype: 'image/svg+xml'
           }
         }
