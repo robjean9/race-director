@@ -159,7 +159,6 @@ io.once('connection', (socket: any) => {
   console.log('Socket connection opened');
   // Start listening to F1 client
   startRecording();
-  // tslint:disable-next-line:no-any
   client.on(PACKETS.motion, (data: any) =>
     registerClient(PACKETS.motion, db.motion, data, socket)
   );

@@ -1,14 +1,21 @@
 {
-  "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "declaration": false,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "pretty": true,
+    "sourceMap": true,
+    "strict": true,
     "baseUrl": ".",
     "paths": { "*": ["types/*"] },
     "rootDir": ".",
     "outDir": "build",
     "jsx": "react",
-    "lib": ["es6", "dom"]
+    "lib": ["es6", "dom"],
+    "esModuleInterop": true
   },
-  "exclude": ["node_modules"],
-  "files": ["global.d.ts"]
+  "exclude": ["node_modules"]
 }

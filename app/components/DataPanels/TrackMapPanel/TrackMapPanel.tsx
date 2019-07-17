@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Coordinate } from 'f1-telemetry-client/build/src/constants/types';
+import Singapore from './Tracks/Singapore.svg';
 import { StateContext } from '../../App';
-
-const styles = require('./TrackMapPanel.css');
-
+import styles from './TrackMapPanel.css';
+debugger;
 export function TrackMapPanel() {
   const state = React.useContext(StateContext);
   const { worldPositions, participants } = state;
@@ -37,7 +37,7 @@ export function TrackMapPanel() {
 
   return (
     <div className={styles.trackMapWrapper}>
-      {/*<Singapore />*/}
+      <img src={Singapore} />
       {renderDrivers()}
     </div>
   );

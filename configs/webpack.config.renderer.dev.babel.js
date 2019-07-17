@@ -120,7 +120,7 @@ export default merge.smart(baseConfig, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader'
       },
-      // SVG Font
+      // SVG
       {
         test: /\.svg$/,
         use: {
