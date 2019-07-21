@@ -18,7 +18,7 @@ import { InstrumentsPanel } from './InstrumentsPanel';
 import { SessionPanel } from './SessionPanel';
 */
 
-const styles = require('./Canvas.css');
+import styles from './Canvas.css';
 
 const canvasSetup: Column[] = [
   { width: 8, panels: [<ParticipantsPanel />] },

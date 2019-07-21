@@ -5,7 +5,7 @@ import { Props } from './types';
 import { ModeIndicator } from '../../DataComponents';
 import { TYRES } from 'f1-telemetry-client/build/src/constants';
 
-const styles = require('./ModesPanel.css');
+import styles from './ModesPanel.css';
 
 export function ModesPanel(props: Props) {
   const { tyreCompound } = useContext(StateContext);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Props } from './types';
 
-const styles = require('./LapTimingGrid.css');
+import styles from './LapTimingGrid.css';
 
 export class LapTimingGrid extends React.PureComponent<Props> {
   render() {

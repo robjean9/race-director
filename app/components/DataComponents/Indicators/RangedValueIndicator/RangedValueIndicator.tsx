@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Props } from './types';
 import classNames from 'classnames';
 
-const styles = require('./RangedValueIndicator.css');
+import styles from './RangedValueIndicator.css';
 
 export class RangedValueIndicator extends React.PureComponent<Props> {
   render() {

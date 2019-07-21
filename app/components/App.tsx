@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createContext, useReducer, useEffect, Dispatch } from 'react';
 
 import openSocket from 'socket.io-client';
-const styles = require('./App.css');
+import styles from './App.css';
 
 import { State, Participant } from './types';
 import { Toolbar } from './Toolbar';

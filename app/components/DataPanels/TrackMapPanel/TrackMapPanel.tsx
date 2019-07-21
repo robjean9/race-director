@@ -3,28 +3,36 @@ import { Coordinate } from 'f1-telemetry-client/build/src/constants/types';
 import Singapore from './Tracks/Singapore.svg';
 import { StateContext } from '../../App';
 import styles from './TrackMapPanel.css';
-debugger;
+
+let mapRef: any;
+
 export function TrackMapPanel() {
   const state = React.useContext(StateContext);
   const { worldPositions, participants } = state;
 
-  // 20% of screen
-  const canvasWidth = window.innerWidth * 0.2;
+  React.useEffect(() => {
+    mapRef = React.createRef();
+  }, []);
 
-  //console.log(JSON.stringify(worldPositions));
+  const getDriverColor = (index: number) => {
+    const teamColor =
+      participants &&
+      participants.participantList &&
+      participants.participantList[index] &&
+      participants.participantList[index].team.color;
+    return teamColor || '#ffffff';
+  };
 
   const renderDrivers = () =>
     worldPositions.map((worldPosition: Coordinate, index: number) => {
-      const translateX = worldPosition.x + canvasWidth / 2;
-      const translateY = worldPosition.y + canvasWidth / 2;
-      const transform = `translate(${translateX}px, ${translateY}px)`;
+      const mapWidth = mapRef.current.clientWidth;
+      let relativeSize = mapWidth / 297;
+      console.log('mapWidth', mapWidth);
+      const translateX = mapWidth / 2 - 6 + worldPosition.x * relativeSize;
+      const translateY = worldPosition.y * relativeSize;
 
-      const teamColor =
-        participants &&
-        participants.participantList &&
-        participants.participantList[index] &&
-        participants.participantList[index].team.color;
-      const backgroundColor = teamColor || '#ffffff';
+      const transform = `translate(${translateX}px, ${translateY}px)`;
+      const backgroundColor = getDriverColor(index);
 
       return (
         <div
@@ -35,10 +43,23 @@ export function TrackMapPanel() {
       );
     });
 
+  const handleScaleChange = (e: any) => {
+    //relativeSize = e.target.value;
+  };
+
   return (
-    <div className={styles.trackMapWrapper}>
-      <img src={Singapore} />
-      {renderDrivers()}
-    </div>
+    <React.Fragment>
+      <input
+        className={styles.txt1}
+        type="text"
+        onChange={handleScaleChange}
+        placeholder="scale"
+      />
+      <div className={styles.trackMapWrapper} ref={mapRef}>
+        <img src={Singapore} className={styles.trackMap} />
+        {/*renderCurrentDriver()*/}
+        {renderDrivers()}
+      </div>
+    </React.Fragment>
   );
 }

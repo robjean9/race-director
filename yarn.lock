@@ -4119,10 +4119,10 @@ extsprintf@^1.2.0:
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
   integrity sha1-4mifjzVvrWLMplo6kcXfX5VRaS8=
 
-f1-telemetry-client@0.1.14:
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.14.tgz#2416754fe3c27d639d2a5191a0d31f1f21c932b3"
-  integrity sha512-QBDhAGgf091Azx74amMO+CdYiZLH858mxaYmeNj0EPua7UsOukx0XqE6BFjAt6lhjOgzcOu/a53dbj6PZZc+RQ==
+f1-telemetry-client@0.1.15:
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/f1-telemetry-client/-/f1-telemetry-client-0.1.15.tgz#5b65549928eb0a48fba9a5f6e212ced579a07da8"
+  integrity sha512-YAJZ6B+BluJNPLedHyypeJtRUpOYjMJMSOV2dwITKw3C1eiyYc0FO12XRJzNvT4i+oIztkvlPn+yDyHxiCALhQ==
   dependencies:
     binary-parser "^1.3.2"
     struct "^0.0.12"

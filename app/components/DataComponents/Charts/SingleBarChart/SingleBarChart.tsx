@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Props } from './types';
 import ReactEcharts from 'echarts-for-react';
 
-const styles = require('./SingleBarChart.css');
+import styles from './SingleBarChart.css';
 
 export class SingleBarChart extends React.PureComponent<Props> {
   getSingleBarChart = () => {

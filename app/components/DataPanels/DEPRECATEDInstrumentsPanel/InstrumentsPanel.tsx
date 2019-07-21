@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Props } from './types';
 //import {} from '../../DataPanels/Charts';
 
-const styles = require('./InstrumentsPanel.css');
+import styles from './InstrumentsPanel.css';
 
 export class InstrumentsPanel extends React.PureComponent<Props> {
   render() {

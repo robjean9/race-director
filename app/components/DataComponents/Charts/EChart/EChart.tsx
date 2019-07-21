@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { Props, EchartStyle } from './types';
 
-const styles = require('./EChart.css');
+import styles from './EChart.css';
 
 export class EChart extends React.PureComponent<Props> {
   render() {

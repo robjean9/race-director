@@ -29,7 +29,8 @@ const {
   STOP_F1_CLIENT
 } = require('./constants/f1client');
 
-const client = new F1TelemetryClient({ port: 20813 });
+console.log('Initialized client');
+const client = new F1TelemetryClient({ port: 20839 });
 
 export class AppUpdater {
   constructor() {
@@ -89,6 +90,14 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
+  createWindow();
+
+  // Remove this if your app does not use auto updates
+  // tslint:disable-next-line:no-unused-expression
+  new AppUpdater();
+});
+
+function createWindow() {
   mainWindow = new BrowserWindow({
     titleBarStyle: 'default',
     show: false,
@@ -102,7 +111,6 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.once('ready-to-show', () => {
-    // tslint:disable-next-line:no-unused-expression
     mainWindow && mainWindow.show();
   });
 
@@ -110,21 +118,13 @@ app.on('ready', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.focus();
-    }
+    mainWindow.focus();
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
-  // Remove this if your app does not use auto updates
-  // tslint:disable-next-line:no-unused-expression
-  new AppUpdater();
-});
+}
 
 // Mongo database
 const db = mongojs(MONGO_CONNECTION_STRING);
@@ -207,6 +207,7 @@ const registerClient = (
 };
 
 const startRecording = () => {
+  console.log('Starts the client');
   client.start();
   //isRecording = true;
 };
@@ -227,15 +228,3 @@ const storeInCollection = (
   // tslint:disable-next-line:no-unused-expression
   isRecording && collection.insert(data);
 };
-
-// stops the client
-[
-  `exit`,
-  `SIGINT`,
-  `SIGUSR1`,
-  `SIGUSR2`,
-  //`uncaughtException`,
-  `SIGTERM`
-].forEach(eventType => {
-  (process as NodeJS.EventEmitter).on(eventType, () => client.stop());
-});

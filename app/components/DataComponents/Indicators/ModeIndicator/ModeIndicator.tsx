@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Props } from './types';
 import classNames from 'classnames';
 
-const styles = require('./ModeIndicator.css');
+import styles from './ModeIndicator.css';
 
 export class ModeIndicator extends React.PureComponent<Props> {
   render() {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EChart } from '../EChart';
 
-const styles = require('./RPMGaugeChart.css');
+import styles from './RPMGaugeChart.css';
 
 export class RPMGaugeChart extends React.PureComponent {
   getRPMChart = () => {

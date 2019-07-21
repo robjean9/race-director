@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
 import { Props } from './types';
-const styles = require('./Toolbar.css');
+import styles from './Toolbar.css';
 
 const START_F1_CLIENT = 'startF1Client';
 const STOP_F1_CLIENT = 'stopF1Client';

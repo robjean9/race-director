@@ -1,12 +1,35 @@
 .driver {
-  height: 10px;
-  width: 10px;
+  height: 12px;
+  width: 12px;
   border-radius: 50%;
+  border: 2px solid black;
   position: absolute;
   transition: transform 0.5s;
 }
 
+.trackMap {
+  width: 100%;
+  height: auto;
+}
+
 .trackMapWrapper {
   height: 19vw;
-  /*background-image: url('./Tracks/Singapore.svg');*/
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.txt1 {
+  position: absolute;
+  top: 15px;
+}
+
+.txt2 {
+  position: absolute;
+  top: 40px;
+}
+
+.txt3 {
+  position: absolute;
+  top: 65px;
 }

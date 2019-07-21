@@ -3,7 +3,7 @@ import { QuaternaryIndicator } from '../../DataComponents';
 import { Props } from './types';
 import { StateContext } from '../../App';
 
-const styles = require('./TyreWearPanel.css');
+import styles from './TyreWearPanel.css';
 
 export function TyreWearPanel(props: Props) {
   const { tyresWear } = React.useContext(StateContext);

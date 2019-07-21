@@ -5,7 +5,7 @@ import { Participant } from '../../types';
 import { actions } from '../../reducer';
 import classNames = require('classnames');
 
-const styles = require('./ParticipantsPanel.css');
+import styles from './ParticipantsPanel.css';
 
 export function ParticipantsPanel() {
   const participants = useContext(ParticipantsContext);

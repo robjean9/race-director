@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RangedValueIndicator } from '../RangedValueIndicator';
 import { Props } from './types';
 
-const styles = require('./QuaternaryIndicator.css');
+import styles from './QuaternaryIndicator.css';
 
 export class QuaternaryIndicator extends React.PureComponent<Props> {
   render() {
