@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Coordinate } from 'f1-telemetry-client/build/src/constants/types';
 import Singapore from './Tracks/Singapore.svg';
+import Australia from './Tracks/Australia.svg';
+import Bahrain from './Tracks/Bahrain.svg';
+import BahrainShort from './Tracks/BahrainShort.svg';
 import { StateContext } from '../../App';
 import styles from './TrackMapPanel.css';
 
@@ -8,6 +11,7 @@ let mapRef: any;
 
 export function TrackMapPanel() {
   const state = React.useContext(StateContext);
+  const [map, setMap] = React.useState('');
   const { worldPositions, participants } = state;
 
   React.useEffect(() => {
@@ -26,8 +30,8 @@ export function TrackMapPanel() {
   const renderDrivers = () =>
     worldPositions.map((worldPosition: Coordinate, index: number) => {
       const mapWidth = mapRef.current.clientWidth;
-      let relativeSize = mapWidth / 297;
-      console.log('mapWidth', mapWidth);
+      const relativeSize = mapWidth / 297;
+
       const translateX = mapWidth / 2 - 6 + worldPosition.x * relativeSize;
       const translateY = worldPosition.y * relativeSize;
 
@@ -47,6 +51,10 @@ export function TrackMapPanel() {
     //relativeSize = e.target.value;
   };
 
+  const handleChangeMap = (e: any) => {
+    setMap(e.target.value);
+  };
+
   return (
     <React.Fragment>
       <input
@@ -55,8 +63,14 @@ export function TrackMapPanel() {
         onChange={handleScaleChange}
         placeholder="scale"
       />
+      <select className={styles.txt2} onChange={handleChangeMap}>
+        <option value={Australia}>Singapore</option>
+        <option value={Singapore}>Australia</option>
+        <option value={Bahrain}>Bahrain</option>
+        <option value={BahrainShort}>Bahrain Short</option>
+      </select>
       <div className={styles.trackMapWrapper} ref={mapRef}>
-        <img src={Singapore} className={styles.trackMap} />
+        <img src={map} className={styles.trackMap} />
         {/*renderCurrentDriver()*/}
         {renderDrivers()}
       </div>
