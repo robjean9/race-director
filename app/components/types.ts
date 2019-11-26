@@ -20,6 +20,9 @@ export interface State {
   tyresWear: any;
   participants: Participants;
   tyreCompound: any;
+  drsAllowed: boolean;
+  fuelMix: any;
+  ersMode: any;
 }
 
 export interface Participants {

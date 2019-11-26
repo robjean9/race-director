@@ -30,7 +30,7 @@ const {
 } = require('./constants/f1client');
 
 console.log('Initialized client');
-const client = new F1TelemetryClient({ port: 20777 });
+const client = new F1TelemetryClient({ port: 20777   });
 
 export class AppUpdater {
   constructor() {

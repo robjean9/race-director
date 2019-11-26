@@ -12,7 +12,7 @@ export const actions = {
   UPDATE_CURRENT_LAP_TIME: 'Update Current Lap Time',
   UPDATE_PARTICIPANT: 'Update Participant'
 };
-
+console.log('teste');
 export const reducer = (state: State, action: any) => {
   switch (action.type) {
     case actions.SESSION_RESTART:
@@ -64,7 +64,19 @@ export const reducer = (state: State, action: any) => {
         action.carStatusPacket.m_carStatusData[currentParticipant]
           .m_actualTyreCompound;
 
-      return { ...state, tyresWear, tyreCompound };
+      const fuelMix = 
+        action.carStatusPacket.m_carStatusData[currentParticipant].m_fuelMix;
+
+
+      const drsAllowed = 
+        action.carStatusPacket.m_carStatusData[currentParticipant]
+        .m_drsAllowed;
+
+      const ersMode = 
+        action.carStatusPacket.m_carStatusData[currentParticipant]
+        .m_ersDeployMode;
+
+      return { ...state, tyresWear, tyreCompound, drsAllowed, fuelMix, ersMode};
 
     case actions.UPDATE_CAR_TELEMETRY:
       const playerTelemetry =

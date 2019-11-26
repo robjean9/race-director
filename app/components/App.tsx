@@ -29,8 +29,11 @@ const initialState: State = {
   brakesTemperature: [],
   tyresSurfaceTemperature: [],
   tyresWear: [],
-  tyreCompound: undefined,
-  participants: { selectedParticipant: 0, participantList: [] }
+  tyreCompound: 1,
+  participants: { selectedParticipant: 0, participantList: [] },
+  drsAllowed:false,
+  fuelMix:0,
+  ersMode:0
 };
 
 export const StateContext = createContext({} as State);

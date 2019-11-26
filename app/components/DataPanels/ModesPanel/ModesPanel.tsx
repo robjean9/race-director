@@ -3,30 +3,40 @@ import { useContext } from 'react';
 import { StateContext } from '../../App';
 import { Props } from './types';
 import { ModeIndicator } from '../../DataComponents';
-import { TYRES } from 'f1-telemetry-client/build/src/constants';
+import { TYRES, FUEL_MIX, ERS_DEPLOY_MODE } from 'f1-telemetry-client/build/src/constants';
 
 import styles from './ModesPanel.css';
 
 export function ModesPanel(props: Props) {
-  const { tyreCompound } = useContext(StateContext);
+  const { tyreCompound, fuelMix, ersMode, drsAllowed} = useContext(StateContext);
 
   return (
+    <div>
     <div className={styles.modesPanelWrapper}>
       <ModeIndicator
         className={styles.modesPanelIndicator}
         title="Tyre Compound"
-        value={tyreCompound && TYRES[tyreCompound] && TYRES[tyreCompound].name}
+        value={tyreCompound ? (TYRES[tyreCompound] && TYRES[tyreCompound].name) : 'NONE'}
       />
       <ModeIndicator
         className={styles.modesPanelIndicator}
         title="Fuel Mix"
-        value={'OK'}
+        value={fuelMix  && FUEL_MIX[fuelMix] ? FUEL_MIX[fuelMix] : 'NONE'}
       />
-      <ModeIndicator
+      
+    </div>
+    <div className={styles.modesPanelWrapper}>
+    <ModeIndicator
         className={styles.modesPanelIndicator}
         title="ERS Deploy Mode"
-        value={'OK'}
+        value={ersMode && ERS_DEPLOY_MODE[ersMode] ? ERS_DEPLOY_MODE[ersMode] : 'NONE'}
       />
-    </div>
+    <ModeIndicator
+      className={styles.modesPanelIndicator}
+      title="DRS Allowed"
+      value={drsAllowed ? 'YES' : 'NO'}
+    />
+  </div>
+  </div>
   );
 }
