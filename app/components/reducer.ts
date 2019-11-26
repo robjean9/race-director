@@ -110,7 +110,8 @@ export const reducer = (state: State, action: any) => {
         m_brake,
         m_steer,
         m_brakesTemperature,
-        m_tyresSurfaceTemperature
+        m_tyresSurfaceTemperature,
+        m_drs
       } = playerTelemetry;
 
       updatedTelemetryMatrix[state.currentLapTime][state.currentLapNumber] = {
@@ -127,13 +128,16 @@ export const reducer = (state: State, action: any) => {
       const brakesTemperature = m_brakesTemperature;
 
       const tyresSurfaceTemperature = m_tyresSurfaceTemperature;
+      
+      const drsStatus = m_drs;
 
       return {
         ...state,
         xAxisData,
         telemetryMatrix: updatedTelemetryMatrix,
         brakesTemperature,
-        tyresSurfaceTemperature
+        tyresSurfaceTemperature,
+        drsStatus
       };
 
     case actions.UPDATE_CURRENT_LAP_TIME:
@@ -141,13 +145,26 @@ export const reducer = (state: State, action: any) => {
         action.lapTimePacket.m_lapData[state.participants.selectedParticipant]
           .m_currentLapNum - 1;
 
-      // this gives us an integer representing the current lap time, in ms
+      // this gives us an integer representing the current lap time, in s
       const currentLapTime = Math.round(
         action.lapTimePacket.m_lapData[state.participants.selectedParticipant]
-          .m_currentLapTime * 1e3
+          .m_currentLapTime
       );
 
-      return { ...state, currentLapTime, currentLapNumber };
+      const participantData = action.lapTimePacket.m_lapData[state.participants.selectedParticipant];
+      let sector1Time = participantData.m_sector1Time.toFixed(2);
+      let sector2Time = participantData.m_sector2Time.toFixed(2);
+      let sector3Time;
+      console.log(participantData.m_sector);
+      if(participantData.m_sector == 0){
+        sector1Time = participantData.m_currentLapTime.toFixed(2);
+      }else if(participantData.m_sector == 1){
+        sector2Time = (participantData.m_currentLapTime - sector1Time).toFixed(2);
+    }else {
+        sector3Time = (participantData.m_currentLapTime - sector1Time - sector2Time).toFixed(2);
+    }
+      
+      return { ...state, currentLapTime, currentLapNumber, sector1Time, sector2Time, sector3Time };
 
     case actions.UPDATE_PARTICIPANT:
       return {

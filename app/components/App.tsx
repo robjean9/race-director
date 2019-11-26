@@ -32,8 +32,12 @@ const initialState: State = {
   tyreCompound: 1,
   participants: { selectedParticipant: 0, participantList: [] },
   drsAllowed:false,
+  drsStatus:false,
   fuelMix:0,
-  ersMode:0
+  ersMode:0,
+  sector1Time:0,
+  sector2Time:0,
+  sector3Time:0
 };
 
 export const StateContext = createContext({} as State);
@@ -87,6 +91,7 @@ export default function App() {
 
   const handleCarStatusPacket = (carStatusPacket: PacketCarStatusData) => {
     if (packetCounts.carStatus % PACKAGE_LOSS === 0) {
+      // console.log(carStatusPacket);
       dispatch({ type: actions.UPDATE_CAR_STATUS, carStatusPacket });
     }
 

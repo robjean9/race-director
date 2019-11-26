@@ -21,8 +21,12 @@ export interface State {
   participants: Participants;
   tyreCompound: any;
   drsAllowed: boolean;
+  drsStatus: Boolean;
   fuelMix: any;
   ersMode: any;
+  sector1Time: any;
+  sector2Time: any;
+  sector3Time: any;
 }
 
 export interface Participants {

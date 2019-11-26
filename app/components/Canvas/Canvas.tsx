@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Column, Panel } from './types';
 import { TelemetryType } from '../types';
 
-import { LineChart } from '../DataComponents';
+import { LineChart, LapTimingGrid } from '../DataComponents';
 import {
   BrakeTemperaturePanel,
   TrackMapPanel,
@@ -25,6 +25,7 @@ const canvasSetup: Column[] = [
   {
     width: 44,
     panels: [
+      <LapTimingGrid title={'Lap Timing'} />,
       // make non-generic components (panels) for each LineChart
       <LineChart
         title="Speed"
@@ -43,7 +44,7 @@ const canvasSetup: Column[] = [
         unit="%"
       />,
       <LineChart title="Brake" telemetryType={TelemetryType.Brake} unit="%" />,
-      <LineChart title="Steer" telemetryType={TelemetryType.Steer} unit="%" />
+      <LineChart title="Steer" telemetryType={TelemetryType.Steer} unit="%" />,
     ]
   },
   {
@@ -55,13 +56,16 @@ const canvasSetup: Column[] = [
       />,
       <BrakeTemperaturePanel unit="℃" title="Brake Temperature" />,
       <TyreWearPanel unit="%" title="Tyre Wear" />,
-      <ModesPanel title="Modes" />
+      <ModesPanel title="Modes" />,
+      
+        
     ]
   },
   {
     width: 19,
     panels: [<TrackMapPanel />]
-  }
+  },
+  
 ];
 
 export function Canvas() {

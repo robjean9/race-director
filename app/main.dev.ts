@@ -203,13 +203,14 @@ const registerClient = (
   socket: { emit: (arg0: any, arg1: any) => void }
 ) => {
   storeInCollection(collection, data);
+  // console.log(packet,data);
   socket.emit(packet, data);
 };
 
 const startRecording = () => {
   console.log('Starts the client');
-  //client.start();
-  //isRecording = true;
+  client.start();
+  // isRecording = true;
 };
 
 const stopRecording = () => {

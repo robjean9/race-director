@@ -8,7 +8,7 @@ import { TYRES, FUEL_MIX, ERS_DEPLOY_MODE } from 'f1-telemetry-client/build/src/
 import styles from './ModesPanel.css';
 
 export function ModesPanel(props: Props) {
-  const { tyreCompound, fuelMix, ersMode, drsAllowed} = useContext(StateContext);
+  const { tyreCompound, fuelMix, ersMode, drsAllowed,drsStatus} = useContext(StateContext);
 
   return (
     <div>
@@ -34,7 +34,7 @@ export function ModesPanel(props: Props) {
     <ModeIndicator
       className={styles.modesPanelIndicator}
       title="DRS Allowed"
-      value={drsAllowed ? 'YES' : 'NO'}
+      value={drsAllowed ? 'YES' : (drsStatus ? 'USING': 'NO') }
     />
   </div>
   </div>

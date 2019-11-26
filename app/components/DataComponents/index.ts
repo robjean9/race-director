@@ -1,5 +1,5 @@
 import { LapTimingGrid } from './Grids';
-import { LineChart } from './Charts';
+import { LineChart,RPMGaugeChart,SingleBarChart } from './Charts';
 import {
   QuaternaryIndicator,
   RangedValueIndicator,
@@ -11,5 +11,7 @@ export {
   QuaternaryIndicator,
   RangedValueIndicator,
   ModeIndicator,
-  LapTimingGrid
+  LapTimingGrid,
+  RPMGaugeChart,
+  SingleBarChart
 };
